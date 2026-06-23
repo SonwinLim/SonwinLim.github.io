@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CommEx — Risk Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:          #050B15;
+      --surface:     #091422;
+      --surface-2:   #0E1D30;
+      --gold:        #C4A35A;
+      --gold-bright: #D4B96A;
+      --gold-dim:    rgba(196,163,90,0.12);
+      --red:         #E8392A;
+      --red-dim:     rgba(232,57,42,0.12);
+      --red-mid:     rgba(232,57,42,0.25);
+      --amber:       #E8972A;
+      --amber-dim:   rgba(232,151,42,0.12);
+      --amber-mid:   rgba(232,151,42,0.25);
+      --green:       #2AE896;
+      --green-dim:   rgba(42,232,150,0.10);
+      --text-1:      #EDF1F7;
+      --text-2:      #7B8FA6;
+      --text-3:      #2E4260;
+      --border:      rgba(255,255,255,0.055);
+      --border-gold: rgba(196,163,90,0.28);
+      --mono:        'IBM Plex Mono', monospace;
+      --sans:        'IBM Plex Sans', sans-serif;
+      --serif:       'Cormorant Garamond', Georgia, serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text-1);
+      font-family: var(--sans);
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.028;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    /* ── GRID LINES ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.4;
+    }
+
+    /* ── LAYOUT SHELL ── */
+    #app { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; max-width: 1440px; margin: 0 auto; }
+
+    /* ── HEADER ── */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(5,11,21,0.92);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      font-family: var(--serif);
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+    .brand span {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--text-2);
+      font-size: 16px;
+      letter-spacing: 0.04em;
+      margin-left: 12px;
+    }
+
+    .header-meta {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text-3);
+      letter-spacing: 0.06em;
+      text-align: right;
+    }
+    .header-meta .client-name {
+      color: var(--text-2);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    /* ── BACK NAV ── */
+    #back-nav {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text-2);
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+      padding: 24px 40px 0;
+    }
+    #back-nav:hover { color: var(--gold); }
+    #back-nav svg { transition: transform 0.2s; }
+    #back-nav:hover svg { transform: translateX(-3px); }
+    #back-nav.visible { display: flex; }
+
+    /* ── SCREENS ── */
+    .screen {
+      display: none;
+      flex: 1;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+    .screen.active {
+      display: flex;
+      flex-direction: column;
+    }
+    .screen.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ══════════════════════════════════════
+       HOME SCREEN
+    ══════════════════════════════════════ */
+    #home {
+      padding: 48px 40px 40px;
+      gap: 40px;
+    }
+
+    .home-headline {
+      font-family: var(--serif);
+      font-size: clamp(42px, 3.5vw, 68px);
+      font-weight: 600;
+      line-height: 1.15;
+      color: var(--text-1);
+      max-width: 600px;
+    }
+    .home-headline em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .home-sub {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text-2);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .home-sub::before {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      flex: 1;
+    }
+
+    .score-card {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: 3px solid;
+      padding: 36px 32px 32px;
+      cursor: pointer;
+      transition: border-color 0.25s, background 0.25s, transform 0.25s;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .score-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, currentColor 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .score-card:hover::after { opacity: 0.03; }
+    .score-card:hover { transform: translateY(-3px); }
+
+    .score-card.red  { border-top-color: var(--red); color: var(--red); }
+    .score-card.amber { border-top-color: var(--amber); color: var(--amber); }
+    .score-card.green { border-top-color: var(--green); color: var(--green); }
+
+    .score-card.red:hover  { background: color-mix(in srgb, var(--surface) 92%, var(--red)); }
+    .score-card.amber:hover { background: color-mix(in srgb, var(--surface) 92%, var(--amber)); }
+    .score-card.green:hover { background: color-mix(in srgb, var(--surface) 92%, var(--green)); }
+
+    .score-label {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-2);
+    }
+
+    .score-value {
+      font-family: var(--serif);
+      font-size: clamp(80px, 7vw, 140px);
+      font-weight: 700;
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+    }
+    .score-card.red  .score-value { color: var(--red); }
+    .score-card.amber .score-value { color: var(--amber); }
+    .score-card.green .score-value { color: var(--green); }
+
+    .score-status {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 500;
+      margin-top: 4px;
+    }
+    .score-card.red  .score-status { color: var(--red); }
+    .score-card.amber .score-status { color: var(--amber); }
+    .score-card.green .score-status { color: var(--green); }
+
+    .score-detail {
+      font-family: var(--sans);
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--text-2);
+      flex: 1;
+      line-height: 1.6;
+      margin-top: 8px;
+    }
+
+    .score-cta {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 16px;
+      transition: color 0.2s, gap 0.2s;
+    }
+    .score-card:hover .score-cta { color: var(--text-2); gap: 10px; }
+
+    .overall-bar {
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 0.07em;
+      color: var(--text-2);
+    }
+    .overall-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--red);
+      animation: pulse 2s ease infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .overall-risk { color: var(--red); font-weight: 500; }
+    .overall-time { color: var(--text-3); }
+
+    /* ══════════════════════════════════════
+       DETAIL SCREENS (shared)
+    ══════════════════════════════════════ */
+    .detail-screen {
+      padding: 32px 40px 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .detail-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 20px;
+    }
+
+    .detail-title {
+      font-family: var(--serif);
+      font-size: 46px;
+      font-weight: 600;
+      color: var(--text-1);
+    }
+    .detail-sub {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text-2);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .detail-score-badge {
+      font-family: var(--serif);
+      font-size: 60px;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .detail-score-badge.red  { color: var(--red); }
+    .detail-score-badge.amber { color: var(--amber); }
+    .detail-score-badge.green { color: var(--green); }
+    .badge-label {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-align: right;
+      margin-bottom: 4px;
+    }
+    .badge-label.red  { color: var(--red); }
+    .badge-label.amber { color: var(--amber); }
+    .badge-label.green { color: var(--green); }
+
+    /* ── TABLE ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 14px;
+    }
+    thead th {
+      text-align: left;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      padding: 0 16px 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-weight: 500;
+    }
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+    tbody tr:hover { background: rgba(255,255,255,0.02); }
+    tbody td {
+      padding: 14px 16px 14px 0;
+      vertical-align: middle;
+      color: var(--text-1);
+    }
+
+    .flag-cell {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 2px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+    .flag-missing  { background: var(--red-dim);   color: var(--red);   border: 1px solid var(--red-mid); }
+    .flag-present  { background: var(--green-dim);  color: var(--green); border: 1px solid rgba(42,232,150,0.2); }
+    .flag-warning  { background: var(--amber-dim);  color: var(--amber); border: 1px solid var(--amber-mid); }
+    .flag-clean    { background: transparent; color: var(--text-3); }
+
+    /* ── GLIDEPATH CARDS ── */
+    .glidepath-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .year-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 28px 24px;
+      position: relative;
+    }
+    .year-label {
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-2);
+      margin-bottom: 12px;
+    }
+    .year-pct {
+      font-family: var(--serif);
+      font-size: 80px;
+      font-weight: 700;
+      line-height: 0.9;
+      margin-bottom: 16px;
+    }
+    .year-card.red-card   { border-top: 3px solid var(--red); }
+    .year-card.amber-card { border-top: 3px solid var(--amber); }
+    .year-card.green-card { border-top: 3px solid var(--green); }
+    .year-card.red-card   .year-pct { color: var(--red); }
+    .year-card.amber-card .year-pct { color: var(--amber); }
+    .year-card.green-card .year-pct { color: var(--green); }
+
+    .year-flags { display: flex; flex-direction: column; gap: 8px; }
+    .year-flag {
+      font-family: var(--mono);
+      font-size: 13px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.4;
+    }
+    .year-flag .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+    .year-flag.bad  .dot { background: var(--red); }
+    .year-flag.warn .dot { background: var(--amber); }
+    .year-flag.ok   .dot { background: var(--green); }
+    .year-flag.bad  { color: var(--red); }
+    .year-flag.warn { color: var(--amber); }
+    .year-flag.ok   { color: var(--green); }
+
+    /* ── SAVINGS SPLIT BAR ── */
+    .split-bar-wrap { margin-top: 12px; }
+    .split-bar-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 5px;
+    }
+    .split-bar {
+      height: 5px;
+      background: var(--surface-2);
+      border-radius: 0;
+      overflow: hidden;
+      display: flex;
+    }
+    .split-hard  { background: var(--green); }
+    .split-soft  { background: var(--amber); }
+
+    /* ── AI PANEL ── */
+    .ai-section { border-top: 1px solid var(--border); padding-top: 28px; }
+
+    .ai-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--mono);
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-1);
+      background: none;
+      border: 1px solid var(--border-gold);
+      padding: 12px 24px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, gap 0.2s;
+    }
+    .ai-trigger:hover {
+      background: var(--gold-dim);
+      border-color: var(--gold);
+      gap: 14px;
+    }
+    .ai-trigger .icon { color: var(--gold); font-size: 14px; }
+
+    .ai-panel {
+      display: none;
+      margin-top: 24px;
+      border-left: 2px solid var(--gold);
+      padding: 24px 28px;
+      background: var(--surface);
+      position: relative;
+    }
+    .ai-panel.open { display: block; }
+
+    .ai-badge {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ai-badge::before {
+      content: '';
+      display: block;
+      width: 16px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .ai-text {
+      font-family: var(--sans);
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--text-1);
+      line-height: 1.8;
+      white-space: pre-wrap;
+    }
+
+    .ai-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: var(--gold);
+      margin-left: 2px;
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* ── INVOICE AMOUNT ── */
+    .amount { text-align: right; color: var(--text-2); }
+    .amount.flagged { color: var(--red); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .score-grid { grid-template-columns: 1fr; }
+      .glidepath-grid { grid-template-columns: 1fr; }
+      header, #home, .detail-screen { padding-left: 20px; padding-right: 20px; }
+      #back-nav.visible { padding-left: 20px; }
+    }
+
+    /* ── NUMBER COUNT-UP ANIMATION ── */
+    @keyframes countUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .score-value { animation: countUp 0.5s ease both; }
+    .score-card:nth-child(1) .score-value { animation-delay: 0.05s; }
+    .score-card:nth-child(2) .score-value { animation-delay: 0.15s; }
+    .score-card:nth-child(3) .score-value { animation-delay: 0.25s; }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ── HEADER ── -->
+  <header>
+    <div>
+      <div class="brand">CommEx <span>Risk Intelligence</span></div>
+    </div>
+    <div class="header-meta">
+      <span class="client-name">MERIDIAN FINANCIAL APAC</span>
+      <span>Fixed-Price IFM · SGD 4.2M / yr · 3-yr term</span>
+    </div>
+  </header>
+
+  <!-- ── BACK NAV ── -->
+  <div id="back-nav" onclick="navigate('home')">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Back to dashboard
+  </div>
+
+  <!-- ══════════════════════════════════════
+       HOME SCREEN
+  ══════════════════════════════════════ -->
+  <section id="home" class="screen">
+    <div>
+      <h1 class="home-headline">Commercial risk <em>mapped</em> the moment a contract lands in delivery.</h1>
+      <div class="home-sub">3 critical issues identified in executed contract · Active mitigation required</div>
+    </div>
+
+    <div class="score-grid">
+      <div class="score-card red" onclick="navigate('clause')">
+        <div class="score-label">Contract Risk Score</div>
+        <div class="score-value">62</div>
+        <div class="score-status">⚠ HIGH RISK</div>
+        <div class="score-detail">3 mandatory clauses absent from the executed contract — inflation indexation, manpower burden rate cap, and regulatory pass-through. Exposure is live and unhedged in delivery.</div>
+        <div class="score-cta">Analyse gaps <span>→</span></div>
+      </div>
+
+      <div class="score-card amber" onclick="navigate('glidepath')">
+        <div class="score-label">Glidepath Risk Score</div>
+        <div class="score-value">74</div>
+        <div class="score-status">◈ ELEVATED RISK</div>
+        <div class="score-detail">Savings commitment is front-loaded. Year 1 baseline is undocumented and 100% classified as hard savings — a position unlikely to survive client scrutiny.</div>
+        <div class="score-cta">Review commitment <span>→</span></div>
+      </div>
+
+      <div class="score-card red" onclick="navigate('invoice')">
+        <div class="score-label">Invoice Audit Score</div>
+        <div class="score-value">58</div>
+        <div class="score-status">⚠ HIGH RISK</div>
+        <div class="score-detail">SGD 94,600 across 3 invoices requires intervention: one duplicate line item, one category mismatch (soft services billed as capex), one missing receipt above threshold.</div>
+        <div class="score-cta">Audit invoices <span>→</span></div>
+      </div>
+    </div>
+
+    <div class="overall-bar">
+      <div class="overall-status">
+        <div class="status-dot"></div>
+        <span>Overall commercial risk: <span class="overall-risk">HIGH</span></span>
+      </div>
+      <div class="overall-time">Last analysis: 29 May 2026 · 09:14 SGT</div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       CLAUSE CHECKER SCREEN
+  ══════════════════════════════════════ -->
+  <section id="clause" class="screen">
+    <div class="detail-screen">
+      <div class="detail-header">
+        <div>
+          <div class="detail-title">Contract Clause Analysis</div>
+          <div class="detail-sub">APAC IFM — Meridian Financial · Executed Contract · FY2026</div>
+        </div>
+        <div>
+          <div class="badge-label red">Risk Score</div>
+          <div class="detail-score-badge red">62</div>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width:40%">Clause</th>
+            <th style="width:22%">Category</th>
+            <th style="width:18%">Status</th>
+            <th>Exposure if absent</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Inflation indexation (CPI-linked adjustment)</td>
+            <td style="color:var(--text-2)">Cost protection</td>
+            <td><span class="flag-cell flag-missing">✗ MISSING</span></td>
+            <td style="color:var(--red);font-size:13px">SGD 100–250K / yr unhedged</td>
+          </tr>
+          <tr>
+            <td>Manpower burden rate cap</td>
+            <td style="color:var(--text-2)">Labour cost</td>
+            <td><span class="flag-cell flag-missing">✗ MISSING</span></td>
+            <td style="color:var(--red);font-size:13px">CPF / SDL / FWL changes absorbed by JLL</td>
+          </tr>
+          <tr>
+            <td>Regulatory change pass-through</td>
+            <td style="color:var(--text-2)">Statutory</td>
+            <td><span class="flag-cell flag-missing">✗ MISSING</span></td>
+            <td style="color:var(--red);font-size:13px">Full regulatory uplifts fall to JLL</td>
+          </tr>
+          <tr>
+            <td>GMP overrun mitigation</td>
+            <td style="color:var(--text-2)">Risk allocation</td>
+            <td><span class="flag-cell flag-present">✓ PRESENT</span></td>
+            <td style="color:var(--text-3);font-size:13px">—</td>
+          </tr>
+          <tr>
+            <td>Termination for convenience</td>
+            <td style="color:var(--text-2)">Exit rights</td>
+            <td><span class="flag-cell flag-present">✓ PRESENT</span></td>
+            <td style="color:var(--text-3);font-size:13px">—</td>
+          </tr>
+          <tr>
+            <td>Savings measurement &amp; sign-off</td>
+            <td style="color:var(--text-2)">Reporting</td>
+            <td><span class="flag-cell flag-present">✓ PRESENT</span></td>
+            <td style="color:var(--text-3);font-size:13px">—</td>
+          </tr>
+          <tr>
+            <td>Gainshare split definition</td>
+            <td style="color:var(--text-2)">Commercial model</td>
+            <td><span class="flag-cell flag-present">✓ PRESENT</span></td>
+            <td style="color:var(--text-3);font-size:13px">—</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="ai-section">
+        <button class="ai-trigger" onclick="runAnalysis('clause', this)">
+          <span class="icon">◈</span> Run AI Analysis
+        </button>
+        <div id="clause-panel" class="ai-panel">
+          <div class="ai-badge">AI Commercial Analysis</div>
+          <div id="clause-text" class="ai-text"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       GLIDEPATH SCREEN
+  ══════════════════════════════════════ -->
+  <section id="glidepath" class="screen">
+    <div class="detail-screen">
+      <div class="detail-header">
+        <div>
+          <div class="detail-title">Savings Glidepath Validator</div>
+          <div class="detail-sub">Committed trajectory · 3-year IFM term</div>
+        </div>
+        <div>
+          <div class="badge-label amber">Risk Score</div>
+          <div class="detail-score-badge amber">74</div>
+        </div>
+      </div>
+
+      <div class="glidepath-grid">
+        <div class="year-card red-card">
+          <div class="year-label">Year 1</div>
+          <div class="year-pct">5%</div>
+          <div class="year-flags">
+            <div class="year-flag bad"><span class="dot"></span>No documented baseline — savings baseline is disputed</div>
+            <div class="year-flag bad"><span class="dot"></span>100% classified as hard savings — implausible at contract start</div>
+          </div>
+          <div class="split-bar-wrap">
+            <div class="split-bar-label">Hard / Soft split</div>
+            <div class="split-bar">
+              <div class="split-hard" style="width:100%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="year-card amber-card">
+          <div class="year-label">Year 2</div>
+          <div class="year-pct">5%</div>
+          <div class="year-flags">
+            <div class="year-flag warn"><span class="dot"></span>Baseline added late — agreed only in month 4</div>
+            <div class="year-flag ok"><span class="dot"></span>Hard / soft split more realistic at 60 / 40</div>
+          </div>
+          <div class="split-bar-wrap">
+            <div class="split-bar-label">Hard / Soft split</div>
+            <div class="split-bar">
+              <div class="split-hard" style="width:60%"></div>
+              <div class="split-soft" style="width:40%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="year-card green-card">
+          <div class="year-label">Year 3</div>
+          <div class="year-pct">1%</div>
+          <div class="year-flags">
+            <div class="year-flag bad"><span class="dot"></span>Cliff drop from 5% → 1% signals front-loading — client expectation gap</div>
+            <div class="year-flag ok"><span class="dot"></span>Baseline documented, split conservative</div>
+          </div>
+          <div class="split-bar-wrap">
+            <div class="split-bar-label">Hard / Soft split</div>
+            <div class="split-bar">
+              <div class="split-hard" style="width:80%"></div>
+              <div class="split-soft" style="width:20%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ai-section">
+        <button class="ai-trigger" onclick="runAnalysis('glidepath', this)">
+          <span class="icon">◈</span> Run AI Analysis
+        </button>
+        <div id="glidepath-panel" class="ai-panel">
+          <div class="ai-badge">AI Commercial Analysis</div>
+          <div id="glidepath-text" class="ai-text"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       INVOICE AUDIT SCREEN
+  ══════════════════════════════════════ -->
+  <section id="invoice" class="screen">
+    <div class="detail-screen">
+      <div class="detail-header">
+        <div>
+          <div class="detail-title">Invoice Audit</div>
+          <div class="detail-sub">May 2026 billing cycle · 7 invoices reviewed</div>
+        </div>
+        <div>
+          <div class="badge-label red">Risk Score</div>
+          <div class="detail-score-badge red">58</div>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Invoice</th>
+            <th>Vendor</th>
+            <th>Service</th>
+            <th>Category</th>
+            <th style="text-align:right">Amount (SGD)</th>
+            <th>Status</th>
+            <th>Finding</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>INV-041</td>
+            <td style="color:var(--text-2)">CleanPro SG</td>
+            <td style="color:var(--text-2);font-size:13px">Periodic deep clean</td>
+            <td style="color:var(--text-2);font-size:13px">Soft services</td>
+            <td class="amount flagged">18,400</td>
+            <td><span class="flag-cell flag-missing">⚠ HOLD</span></td>
+            <td style="color:var(--red);font-size:13px">Duplicate line item — Level 12 charge appears twice</td>
+          </tr>
+          <tr>
+            <td>INV-047</td>
+            <td style="color:var(--text-2)">AirTech HVAC</td>
+            <td style="color:var(--text-2);font-size:13px">Filter replacement</td>
+            <td style="color:var(--amber);font-size:13px">Billed: Capex ⚠</td>
+            <td class="amount flagged">62,000</td>
+            <td><span class="flag-cell flag-warning">◈ RECODE</span></td>
+            <td style="color:var(--amber);font-size:13px">Category mismatch — operational service billed as capital expenditure</td>
+          </tr>
+          <tr>
+            <td>INV-052</td>
+            <td style="color:var(--text-2)">SecureGuard</td>
+            <td style="color:var(--text-2);font-size:13px">Security manpower</td>
+            <td style="color:var(--text-2);font-size:13px">Soft services</td>
+            <td class="amount flagged">14,200</td>
+            <td><span class="flag-cell flag-missing">⚠ HOLD</span></td>
+            <td style="color:var(--red);font-size:13px">No receipt submitted — exceeds SGD 10K receipt threshold</td>
+          </tr>
+          <tr>
+            <td>INV-055</td>
+            <td style="color:var(--text-2)">Otis Lifts SG</td>
+            <td style="color:var(--text-2);font-size:13px">Lift maintenance</td>
+            <td style="color:var(--text-2);font-size:13px">Hard services</td>
+            <td class="amount">8,400</td>
+            <td><span class="flag-cell flag-clean">✓ Approved</span></td>
+            <td style="color:var(--text-3);font-size:13px">—</td>
+          </tr>
+          <tr>
+            <td>INV-056</td>
+            <td style="color:var(--text-2)">SG Power Sys</td>
+            <td style="color:var(--text-2);font-size:13px">Electrical inspection</td>
+            <td style="color:var(--text-2);font-size:13px">Hard services</td>
+            <td class="amount">12,600</td>
+            <td><span class="flag-cell flag-clean">✓ Approved</span></td>
+            <td style="color:var(--text-3);font-size:13px">—</td>
+          </tr>
+          <tr>
+            <td>INV-057</td>
+            <td style="color:var(--text-2)">Sodexo APAC</td>
+            <td style="color:var(--text-2);font-size:13px">Catering Q1</td>
+            <td style="color:var(--text-2);font-size:13px">Soft services</td>
+            <td class="amount">31,200</td>
+            <td><span class="flag-cell flag-clean">✓ Approved</span></td>
+            <td style="color:var(--text-3);font-size:13px">—</td>
+          </tr>
+          <tr>
+            <td>INV-058</td>
+            <td style="color:var(--text-2)">Rentokil SG</td>
+            <td style="color:var(--text-2);font-size:13px">Pest control</td>
+            <td style="color:var(--text-2);font-size:13px">Soft services</td>
+            <td class="amount">4,800</td>
+            <td><span class="flag-cell flag-clean">✓ Approved</span></td>
+            <td style="color:var(--text-3);font-size:13px">—</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="font-family:var(--mono);font-size:13px;color:var(--text-2);display:flex;gap:32px;padding-top:8px;">
+        <span>Total reviewed: <strong style="color:var(--text-1)">SGD 151,600</strong></span>
+        <span style="color:var(--red)">On hold / recode: <strong>SGD 94,600</strong></span>
+        <span style="color:var(--green)">Approved: <strong>SGD 57,000</strong></span>
+      </div>
+
+      <div class="ai-section">
+        <button class="ai-trigger" onclick="runAnalysis('invoice', this)">
+          <span class="icon">◈</span> Run AI Analysis
+        </button>
+        <div id="invoice-panel" class="ai-panel">
+          <div class="ai-badge">AI Commercial Analysis</div>
+          <div id="invoice-text" class="ai-text"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- #app -->
+
+<script>
+// ── DATA & AI COMMENTARY ────────────────────────────────────────────
+const AI = {
+  clause: `Based on my review of the executed Meridian Financial APAC IFM contract, I have identified three material gaps that represent live, unhedged financial exposure for JLL throughout the contract term. These clauses were not included at signing — the mitigation work begins now, in delivery.
+
+The absence of an inflation indexation clause is the most critical finding. With Singapore CPI running at approximately 2.4% and manpower costs rising faster, JLL absorbs all inflationary increases across a SGD 4.2M/yr contract with no contractual adjustment mechanism. The cumulative exposure across the three-year term is estimated at SGD 300K–750K at current rates. Since the contract is executed, unilateral renegotiation is not available. The recommended path is to document and quantify this exposure monthly, and table a formal variation request at the next commercial review — framing it as mutual protection against market volatility, not a JLL-only concern.
+
+The missing manpower burden rate cap creates a live statutory risk. CPF employer rates, Skills Development Levy, and Foreign Worker Levy are all subject to government adjustment. Account leadership must be briefed now so that any Singapore Budget announcements triggering statutory changes can be actioned immediately — a variation request must be ready to raise before the cost is incurred, not after.
+
+The regulatory change pass-through gap reinforces both risks. In the absence of a renegotiated clause, the mitigation is to track Singapore regulatory changes affecting labour and statutory costs, quantify the cumulative impact on this account each quarter, and escalate with a financial impact statement at the next client commercial review.
+
+These three gaps represent the single highest-priority commercial conversation this account team needs to have with the client. The longer the exposure goes unaddressed, the harder the variation request becomes.`,
+
+  glidepath: `The savings glidepath embedded in this executed contract presents significant delivery risk. Unlike clause gaps, these commitments cannot be walked back — they are binding. The account team needs a plan to deliver them, or a strategy to manage a miss before the measurement date arrives.
+
+The Year 1 commitment of 5% savings against an undocumented baseline is the primary operational concern. Without an agreed, auditable baseline, the client holds the advantage in any savings dispute — and disputes over measurement are almost always resolved against the delivering party when that party also holds operational control. The most urgent action is to establish and obtain client sign-off on a documented baseline before the end of Q1, even if this requires a difficult conversation about what can and cannot be measured.
+
+The 100% hard savings classification in Year 1 is implausible for a contract at this stage of delivery. The account team needs a savings initiative register — specific initiatives, owners, delivery timelines, and expected amounts — before Year 1 closes. If the pipeline shows a gap against the committed target, this must be escalated to account leadership now, not when the measurement date passes.
+
+The front-loading pattern — 5%, 5%, 1% — means Year 3 will look like a cliff drop to the client, regardless of whether the work was done. This is a renewal risk that should be managed in Year 2 by framing the Year 3 target as a deliberate step-down for contract maturity, not a sign of declining performance.
+
+Immediate actions required: (1) Establish and document an agreed baseline with client sign-off within 60 days. (2) Build a savings initiative register with owners and dates. (3) Agree a formal hard-versus-soft savings definition with the client. (4) Brief account leadership on the Year 1 delivery position as soon as the savings pipeline is sized.`,
+
+  invoice: `The invoice audit has identified three anomalies in the May 2026 billing cycle, placing SGD 94,600 — 62% of total submitted spend — on hold. Each finding is actionable without client escalation.
+
+INV-041 · CleanPro SG · SGD 18,400: The 'Periodic Deep Clean — Level 12' charge appears twice in this invoice submission with identical vendor reference numbers. This is likely a vendor billing error. However, given that this vendor has a history of high invoice volume, a systematic review of the last three billing cycles is recommended before the duplicate is written off as a one-off. Recommended action: Reject and return to vendor for corrected resubmission.
+
+INV-047 · AirTech HVAC · SGD 62,000: This invoice has been submitted under a capital expenditure budget code, but the service — quarterly HVAC filter replacement and inspection — is an operational activity within the IFM soft services scope. Incorrect categorisation has budget, tax treatment, and client reporting implications. If the client reviews cost allocation, a SGD 62,000 OPEX charge coded as capex will require explanation. Recommended action: Recode to OPEX / soft services before approval and notify the client finance contact.
+
+INV-052 · SecureGuard · SGD 14,200: No delivery confirmation or receipt has been submitted. Under clause 8.4 of the IFM contract, all invoices above SGD 10,000 require supporting documentation before payment authorisation. This is a compliance issue, not a billing error — the service may have been delivered correctly. Recommended action: Hold payment, contact SecureGuard operations for delivery confirmation within 5 business days.
+
+Total on hold: SGD 94,600. Recommend no payment run proceeds until INV-047 is recoded and INV-041 is replaced by corrected invoice. INV-052 may proceed if receipt is received within the 5-day window.`
+};
+
+// ── ROUTER ───────────────────────────────────────────────────────────
+let current = null;
+
+function navigate(screen) {
+  if (current) {
+    const prev = document.getElementById(current);
+    prev.classList.remove('visible');
+    setTimeout(() => prev.classList.remove('active'), 350);
+  }
+
+  current = screen;
+  const el = document.getElementById(screen);
+  el.classList.add('active');
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('visible')));
+
+  const backNav = document.getElementById('back-nav');
+  if (screen === 'home') {
+    backNav.classList.remove('visible');
+  } else {
+    backNav.classList.add('visible');
+  }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── TYPEWRITER ───────────────────────────────────────────────────────
+function typewriter(targetEl, text, speed = 12) {
+  targetEl.textContent = '';
+  const cursor = document.createElement('span');
+  cursor.className = 'ai-cursor';
+  targetEl.appendChild(cursor);
+
+  let i = 0;
+  function step() {
+    if (i < text.length) {
+      targetEl.insertBefore(document.createTextNode(text[i]), cursor);
+      i++;
+      setTimeout(step, speed);
+    } else {
+      cursor.remove();
+    }
+  }
+  step();
+}
+
+// ── AI PANEL ─────────────────────────────────────────────────────────
+function runAnalysis(tool, btn) {
+  const panel = document.getElementById(tool + '-panel');
+  const textEl = document.getElementById(tool + '-text');
+
+  if (panel.classList.contains('open')) return;
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="icon">◈</span> Analysing…';
+  btn.style.opacity = '0.6';
+
+  setTimeout(() => {
+    panel.classList.add('open');
+    typewriter(textEl, AI[tool], 10);
+    btn.innerHTML = '<span class="icon">◈</span> Analysis complete';
+  }, 900);
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────
+navigate('home');
+</script>
+</body>
+</html>

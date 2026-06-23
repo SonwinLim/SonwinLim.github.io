@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CommEx — Scope Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:          #050B15;
+      --surface:     #091422;
+      --surface-2:   #0E1D30;
+      --gold:        #C4A35A;
+      --gold-bright: #D4B96A;
+      --gold-dim:    rgba(196,163,90,0.12);
+      --red:         #E8392A;
+      --red-dim:     rgba(232,57,42,0.12);
+      --red-mid:     rgba(232,57,42,0.25);
+      --amber:       #E8972A;
+      --amber-dim:   rgba(232,151,42,0.12);
+      --amber-mid:   rgba(232,151,42,0.25);
+      --green:       #2AE896;
+      --green-dim:   rgba(42,232,150,0.10);
+      --text-1:      #EDF1F7;
+      --text-2:      #7B8FA6;
+      --text-3:      #2E4260;
+      --border:      rgba(255,255,255,0.055);
+      --border-gold: rgba(196,163,90,0.28);
+      --mono:        'IBM Plex Mono', monospace;
+      --sans:        'IBM Plex Sans', sans-serif;
+      --serif:       'Cormorant Garamond', Georgia, serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text-1);
+      font-family: var(--sans);
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.028;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.4;
+    }
+
+    #app { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; max-width: 1440px; margin: 0 auto; }
+
+    /* ── HEADER ── */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(5,11,21,0.92);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      font-family: var(--serif);
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+    .brand span {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--text-2);
+      font-size: 16px;
+      letter-spacing: 0.04em;
+      margin-left: 12px;
+    }
+
+    .header-meta {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text-3);
+      letter-spacing: 0.06em;
+      text-align: right;
+    }
+    .header-meta .client-name {
+      color: var(--text-2);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    /* ── BACK NAV ── */
+    #back-nav {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text-2);
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+      padding: 24px 40px 0;
+    }
+    #back-nav:hover { color: var(--gold); }
+    #back-nav svg { transition: transform 0.2s; }
+    #back-nav:hover svg { transform: translateX(-3px); }
+    #back-nav.visible { display: flex; }
+
+    /* ── SCREENS ── */
+    .screen {
+      display: none;
+      flex: 1;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+    .screen.active { display: flex; flex-direction: column; }
+    .screen.visible { opacity: 1; transform: translateY(0); }
+
+    /* ══════════════════════════════════════
+       HOME SCREEN
+    ══════════════════════════════════════ */
+    #home { padding: 48px 40px 40px; gap: 40px; }
+
+    .home-headline {
+      font-family: var(--serif);
+      font-size: clamp(42px, 3.5vw, 68px);
+      font-weight: 600;
+      line-height: 1.15;
+      color: var(--text-1);
+      max-width: 680px;
+    }
+    .home-headline em { font-style: italic; color: var(--gold); }
+
+    .home-sub {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text-2);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .home-sub::before {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    /* ── HOW IT WORKS STRIP ── */
+    .how-strip {
+      display: flex;
+      gap: 0;
+      border: 1px solid var(--border);
+    }
+    .how-step {
+      flex: 1;
+      padding: 20px 24px;
+      border-right: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .how-step:last-child { border-right: none; }
+    .how-num {
+      font-family: var(--serif);
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--text-3);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .how-text {}
+    .how-title {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .how-desc {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--text-2);
+      line-height: 1.5;
+    }
+
+    /* ── CASE CARDS ── */
+    .case-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      flex: 1;
+    }
+
+    .case-card {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: 3px solid;
+      padding: 32px 28px 28px;
+      cursor: pointer;
+      transition: background 0.25s, transform 0.25s;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .case-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .case-card:hover::after { opacity: 0.03; }
+    .case-card:hover { transform: translateY(-3px); }
+
+    .case-card.in-scope  { border-top-color: var(--green); }
+    .case-card.out-scope { border-top-color: var(--red); }
+    .case-card.ambiguous { border-top-color: var(--amber); }
+
+    .case-card.in-scope:hover  { background: color-mix(in srgb, var(--surface) 92%, var(--green)); }
+    .case-card.out-scope:hover { background: color-mix(in srgb, var(--surface) 92%, var(--red)); }
+    .case-card.ambiguous:hover { background: color-mix(in srgb, var(--surface) 92%, var(--amber)); }
+
+    .case-ref {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+
+    .case-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 2px;
+      width: fit-content;
+    }
+    .in-scope  .case-status { background: var(--green-dim); color: var(--green); border: 1px solid rgba(42,232,150,0.2); }
+    .out-scope .case-status { background: var(--red-dim); color: var(--red); border: 1px solid var(--red-mid); }
+    .ambiguous .case-status { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-mid); }
+
+    .case-title {
+      font-family: var(--serif);
+      font-size: 30px;
+      font-weight: 600;
+      color: var(--text-1);
+      line-height: 1.2;
+    }
+
+    .case-service {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      color: var(--text-2);
+      text-transform: uppercase;
+    }
+
+    .case-amount {
+      font-family: var(--mono);
+      font-size: 20px;
+      font-weight: 500;
+      margin-top: 4px;
+    }
+    .in-scope  .case-amount { color: var(--green); }
+    .out-scope .case-amount { color: var(--red); }
+    .ambiguous .case-amount { color: var(--amber); }
+
+    .case-query {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--text-2);
+      line-height: 1.65;
+      font-style: italic;
+      flex: 1;
+      border-left: 2px solid var(--border);
+      padding-left: 12px;
+      margin-top: 4px;
+    }
+
+    .case-cta {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+      transition: color 0.2s, gap 0.2s;
+    }
+    .case-card:hover .case-cta { color: var(--text-2); gap: 10px; }
+
+    .overall-bar {
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 0.07em;
+      color: var(--text-2);
+    }
+    .overall-status { display: flex; align-items: center; gap: 8px; }
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--amber);
+      animation: pulse 2s ease infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    .overall-flag { color: var(--amber); font-weight: 500; }
+    .overall-time { color: var(--text-3); }
+
+    /* ══════════════════════════════════════
+       DETAIL SCREENS
+    ══════════════════════════════════════ */
+    .detail-screen {
+      padding: 32px 40px 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .detail-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 20px;
+    }
+
+    .detail-title {
+      font-family: var(--serif);
+      font-size: 42px;
+      font-weight: 600;
+      color: var(--text-1);
+      line-height: 1.15;
+    }
+    .detail-sub {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text-2);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .detail-badge-wrap { text-align: right; }
+    .detail-badge-label {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .detail-badge-label.green { color: var(--green); }
+    .detail-badge-label.red   { color: var(--red); }
+    .detail-badge-label.amber { color: var(--amber); }
+
+    .detail-badge {
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      padding: 8px 20px;
+      border-radius: 2px;
+    }
+    .detail-badge.green { background: var(--green-dim); color: var(--green); border: 1px solid rgba(42,232,150,0.2); }
+    .detail-badge.red   { background: var(--red-dim); color: var(--red); border: 1px solid var(--red-mid); }
+    .detail-badge.amber { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-mid); }
+
+    /* ── CLIENT QUERY BOX ── */
+    .query-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      padding: 24px 28px;
+    }
+    .query-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .query-label::before { content: ''; display: block; width: 16px; height: 1px; background: var(--gold); }
+    .query-meta {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-3);
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+    .query-text {
+      font-family: var(--sans);
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--text-1);
+      line-height: 1.7;
+      font-style: italic;
+    }
+
+    /* ── TABLE ── */
+    .section-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 14px;
+    }
+    thead th {
+      text-align: left;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      padding: 0 16px 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-weight: 500;
+    }
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+    tbody tr:hover { background: rgba(255,255,255,0.02); }
+    tbody td {
+      padding: 14px 16px 14px 0;
+      vertical-align: middle;
+      color: var(--text-1);
+    }
+
+    .flag-cell {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 2px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+    .flag-in     { background: var(--green-dim);  color: var(--green); border: 1px solid rgba(42,232,150,0.2); }
+    .flag-out    { background: var(--red-dim);    color: var(--red);   border: 1px solid var(--red-mid); }
+    .flag-amb    { background: var(--amber-dim);  color: var(--amber); border: 1px solid var(--amber-mid); }
+    .flag-ok     { background: transparent; color: var(--text-3); }
+
+    /* ── EVIDENCE TRAIL ── */
+    .evidence-list { display: flex; flex-direction: column; gap: 0; }
+    .evidence-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 13px;
+    }
+    .evidence-row:last-child { border-bottom: none; }
+    .ev-id { color: var(--gold); width: 120px; flex-shrink: 0; }
+    .ev-desc { color: var(--text-1); flex: 1; }
+    .ev-time { color: var(--text-3); font-size: 12px; width: 140px; text-align: right; flex-shrink: 0; }
+    .ev-check { font-size: 14px; }
+    .ev-check.ok { color: var(--green); }
+    .ev-check.warn { color: var(--amber); }
+
+    /* ── AI PANEL ── */
+    .ai-section { border-top: 1px solid var(--border); padding-top: 28px; }
+
+    .ai-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--mono);
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-1);
+      background: none;
+      border: 1px solid var(--border-gold);
+      padding: 12px 24px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, gap 0.2s;
+    }
+    .ai-trigger:hover { background: var(--gold-dim); border-color: var(--gold); gap: 14px; }
+    .ai-trigger:disabled { opacity: 0.6; cursor: default; }
+    .ai-trigger .icon { color: var(--gold); }
+
+    .ai-panel {
+      display: none;
+      margin-top: 24px;
+      border-left: 2px solid var(--gold);
+      padding: 24px 28px;
+      background: var(--surface);
+      position: relative;
+    }
+    .ai-panel.open { display: block; }
+
+    .ai-badge {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ai-badge::before { content: ''; display: block; width: 16px; height: 1px; background: var(--gold); }
+
+    .ai-text {
+      font-family: var(--sans);
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--text-1);
+      line-height: 1.8;
+      white-space: pre-wrap;
+    }
+
+    .ai-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: var(--gold);
+      margin-left: 2px;
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .case-grid { grid-template-columns: 1fr; }
+      .how-strip { flex-direction: column; }
+      .how-step { border-right: none; border-bottom: 1px solid var(--border); }
+      .how-step:last-child { border-bottom: none; }
+      header, #home, .detail-screen { padding-left: 20px; padding-right: 20px; }
+      #back-nav.visible { padding-left: 20px; }
+      .detail-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+    }
+
+    @keyframes countUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .case-card:nth-child(1) { animation: countUp 0.5s ease 0.05s both; }
+    .case-card:nth-child(2) { animation: countUp 0.5s ease 0.15s both; }
+    .case-card:nth-child(3) { animation: countUp 0.5s ease 0.25s both; }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ── HEADER ── -->
+  <header>
+    <div>
+      <div class="brand">CommEx <span>Scope Intelligence</span></div>
+    </div>
+    <div class="header-meta">
+      <span class="client-name">MERIDIAN FINANCIAL APAC</span>
+      <span>Fixed-Price IFM · SGD 4.2M / yr · 3 active disputes</span>
+    </div>
+  </header>
+
+  <!-- ── BACK NAV ── -->
+  <div id="back-nav" onclick="navigate('home')">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Back to disputes
+  </div>
+
+  <!-- ══════════════════════════════════════
+       HOME SCREEN
+  ══════════════════════════════════════ -->
+  <section id="home" class="screen">
+    <div>
+      <h1 class="home-headline">Scope disputes <em>answered</em> before the client escalates.</h1>
+      <div class="home-sub">3 active disputes · clause references retrieved · draft responses ready</div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <div class="how-strip">
+      <div class="how-step">
+        <div class="how-num">01</div>
+        <div class="how-text">
+          <div class="how-title">Client raises a query</div>
+          <div class="how-desc">Account team logs the dispute — any format, any wording. The system reads the intent.</div>
+        </div>
+      </div>
+      <div class="how-step">
+        <div class="how-num">02</div>
+        <div class="how-text">
+          <div class="how-title">Contract is queried instantly</div>
+          <div class="how-desc">Service specification, SLA, and exclusion schedule are searched. The relevant clause surfaces in seconds.</div>
+        </div>
+      </div>
+      <div class="how-step">
+        <div class="how-num">03</div>
+        <div class="how-text">
+          <div class="how-title">Response is drafted</div>
+          <div class="how-desc">A professional, clause-referenced client explanation is generated — ready to send or adapt by the account team.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CASE CARDS -->
+    <div class="case-grid">
+
+      <div class="case-card in-scope" onclick="navigate('case1')">
+        <div class="case-ref">WO-2026-441 · Hard Services</div>
+        <div class="case-status">✓ In Scope</div>
+        <div class="case-title">Emergency HVAC Repair</div>
+        <div class="case-service">Level 7 · M&amp;E Reactive · 04 Jun 2026</div>
+        <div class="case-amount">SGD 8,400</div>
+        <div class="case-query">"We were charged for emergency repairs without advance notice. Is this valid?"</div>
+        <div class="case-cta">Review determination <span>→</span></div>
+      </div>
+
+      <div class="case-card out-scope" onclick="navigate('case2')">
+        <div class="case-ref">WO-2026-387 · Capital Works</div>
+        <div class="case-status">✗ Out of Scope</div>
+        <div class="case-title">Carpet Replacement</div>
+        <div class="case-service">Floors D7–D12 · Variation Required · 28 May 2026</div>
+        <div class="case-amount">SGD 42,000</div>
+        <div class="case-query">"We thought maintenance was covered. Why are we being billed separately for carpet?"</div>
+        <div class="case-cta">Review determination <span>→</span></div>
+      </div>
+
+      <div class="case-card ambiguous" onclick="navigate('case3')">
+        <div class="case-ref">WO-2026-408 · Soft Services</div>
+        <div class="case-status">◈ Requires Review</div>
+        <div class="case-title">Event Security Hours</div>
+        <div class="case-service">Board Meeting · Notice Period Unclear · 05 Jun 2026</div>
+        <div class="case-amount">SGD 6,200</div>
+        <div class="case-query">"Are additional security hours for our internal events billable under the contract?"</div>
+        <div class="case-cta">Review determination <span>→</span></div>
+      </div>
+
+    </div>
+
+    <div class="overall-bar">
+      <div class="overall-status">
+        <div class="status-dot"></div>
+        <span>1 dispute <span class="overall-flag">requires account manager review</span> before client response</span>
+      </div>
+      <div class="overall-time">Last analysis: 07 Jun 2026 · 19:14 SGT</div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       CASE 1 — EMERGENCY HVAC REPAIR (IN SCOPE)
+  ══════════════════════════════════════ -->
+  <section id="case1" class="screen">
+    <div class="detail-screen">
+
+      <div class="detail-header">
+        <div>
+          <div class="detail-title">Emergency HVAC Repair</div>
+          <div class="detail-sub">WO-2026-441 · Hard Services · Level 7 · 04 Jun 2026</div>
+        </div>
+        <div class="detail-badge-wrap">
+          <div class="detail-badge-label green">Scope Determination</div>
+          <div class="detail-badge green">✓ IN SCOPE</div>
+        </div>
+      </div>
+
+      <!-- CLIENT QUERY -->
+      <div class="query-box">
+        <div class="query-label">Client Query</div>
+        <div class="query-meta">Received: 05 Jun 2026, 09:22 · From: Meridian FM Operations</div>
+        <div class="query-text">"We have been charged SGD 8,400 for emergency HVAC repairs on Level 7. We were not informed in advance that these works would take place. We would like to understand whether this charge is valid under our contract, and why we were not notified before the work began."</div>
+      </div>
+
+      <!-- CONTRACT ANALYSIS -->
+      <div>
+        <div class="section-label">Contract Analysis — Service Specification &amp; SLA</div>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:32%">Element</th>
+              <th style="width:24%">Source</th>
+              <th style="width:16%">Finding</th>
+              <th>Detail</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Reactive M&amp;E maintenance</td>
+              <td style="color:var(--text-2)">Service Spec, Part 2 §2.1</td>
+              <td><span class="flag-cell flag-in">✓ In Scope</span></td>
+              <td style="color:var(--text-2);font-size:13px">Schedule 2, §3.4 — unplanned reactive maintenance to M&amp;E plant and equipment is explicitly included</td>
+            </tr>
+            <tr>
+              <td>Emergency response (Priority 1)</td>
+              <td style="color:var(--text-2)">SLA, Part 3 §3.1</td>
+              <td><span class="flag-cell flag-in">✓ Compliant</span></td>
+              <td style="color:var(--text-2);font-size:13px">4-hour response target. Technician attended 00:23, fault logged 23:47 — within 37 minutes</td>
+            </tr>
+            <tr>
+              <td>Advance notice requirement</td>
+              <td style="color:var(--text-2)">SLA, §4.2</td>
+              <td><span class="flag-cell flag-in">✓ Exempt</span></td>
+              <td style="color:var(--text-2);font-size:13px">48-hour notice waived for emergency works presenting building operations risk — HVAC failure qualifies</td>
+            </tr>
+            <tr>
+              <td>Rate applied (emergency M&amp;E)</td>
+              <td style="color:var(--text-2)">Schedule 5 — Rate Card</td>
+              <td><span class="flag-cell flag-in">✓ Contracted</span></td>
+              <td style="color:var(--text-2);font-size:13px">SGD 8,400 at contracted emergency reactive rate — no uplift or variation applied</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- EVIDENCE TRAIL -->
+      <div>
+        <div class="section-label">Evidence Trail</div>
+        <div class="evidence-list">
+          <div class="evidence-row">
+            <div class="ev-id">WO-2026-441</div>
+            <div class="ev-desc">Work order raised — HVAC fault, Level 7, classified Priority 1</div>
+            <div class="ev-time">03 Jun · 23:47</div>
+            <div class="ev-check ok">✓</div>
+          </div>
+          <div class="evidence-row">
+            <div class="ev-id">Auto-Auth</div>
+            <div class="ev-desc">Emergency authorisation applied — under SGD 10K threshold, no manual approval required</div>
+            <div class="ev-time">03 Jun · 23:48</div>
+            <div class="ev-check ok">✓</div>
+          </div>
+          <div class="evidence-row">
+            <div class="ev-id">Attendance Log</div>
+            <div class="ev-desc">Technician on site — response time 36 min (SLA target: 4 hrs)</div>
+            <div class="ev-time">04 Jun · 00:23</div>
+            <div class="ev-check ok">✓</div>
+          </div>
+          <div class="evidence-row">
+            <div class="ev-id">Service Record</div>
+            <div class="ev-desc">Works completed, HVAC restored to operational. Signed off by site supervisor</div>
+            <div class="ev-time">04 Jun · 06:15</div>
+            <div class="ev-check ok">✓</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI RESPONSE -->
+      <div class="ai-section">
+        <button class="ai-trigger" onclick="runAnalysis('case1', this)">
+          <span class="icon">◈</span> Generate Client Response
+        </button>
+        <div id="case1-panel" class="ai-panel">
+          <div class="ai-badge">Draft Client Response — Ready to Send</div>
+          <div id="case1-text" class="ai-text"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       CASE 2 — CARPET REPLACEMENT (OUT OF SCOPE)
+  ══════════════════════════════════════ -->
+  <section id="case2" class="screen">
+    <div class="detail-screen">
+
+      <div class="detail-header">
+        <div>
+          <div class="detail-title">Carpet Replacement</div>
+          <div class="detail-sub">WO-2026-387 · Capital Works · Floors D7–D12 · 28 May 2026</div>
+        </div>
+        <div class="detail-badge-wrap">
+          <div class="detail-badge-label red">Scope Determination</div>
+          <div class="detail-badge red">✗ OUT OF SCOPE</div>
+        </div>
+      </div>
+
+      <!-- CLIENT QUERY -->
+      <div class="query-box">
+        <div class="query-label">Client Query</div>
+        <div class="query-meta">Received: 02 Jun 2026, 14:07 · From: Meridian Finance Director</div>
+        <div class="query-text">"We have received an invoice for SGD 42,000 for carpet replacement across Floors D7 to D12. We were under the impression that maintenance of our floors was covered under the IFM contract. Please explain why this is being billed separately and what the basis is."</div>
+      </div>
+
+      <!-- CONTRACT ANALYSIS -->
+      <div>
+        <div class="section-label">Contract Analysis — Service Specification &amp; Exclusion Schedule</div>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:32%">Element</th>
+              <th style="width:24%">Source</th>
+              <th style="width:16%">Finding</th>
+              <th>Detail</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Carpet maintenance (cleaning)</td>
+              <td style="color:var(--text-2)">Service Spec, Part 2 §5</td>
+              <td><span class="flag-cell flag-in">✓ In Scope</span></td>
+              <td style="color:var(--text-2);font-size:13px">Routine vacuuming, spot cleaning, and stain treatment of carpeted areas is included under soft services</td>
+            </tr>
+            <tr>
+              <td>Full floor covering replacement</td>
+              <td style="color:var(--text-2)">Schedule 4 §2 — Exclusions</td>
+              <td><span class="flag-cell flag-out">✗ Excluded</span></td>
+              <td style="color:var(--text-2);font-size:13px">Full replacement of floor coverings constitutes capital expenditure and is explicitly excluded from IFM scope</td>
+            </tr>
+            <tr>
+              <td>Variation order requirement</td>
+              <td style="color:var(--text-2)">Contract §14.1</td>
+              <td><span class="flag-cell flag-out">✗ Not Raised</span></td>
+              <td style="color:var(--text-2);font-size:13px">Works outside Schedule 2 require a signed variation order agreed by both parties before commencement</td>
+            </tr>
+            <tr>
+              <td>Invoice coding</td>
+              <td style="color:var(--text-2)">Billing review</td>
+              <td><span class="flag-cell flag-out">✗ Error</span></td>
+              <td style="color:var(--text-2);font-size:13px">Invoice raised under maintenance billing cycle — should be a formal variation request, not a standard charge</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- EVIDENCE TRAIL -->
+      <div>
+        <div class="section-label">Evidence Trail</div>
+        <div class="evidence-list">
+          <div class="evidence-row">
+            <div class="ev-id">WO-2026-387</div>
+            <div class="ev-desc">Work order raised — full carpet replacement, Floors D7–D12</div>
+            <div class="ev-time">22 May · 11:20</div>
+            <div class="ev-check warn">⚠</div>
+          </div>
+          <div class="evidence-row">
+            <div class="ev-id">No VO Raised</div>
+            <div class="ev-desc">No variation order created — work proceeded without client sign-off on variation scope</div>
+            <div class="ev-time">22–28 May</div>
+            <div class="ev-check warn">⚠</div>
+          </div>
+          <div class="evidence-row">
+            <div class="ev-id">INV-2026-062</div>
+            <div class="ev-desc">Invoice issued under standard maintenance code — incorrect billing category applied</div>
+            <div class="ev-time">01 Jun · 09:00</div>
+            <div class="ev-check warn">⚠</div>
+          </div>
+          <div class="evidence-row">
+            <div class="ev-id">Action Required</div>
+            <div class="ev-desc">Withdraw current invoice · Reissue as variation order request · Obtain client approval before payment</div>
+            <div class="ev-time">Pending</div>
+            <div class="ev-check warn">⚠</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI RESPONSE -->
+      <div class="ai-section">
+        <button class="ai-trigger" onclick="runAnalysis('case2', this)">
+          <span class="icon">◈</span> Generate Client Response
+        </button>
+        <div id="case2-panel" class="ai-panel">
+          <div class="ai-badge">Draft Client Response — Ready to Send</div>
+          <div id="case2-text" class="ai-text"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       CASE 3 — EVENT SECURITY (AMBIGUOUS)
+  ══════════════════════════════════════ -->
+  <section id="case3" class="screen">
+    <div class="detail-screen">
+
+      <div class="detail-header">
+        <div>
+          <div class="detail-title">Event Security Hours</div>
+          <div class="detail-sub">WO-2026-408 · Soft Services · Board Meeting · 05 Jun 2026</div>
+        </div>
+        <div class="detail-badge-wrap">
+          <div class="detail-badge-label amber">Scope Determination</div>
+          <div class="detail-badge amber">◈ REQUIRES REVIEW</div>
+        </div>
+      </div>
+
+      <!-- CLIENT QUERY -->
+      <div class="query-box">
+        <div class="query-label">Client Query</div>
+        <div class="query-meta">Received: 06 Jun 2026, 10:45 · From: Meridian Office Manager</div>
+        <div class="query-text">"We have received a charge of SGD 6,200 for additional security coverage during our board meeting on 5 June. We were not aware that additional security hours would be billed separately. Are these hours chargeable under the contract, and if so, what is the basis?"</div>
+      </div>
+
+      <!-- CONTRACT ANALYSIS -->
+      <div>
+        <div class="section-label">Contract Analysis — SLA §6 Security Services</div>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:32%">Element</th>
+              <th style="width:24%">Source</th>
+              <th style="width:16%">Finding</th>
+              <th>Detail</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Standard security coverage</td>
+              <td style="color:var(--text-2)">Schedule 2, §6</td>
+              <td><span class="flag-cell flag-in">✓ In Scope</span></td>
+              <td style="color:var(--text-2);font-size:13px">Mon–Fri 07:00–22:00, Sat 08:00–14:00. Board meeting ran Fri 17:00–21:30 — within standard hours</td>
+            </tr>
+            <tr>
+              <td>Additional headcount for event</td>
+              <td style="color:var(--text-2)">SLA, §6.2</td>
+              <td><span class="flag-cell flag-amb">◈ Conditional</span></td>
+              <td style="color:var(--text-2);font-size:13px">Extended coverage and additional personnel for events requires 5 business days' written notice from client</td>
+            </tr>
+            <tr>
+              <td>Notice period compliance</td>
+              <td style="color:var(--text-2)">WO-2026-408 timestamp</td>
+              <td><span class="flag-cell flag-out">✗ Not Met</span></td>
+              <td style="color:var(--text-2);font-size:13px">Work order raised same day as event (05 Jun). 5-day notice requirement not satisfied</td>
+            </tr>
+            <tr>
+              <td>Charge validity</td>
+              <td style="color:var(--text-2)">Account manager review</td>
+              <td><span class="flag-cell flag-amb">◈ Disputed</span></td>
+              <td style="color:var(--text-2);font-size:13px">If notice was not given, contractual basis for additional headcount charge is ambiguous — requires judgment call</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- EVIDENCE TRAIL -->
+      <div>
+        <div class="section-label">Evidence Trail</div>
+        <div class="evidence-list">
+          <div class="evidence-row">
+            <div class="ev-id">WO-2026-408</div>
+            <div class="ev-desc">Work order raised — additional security, board meeting, same-day request</div>
+            <div class="ev-time">05 Jun · 08:30</div>
+            <div class="ev-check warn">⚠</div>
+          </div>
+          <div class="evidence-row">
+            <div class="ev-id">SLA §6.2</div>
+            <div class="ev-desc">5 business days' notice required for event coverage — not provided. No client sign-off on record</div>
+            <div class="ev-time">Required: 29 May</div>
+            <div class="ev-check warn">⚠</div>
+          </div>
+          <div class="evidence-row">
+            <div class="ev-id">Attendance Log</div>
+            <div class="ev-desc">2 additional security officers deployed 17:00–22:00 (5 hrs each). Total: 10 officer-hours at event rate</div>
+            <div class="ev-time">05 Jun · 17:00</div>
+            <div class="ev-check ok">✓</div>
+          </div>
+          <div class="evidence-row">
+            <div class="ev-id">Action Required</div>
+            <div class="ev-desc">Account manager to determine: absorb as goodwill, or negotiate with client. Do not send standard response.</div>
+            <div class="ev-time">Escalated</div>
+            <div class="ev-check warn">⚠</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI RESPONSE -->
+      <div class="ai-section">
+        <button class="ai-trigger" onclick="runAnalysis('case3', this)">
+          <span class="icon">◈</span> Generate Account Manager Brief
+        </button>
+        <div id="case3-panel" class="ai-panel">
+          <div class="ai-badge">Account Manager Briefing — Internal Use Only</div>
+          <div id="case3-text" class="ai-text"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div><!-- #app -->
+
+<script>
+// ── PRE-WRITTEN RESPONSES ────────────────────────────────────────────
+const AI = {
+  case1: `Dear [Client contact],
+
+Thank you for raising this query. I have reviewed work order WO-2026-441 against the service specification and SLA in place for your account, and I am happy to provide a full explanation.
+
+The emergency HVAC repair carried out on Level 7 on 4 June falls within scope under Schedule 2, Section 3.4 of your service agreement, which covers unplanned reactive maintenance to mechanical and electrical plant and equipment. This category is explicitly included in your fixed-price IFM contract and does not require a separate work authorisation.
+
+On the question of advance notice: Section 4.2 of the SLA establishes that emergency works — defined as faults presenting a risk to building operations or occupant safety — are exempt from the standard 48-hour notification requirement. The HVAC failure was logged at 23:47 on 3 June and classified as a Priority 1 emergency. Our SLA requires a four-hour response; our technician was on site at 00:23 on 4 June, within 37 minutes of the fault being reported.
+
+The charge of SGD 8,400 has been calculated at the contracted unit rate for emergency M&E reactive works, as set out in Schedule 5 of your agreement. No uplift or additional cost has been applied. The service record — signed by the site supervisor at 06:15 on 4 June — is available for your review, together with the attendance log and the original fault report.
+
+This charge is correctly applied under your contract. Please do not hesitate to contact us if you would like us to share the full documentation package or discuss any aspect of the response further.`,
+
+  case2: `Dear [Client contact],
+
+Thank you for your query regarding work order WO-2026-387, and for raising this before the invoice was processed. I want to address this clearly and directly.
+
+Having reviewed your service agreement, I can confirm that full carpet replacement for Floors D7–D12 is not within scope under your current IFM contract. Schedule 2, Section 5 covers soft services for carpeted areas — including routine vacuuming, spot cleaning and stain treatment — all of which are included in your fixed-price arrangement. However, Schedule 4, Section 2 (Capital Works Exclusions) explicitly excludes full replacement of floor coverings, as this constitutes capital expenditure rather than an operational maintenance activity.
+
+This means the work should have been processed as a formal variation order under Clause 14.1 of your contract, which requires written agreement from both parties before any out-of-scope work commences. I must also acknowledge that the invoice should not have been raised under the standard maintenance billing cycle. I apologise for the confusion this has caused.
+
+We will withdraw the current invoice immediately and reissue the request correctly as a variation order for your review and approval. You are under no obligation to approve the variation at the current pricing, and we are happy to discuss the scope, timeline, and cost in detail before any commitment is made on your side.
+
+I will follow up with the formal variation order document within two business days. Please let me know if you have any questions in the meantime.`,
+
+  case3: `INTERNAL — ACCOUNT MANAGER BRIEFING
+Case: WO-2026-408 · Event Security · SGD 6,200
+
+DO NOT send a standard client response until this has been reviewed.
+
+Summary of the issue:
+The client is querying additional security charges for their board meeting on 5 June. The contract (SLA §6.2) requires five business days' written notice for event-specific security coverage beyond the standard service hours. The work order was raised on the day of the event. The notice requirement was not met.
+
+This creates a genuine ambiguity. The services were delivered and the staff were deployed — the cost is real. However, the contractual basis for billing those additional hours is not clean, because the client did not request them in writing with the required lead time. If they push back on this charge, they have a reasonable argument under §6.2.
+
+Two options for your consideration:
+
+Option 1 — Absorb and address: Write off the SGD 6,200 as a goodwill gesture for this event, and use the conversation to formalise how event security will be handled going forward. Propose a standing SLA addendum that gives the client a named contact and a streamlined same-day request process at an agreed pre-approved rate. This converts a billing dispute into a service improvement.
+
+Option 2 — Negotiate with context: Acknowledge the notice shortfall, but make the case that the service was requested (even informally), delivered, and genuinely protected their board meeting. Offer a 20–30% reduction on this occasion, and put the event addendum in place to avoid a repeat. This recovers partial cost and demonstrates commercial reasonableness.
+
+Recommended client script if they escalate:
+"We acknowledge that the formal notice requirement under §6.2 was not met on this occasion, and we take responsibility for not raising this with you in advance. We want to make this right and also put a cleaner process in place so this doesn't happen again. We're proposing [option selected above]."
+
+Avoid: sending a clause-only response that makes the client feel they are being told they are wrong. The relationship is more valuable than the SGD 6,200.`
+};
+
+// ── ROUTER ───────────────────────────────────────────────────────────
+let current = null;
+
+function navigate(screen) {
+  if (current) {
+    const prev = document.getElementById(current);
+    prev.classList.remove('visible');
+    setTimeout(() => prev.classList.remove('active'), 350);
+  }
+
+  current = screen;
+  const el = document.getElementById(screen);
+  el.classList.add('active');
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('visible')));
+
+  const backNav = document.getElementById('back-nav');
+  if (screen === 'home') {
+    backNav.classList.remove('visible');
+  } else {
+    backNav.classList.add('visible');
+  }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── TYPEWRITER ───────────────────────────────────────────────────────
+function typewriter(targetEl, text, speed = 10) {
+  targetEl.textContent = '';
+  const cursor = document.createElement('span');
+  cursor.className = 'ai-cursor';
+  targetEl.appendChild(cursor);
+
+  let i = 0;
+  function step() {
+    if (i < text.length) {
+      targetEl.insertBefore(document.createTextNode(text[i]), cursor);
+      i++;
+      setTimeout(step, speed);
+    } else {
+      cursor.remove();
+    }
+  }
+  step();
+}
+
+// ── AI PANEL ─────────────────────────────────────────────────────────
+function runAnalysis(tool, btn) {
+  const panel = document.getElementById(tool + '-panel');
+  const textEl = document.getElementById(tool + '-text');
+
+  if (panel.classList.contains('open')) return;
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="icon">◈</span> Analysing contract…';
+
+  setTimeout(() => {
+    panel.classList.add('open');
+    btn.innerHTML = '<span class="icon">◈</span> Response ready';
+    typewriter(textEl, AI[tool], 8);
+  }, 900);
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────
+navigate('home');
+</script>
+</body>
+</html>

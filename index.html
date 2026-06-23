@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ray Lim — Business Development × Engineering-grade AI</title>
+<meta name="description" content="Ray Lim (Lim Zirui) — 14+ years of regional Business Development leadership fused with advanced Python and agentic AI. Singapore." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+  :root{
+    --ink:        #0c0d0f;   /* near-black hull */
+    --ink-2:      #16181c;   /* panel */
+    --ink-3:      #1f2228;   /* raised panel */
+    --line:       #2c3037;   /* hairline */
+    --line-soft:  #20242a;
+    --paper:      #ece7dc;   /* warm paper-white */
+    --paper-dim:  #a7a294;   /* muted label */
+    --paper-faint:#6f6c63;
+    --signal:     #ff7a18;   /* cockpit amber */
+    --signal-2:   #ffb061;   /* amber glow */
+
+    --serif: "Newsreader", Georgia, serif;
+    --display: "Fraunces", Georgia, serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+
+    --maxw: 1180px;
+    --ease: cubic-bezier(.22,.61,.36,1);
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:var(--serif);
+    font-weight:300;
+    font-size:18px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  /* film grain overlay */
+  body::after{
+    content:"";
+    position:fixed; inset:0; z-index:9999; pointer-events:none;
+    opacity:.045; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  ::selection{ background:var(--signal); color:var(--ink); }
+
+  a{ color:inherit; text-decoration:none; }
+
+  .wrap{ width:100%; max-width:var(--maxw); margin:0 auto; padding:0 32px; }
+
+  .mono{ font-family:var(--mono); }
+  .label{
+    font-family:var(--mono); font-size:11px; font-weight:500;
+    letter-spacing:.28em; text-transform:uppercase; color:var(--paper-dim);
+  }
+  .signal{ color:var(--signal); }
+
+  /* ───────────────────────── NAV ───────────────────────── */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    backdrop-filter:blur(8px);
+    background:linear-gradient(to bottom, rgba(12,13,15,.92), rgba(12,13,15,0));
+    transition:background .4s var(--ease);
+  }
+  nav.docked{ background:rgba(12,13,15,.94); border-bottom:1px solid var(--line-soft); }
+  .nav-inner{ display:flex; align-items:center; justify-content:space-between; height:64px; }
+  .monogram{
+    font-family:var(--display); font-weight:600; font-size:20px; letter-spacing:.02em;
+    display:flex; align-items:center; gap:10px;
+  }
+  .monogram .dot{ width:8px; height:8px; background:var(--signal); border-radius:50%;
+    box-shadow:0 0 12px var(--signal); animation:pulse 3s var(--ease) infinite; }
+  @keyframes pulse{ 0%,100%{opacity:1; transform:scale(1);} 50%{opacity:.45; transform:scale(.7);} }
+  .nav-links{ display:flex; gap:34px; }
+  .nav-links a{
+    font-family:var(--mono); font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--paper-dim); transition:color .25s var(--ease); position:relative;
+  }
+  .nav-links a:hover{ color:var(--paper); }
+  .nav-links a::after{
+    content:""; position:absolute; left:0; bottom:-6px; height:1px; width:0; background:var(--signal);
+    transition:width .3s var(--ease);
+  }
+  .nav-links a:hover::after{ width:100%; }
+  @media(max-width:760px){ .nav-links{ display:none; } }
+
+  /* ───────────────────────── HERO ───────────────────────── */
+  header.hero{
+    min-height:100vh; display:flex; flex-direction:column; justify-content:center;
+    position:relative; padding:120px 0 80px;
+    background:
+      radial-gradient(120% 80% at 85% -10%, rgba(255,122,24,.10), transparent 55%),
+      radial-gradient(90% 70% at 0% 110%, rgba(255,122,24,.05), transparent 50%);
+  }
+  /* hairline grid backdrop */
+  header.hero::before{
+    content:""; position:absolute; inset:0; z-index:0; opacity:.5;
+    background-image:
+      linear-gradient(var(--line-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+    background-size:100% 96px, 96px 100%;
+    -webkit-mask-image:radial-gradient(120% 90% at 50% 40%, #000 30%, transparent 75%);
+            mask-image:radial-gradient(120% 90% at 50% 40%, #000 30%, transparent 75%);
+  }
+  .hero .wrap{ position:relative; z-index:2; }
+
+  .hero-grid{ display:grid; grid-template-columns:1.45fr .9fr; gap:64px; align-items:center; }
+  @media(max-width:900px){ .hero-grid{ grid-template-columns:1fr; gap:48px; } .hero-text{ order:2; } .hero-portrait{ order:1; } }
+
+  /* operator-ID portrait card */
+  .hero-portrait{ margin:0; position:relative; justify-self:end; width:100%; max-width:380px; }
+  @media(max-width:900px){ .hero-portrait{ justify-self:start; max-width:300px; } }
+  .hero-portrait::after{ /* amber halo behind frame */
+    content:""; position:absolute; inset:-12% -8% -8% -12%; z-index:-1; border-radius:50%;
+    background:radial-gradient(closest-side, rgba(255,122,24,.20), transparent 75%);
+    filter:blur(8px);
+  }
+  .hero-portrait .frame{
+    position:relative; padding:10px; border:1px solid var(--line);
+    background:linear-gradient(160deg, var(--ink-3), var(--ink-2));
+    box-shadow:0 30px 70px -30px rgba(0,0,0,.8);
+  }
+  .hero-portrait img{
+    display:block; width:100%; height:auto;
+    filter:saturate(1.02) contrast(1.02);
+    transition:filter .5s var(--ease), transform .6s var(--ease);
+  }
+  .hero-portrait:hover img{ filter:saturate(1.12) contrast(1.05); }
+  /* corner registration brackets */
+  .hero-portrait .bracket{ position:absolute; width:20px; height:20px; z-index:3; pointer-events:none; }
+  .hero-portrait .bracket.tl{ top:-1px; left:-1px; border-top:2px solid var(--signal); border-left:2px solid var(--signal); }
+  .hero-portrait .bracket.br{ bottom:-1px; right:-1px; border-bottom:2px solid var(--signal); border-right:2px solid var(--signal); }
+  .hero-portrait figcaption{
+    display:flex; justify-content:space-between; align-items:center; gap:12px;
+    margin-top:10px; padding-top:10px; border-top:1px solid var(--line);
+    font-family:var(--mono); font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--paper-dim);
+  }
+
+  .hero-coords{
+    display:flex; gap:28px; flex-wrap:wrap; margin-bottom:42px;
+  }
+  .hero-coords span{ font-family:var(--mono); font-size:11px; letter-spacing:.2em; color:var(--paper-faint); text-transform:uppercase; }
+  .hero-coords span b{ color:var(--paper-dim); font-weight:500; }
+
+  h1{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:clamp(3.2rem, 11vw, 9.5rem);
+    line-height:.92;
+    letter-spacing:-.02em;
+    margin:0;
+  }
+  h1 .ray{ font-style:italic; font-weight:400; color:var(--signal); }
+  h1 .sur{ display:block; }
+
+  .tag{
+    margin-top:34px;
+    max-width:760px;
+    font-family:var(--serif);
+    font-size:clamp(1.15rem, 2vw, 1.55rem);
+    font-weight:300; line-height:1.45; color:var(--paper);
+  }
+  .tag b{ font-weight:500; color:var(--paper); font-style:italic; font-family:var(--display); }
+
+  .hero-roles{ margin-top:30px; display:flex; gap:14px 26px; flex-wrap:wrap; }
+  .hero-roles span{ font-family:var(--mono); font-size:12px; letter-spacing:.06em; color:var(--paper-dim); }
+  .hero-roles span::before{ content:"→ "; color:var(--signal); }
+
+  .hero-cta{ margin-top:54px; display:flex; gap:18px; flex-wrap:wrap; align-items:center; }
+  .btn{
+    font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    padding:15px 26px; border:1px solid var(--line); color:var(--paper);
+    transition:all .3s var(--ease); display:inline-flex; align-items:center; gap:10px;
+  }
+  .btn.primary{ background:var(--signal); color:var(--ink); border-color:var(--signal); font-weight:600; }
+  .btn.primary:hover{ background:var(--signal-2); border-color:var(--signal-2); box-shadow:0 0 30px rgba(255,122,24,.4); transform:translateY(-2px); }
+  .btn:hover{ border-color:var(--signal); color:var(--signal); }
+  .demos-callout{ margin-top:48px; border:1px solid var(--line); border-left:3px solid var(--signal); background:var(--ink-2); padding:24px 28px; display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap; }
+  .demos-callout-left .label{ margin-bottom:8px; display:block; }
+  .demos-callout-left p{ font-size:0.95rem; color:var(--paper-dim); margin:0; max-width:480px; line-height:1.5; }
+
+  .scroll-hint{
+    position:absolute; bottom:34px; left:50%; transform:translateX(-50%);
+    font-family:var(--mono); font-size:10px; letter-spacing:.3em; text-transform:uppercase; color:var(--paper-faint);
+    display:flex; flex-direction:column; align-items:center; gap:10px; z-index:2;
+  }
+  .scroll-hint .bar{ width:1px; height:42px; background:linear-gradient(var(--signal), transparent); animation:drop 2.2s var(--ease) infinite; }
+  @keyframes drop{ 0%{transform:scaleY(0); transform-origin:top;} 50%{transform:scaleY(1); transform-origin:top;} 100%{transform:scaleY(0); transform-origin:bottom;} }
+
+  /* ───────────────────── SECTION SCAFFOLD ───────────────────── */
+  section{ padding:120px 0; position:relative; border-top:1px solid var(--line-soft); }
+  .sec-head{ display:flex; align-items:baseline; gap:20px; margin-bottom:62px; }
+  .sec-head .idx{ font-family:var(--mono); font-size:12px; color:var(--signal); letter-spacing:.1em; }
+  .sec-head h2{
+    font-family:var(--display); font-weight:500; font-size:clamp(1.9rem,4vw,3rem);
+    letter-spacing:-.01em; line-height:1;
+  }
+  .sec-head .rule{ flex:1; height:1px; background:var(--line); align-self:center; }
+
+  /* ───────────────────── PROFILE ───────────────────── */
+  .profile-grid{ display:grid; grid-template-columns:1fr 1.4fr; gap:60px; align-items:start; }
+  @media(max-width:840px){ .profile-grid{ grid-template-columns:1fr; gap:36px; } }
+  .profile-lead{ font-family:var(--display); font-weight:400; font-size:clamp(1.5rem,3vw,2.1rem); line-height:1.28; letter-spacing:-.01em; }
+  .profile-lead em{ color:var(--signal); font-style:italic; }
+  .section-sub{ font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--paper-faint); }
+  .profile-body p{ color:var(--paper-dim); font-size:1.08rem; margin-bottom:20px; }
+  .profile-body p b{ color:var(--paper); font-weight:500; }
+
+  /* ───────────────────── METRICS ───────────────────── */
+  .metrics{ display:grid; grid-template-columns:repeat(4,1fr); gap:0; border:1px solid var(--line); }
+  @media(max-width:840px){ .metrics{ grid-template-columns:repeat(2,1fr); } }
+  @media(max-width:460px){ .metrics{ grid-template-columns:1fr; } }
+  .metric{
+    padding:38px 30px; border-right:1px solid var(--line); position:relative; overflow:hidden;
+    transition:background .4s var(--ease);
+  }
+  .metric:last-child{ border-right:none; }
+  @media(max-width:840px){ .metric:nth-child(2){border-right:none;} .metric{border-bottom:1px solid var(--line);} }
+  .metric:hover{ background:var(--ink-2); }
+  .metric::before{ content:""; position:absolute; top:0; left:0; height:2px; width:0; background:var(--signal); transition:width .5s var(--ease); }
+  .metric:hover::before{ width:100%; }
+  .metric .num{ font-family:var(--display); font-weight:600; font-size:clamp(2.6rem,5vw,3.6rem); line-height:1; letter-spacing:-.02em; color:var(--paper); }
+  .metric .num .unit{ color:var(--signal); }
+  .metric .cap{ margin-top:14px; font-family:var(--mono); font-size:11px; letter-spacing:.08em; line-height:1.5; color:var(--paper-dim); text-transform:uppercase; }
+
+  /* ───────────────────── RESULTS ───────────────────── */
+  .results{ display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:var(--line-soft); border:1px solid var(--line-soft); }
+  @media(max-width:760px){ .results{ grid-template-columns:1fr; } }
+  .result{ background:var(--ink); padding:40px 36px; transition:background .35s var(--ease); }
+  .result:hover{ background:var(--ink-2); }
+  .result .big{ font-family:var(--display); font-weight:600; font-size:clamp(2rem,4vw,2.7rem); color:var(--signal); line-height:1; letter-spacing:-.02em; }
+  .result .ctx{ margin-top:16px; font-size:1.05rem; color:var(--paper); line-height:1.45; }
+  .result .org{ margin-top:14px; font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--paper-faint); }
+
+  /* ───────────────────── TIMELINE ───────────────────── */
+  .tl{ position:relative; }
+  .tl::before{ content:""; position:absolute; left:148px; top:6px; bottom:6px; width:1px; background:var(--line); }
+  @media(max-width:760px){ .tl::before{ left:8px; } }
+  .job{ display:grid; grid-template-columns:148px 1fr; gap:0; padding:0 0 56px; position:relative; }
+  @media(max-width:760px){ .job{ grid-template-columns:1fr; padding-left:36px; } }
+  .job .when{ font-family:var(--mono); font-size:11px; letter-spacing:.06em; color:var(--paper-faint); padding-top:5px; text-align:right; padding-right:34px; }
+  @media(max-width:760px){ .job .when{ text-align:left; padding:0 0 10px; } }
+  .job .node{ position:absolute; left:142px; top:8px; width:13px; height:13px; border-radius:50%; background:var(--ink); border:2px solid var(--line); transition:all .3s var(--ease); z-index:2; }
+  @media(max-width:760px){ .job .node{ left:2px; } }
+  .job:hover .node{ border-color:var(--signal); background:var(--signal); box-shadow:0 0 16px rgba(255,122,24,.6); }
+  .job .body{ padding-left:36px; }
+  @media(max-width:760px){ .job .body{ padding-left:0; } }
+  .job .role{ font-family:var(--display); font-weight:600; font-size:1.4rem; letter-spacing:-.01em; line-height:1.15; }
+  .job .co{ font-family:var(--mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--signal); margin-top:6px; }
+  .job .co .note{ color:var(--paper-faint); text-transform:none; letter-spacing:.02em; }
+  .job ul{ list-style:none; margin-top:18px; }
+  .job ul li{ position:relative; padding-left:22px; margin-bottom:11px; color:var(--paper-dim); font-size:1.02rem; line-height:1.5; }
+  .job ul li::before{ content:"—"; position:absolute; left:0; color:var(--signal); }
+  .job ul li b{ color:var(--paper); font-weight:500; }
+
+  /* ───────────────────── CAPABILITIES ───────────────────── */
+  .cap-grid{ display:grid; grid-template-columns:1fr 1fr; gap:54px; }
+  @media(max-width:760px){ .cap-grid{ grid-template-columns:1fr; gap:42px; } }
+  .cap-col h3{ font-family:var(--mono); font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--signal); margin-bottom:24px; padding-bottom:14px; border-bottom:1px solid var(--line); }
+  .chips{ display:flex; flex-wrap:wrap; gap:10px; }
+  .chip{
+    font-family:var(--mono); font-size:12px; letter-spacing:.02em; color:var(--paper-dim);
+    padding:8px 14px; border:1px solid var(--line-soft); transition:all .25s var(--ease);
+  }
+  .chip:hover{ border-color:var(--signal); color:var(--paper); transform:translateY(-2px); }
+
+  /* ───────────────────── EDUCATION / AWARDS ───────────────────── */
+  .ea-grid{ display:grid; grid-template-columns:1.3fr 1fr; gap:60px; }
+  @media(max-width:840px){ .ea-grid{ grid-template-columns:1fr; gap:42px; } }
+  .edu-item{ padding:24px 0; border-bottom:1px solid var(--line-soft); }
+  .edu-item:first-child{ padding-top:0; }
+  .edu-item .deg{ font-family:var(--display); font-weight:500; font-size:1.3rem; }
+  .edu-item .meta{ font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--paper-faint); margin-top:7px; }
+  .edu-item .gpa{ color:var(--signal); }
+  .edu-item p{ color:var(--paper-dim); font-size:.98rem; margin-top:10px; }
+  .awards li{ list-style:none; padding:16px 0; border-bottom:1px solid var(--line-soft); display:flex; gap:14px; align-items:baseline; color:var(--paper); font-size:1.02rem; }
+  .awards li .yr{ font-family:var(--mono); font-size:11px; color:var(--signal); letter-spacing:.1em; min-width:44px; }
+  .extra{ margin-top:28px; }
+  .extra .label{ display:block; margin-bottom:12px; }
+  .extra p{ color:var(--paper-dim); font-size:.98rem; }
+
+  /* ───────────────────── CONTACT ───────────────────── */
+  footer{ padding:120px 0 60px; border-top:1px solid var(--line-soft);
+    background:radial-gradient(100% 120% at 50% 100%, rgba(255,122,24,.08), transparent 60%); }
+  .contact-lead{ font-family:var(--display); font-weight:500; font-size:clamp(2.4rem,7vw,5.5rem); line-height:1; letter-spacing:-.02em; max-width:900px; }
+  .contact-lead em{ font-style:italic; color:var(--signal); }
+  .contact-grid{ margin-top:60px; display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line-soft); border:1px solid var(--line-soft); }
+  @media(max-width:680px){ .contact-grid{ grid-template-columns:1fr; } }
+  .contact-grid a, .contact-grid div{ background:var(--ink); padding:30px; transition:background .3s var(--ease); }
+  .contact-grid a:hover{ background:var(--ink-2); }
+  .contact-grid .label{ display:block; margin-bottom:10px; }
+  .contact-grid .val{ font-family:var(--serif); font-size:1.15rem; color:var(--paper); word-break:break-word; }
+  .contact-grid a:hover .val{ color:var(--signal); }
+  .foot-bar{ margin-top:54px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
+  .foot-bar .mono{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--paper-faint); }
+
+  /* ───────────────────── AI IN PRACTICE ───────────────────── */
+  .pipeline{ border:1px solid var(--line); background:linear-gradient(160deg, var(--ink-2), var(--ink)); padding:34px 30px; }
+  .pipe-readout{ display:flex; align-items:baseline; gap:16px; margin-bottom:30px; flex-wrap:wrap; }
+  .pipe-readout .big{ font-family:var(--display); font-weight:600; font-size:clamp(1.8rem,4vw,2.6rem); color:var(--signal); line-height:1; letter-spacing:-.02em; }
+  .pipe-readout .big em{ font-style:normal; font-family:var(--mono); font-size:.4em; letter-spacing:.1em; color:var(--paper-dim); text-transform:uppercase; }
+
+  .pipe-flow{ display:flex; align-items:stretch; gap:0; }
+  @media(max-width:760px){ .pipe-flow{ flex-direction:column; } }
+  .pnode{ flex:1; display:flex; flex-direction:column; gap:8px; justify-content:center; padding:18px 12px; border:1px solid var(--line-soft); background:var(--ink); text-align:center; transition:border-color .3s var(--ease), background .3s var(--ease); }
+  .pnode:hover{ border-color:var(--signal); background:var(--ink-3); }
+  .pnode .pn{ font-family:var(--mono); font-size:10px; letter-spacing:.2em; color:var(--signal); }
+  .pnode .pl{ font-family:var(--display); font-size:1.02rem; color:var(--paper); line-height:1.1; }
+  .pconn{ flex:0 0 30px; align-self:center; height:2px; background:var(--line); position:relative; transform:scaleX(0); transform-origin:left; transition:transform .5s var(--ease); }
+  .pconn::after{ content:"›"; position:absolute; right:-3px; top:50%; transform:translateY(-55%); color:var(--signal); font-family:var(--mono); font-size:15px; }
+  @media(max-width:760px){
+    .pconn{ flex-basis:20px; width:2px; height:20px; transform:scaleY(0); transform-origin:top; margin:0 auto; }
+    .pconn::after{ content:"⌄"; right:auto; left:50%; top:auto; bottom:-7px; transform:translateX(-50%); }
+  }
+  .pipeline.in .pconn{ transform:scaleX(1); transition-delay:.18s; }
+  @media(max-width:760px){ .pipeline.in .pconn{ transform:scaleY(1); } }
+  .pipe-foot{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-top:26px; }
+  .pipe-tools{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .pipe-hitl{ font-family:var(--mono); font-size:11px; letter-spacing:.05em; color:var(--paper-dim); display:flex; align-items:center; gap:8px; }
+  .pipe-hitl .hdot{ width:7px; height:7px; border-radius:50%; background:var(--signal); box-shadow:0 0 10px var(--signal); flex:none; }
+
+  /* built in the open */
+  .open-grid{ display:grid; grid-template-columns:1fr 1fr; gap:30px; margin-top:60px; align-items:center; }
+  @media(max-width:840px){ .open-grid{ grid-template-columns:1fr; } }
+  .open-note h3{ font-family:var(--display); font-weight:500; font-size:clamp(1.4rem,3vw,1.9rem); margin-bottom:14px; line-height:1.18; letter-spacing:-.01em; }
+  .open-note p{ color:var(--paper-dim); font-size:1.04rem; margin-bottom:18px; }
+  .open-note p b{ color:var(--paper); font-weight:500; }
+  .open-stack{ display:flex; flex-wrap:wrap; gap:8px; }
+  .term{ border:1px solid var(--line); background:#08090b; font-family:var(--mono); font-size:12.5px; line-height:1.75; box-shadow:0 30px 70px -34px rgba(0,0,0,.8); }
+  .term-bar{ display:flex; align-items:center; gap:7px; padding:11px 14px; border-bottom:1px solid var(--line-soft); }
+  .term-bar i{ width:11px; height:11px; border-radius:50%; background:var(--line); }
+  .term-bar i:nth-child(1){ background:#ff5f56; } .term-bar i:nth-child(2){ background:#ffbd2e; } .term-bar i:nth-child(3){ background:#27c93f; }
+  .term-bar small{ margin-left:8px; color:var(--paper-faint); font-size:11px; letter-spacing:.05em; }
+  .term-body{ padding:16px; color:var(--paper-dim); white-space:pre-wrap; }
+  .term-body .pr{ color:var(--signal); } .term-body .cm{ color:var(--paper); } .term-body .ok{ color:#27c93f; }
+
+  /* capability tiles */
+  .tiles{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line-soft); border:1px solid var(--line-soft); margin-top:60px; }
+  @media(max-width:760px){ .tiles{ grid-template-columns:1fr 1fr; } }
+  @media(max-width:460px){ .tiles{ grid-template-columns:1fr; } }
+  .tile{ background:var(--ink); padding:28px 24px; transition:background .3s var(--ease); }
+  .tile:hover{ background:var(--ink-2); }
+  .tile .tn{ font-family:var(--mono); font-size:10px; letter-spacing:.18em; color:var(--signal); }
+  .tile h4{ font-family:var(--display); font-weight:500; font-size:1.16rem; margin:10px 0 8px; line-height:1.15; }
+  .tile-flow{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin:14px 0 10px; }
+  .tstep{ font-family:var(--mono); font-size:9.5px; letter-spacing:.03em; color:var(--paper); padding:5px 8px; border:1px solid var(--line-soft); background:var(--ink-2); white-space:nowrap; }
+  .tarr{ font-family:var(--mono); font-size:10px; color:var(--signal); flex:none; }
+  .tile p{ font-family:var(--serif); font-size:12.5px; line-height:1.55; color:var(--paper-dim); margin-top:2px; font-style:italic; }
+
+  /* ───────────────────── BD SYSTEMS ───────────────────── */
+  .cap-map{ border:1px solid var(--line); margin-bottom:60px; }
+  .cap-header,
+  .cap-row{ display:grid; grid-template-columns:1fr 1.2fr 1.2fr; }
+  @media(max-width:760px){
+    .cap-header{ display:none; }
+    .cap-row{ grid-template-columns:1fr; }
+  }
+  .cap-header{ border-bottom:1px solid var(--line); background:var(--ink-2); }
+  .cap-header span{ font-family:var(--mono); font-size:9.5px; letter-spacing:.12em; color:var(--paper-faint); text-transform:uppercase; padding:12px 16px; }
+  .cap-row{ border-bottom:1px solid var(--line-soft); transition:background .3s var(--ease); }
+  .cap-row:last-child{ border-bottom:none; }
+  .cap-row:hover{ background:var(--ink-2); }
+  .c-label{ padding:14px 16px; font-family:var(--display); font-weight:500; font-size:1.02rem; color:var(--paper); border-left:2px solid transparent; transition:border-color .3s var(--ease); }
+  .cap-row:hover .c-label{ border-left-color:var(--signal); }
+  .c-built,
+  .c-enterprise{ padding:14px 16px; font-family:var(--mono); font-size:10.5px; line-height:1.55; color:var(--paper-dim); }
+  @media(max-width:760px){
+    .c-label{ border-left:none; border-bottom:1px solid var(--line-soft); }
+    .cap-row:hover .c-label{ border-left-color:transparent; }
+    .c-built{ padding-top:10px; padding-bottom:4px; }
+    .c-enterprise{ padding-top:2px; padding-bottom:14px; }
+    .c-built::before{ content:"Built: "; font-family:var(--mono); font-size:9px; letter-spacing:.1em; color:var(--paper-faint); text-transform:uppercase; }
+    .c-enterprise::before{ content:"Enterprise: "; font-family:var(--mono); font-size:9px; letter-spacing:.1em; color:var(--paper-faint); text-transform:uppercase; }
+  }
+
+  /* ───────────────────── REVEAL ───────────────────── */
+  .reveal{ opacity:0; transform:translateY(28px); transition:opacity .9s var(--ease), transform .9s var(--ease); }
+  .reveal.in{ opacity:1; transform:none; }
+  .stagger > *{ opacity:0; transform:translateY(22px); transition:opacity .8s var(--ease), transform .8s var(--ease); }
+  .stagger.in > *{ opacity:1; transform:none; }
+  .stagger.in > *:nth-child(1){ transition-delay:.0s; }
+  .stagger.in > *:nth-child(2){ transition-delay:.08s; }
+  .stagger.in > *:nth-child(3){ transition-delay:.16s; }
+  .stagger.in > *:nth-child(4){ transition-delay:.24s; }
+  .stagger.in > *:nth-child(5){ transition-delay:.32s; }
+  .stagger.in > *:nth-child(6){ transition-delay:.40s; }
+
+  /* hero load sequence */
+  .h-anim{ opacity:0; transform:translateY(30px); animation:rise 1s var(--ease) forwards; }
+  .d1{ animation-delay:.1s; } .d2{ animation-delay:.28s; } .d3{ animation-delay:.46s; }
+  .d4{ animation-delay:.64s; } .d5{ animation-delay:.82s; } .d6{ animation-delay:1s; }
+  @keyframes rise{ to{ opacity:1; transform:none; } }
+
+  @media(prefers-reduced-motion:reduce){
+    *{ animation:none !important; transition:none !important; }
+    .reveal,.stagger>*,.h-anim{ opacity:1 !important; transform:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="wrap nav-inner">
+    <a href="#top" class="monogram"><span class="dot"></span>RAY LIM</a>
+    <div class="nav-links">
+      <a href="#profile">Profile</a>
+      <a href="#results">Results</a>
+      <a href="#ai">AI</a>
+      <a href="#practice">Practice</a>
+      <a href="#bd-systems">BD Systems</a>
+      <a href="/projects/">Projects</a>
+      <a href="#experience">Experience</a>
+      <a href="#capabilities">Capabilities</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ─────────────────────────── HERO ─────────────────────────── -->
+<header class="hero" id="top">
+  <div class="wrap">
+   <div class="hero-grid">
+    <div class="hero-text">
+    <div class="hero-coords h-anim d1">
+      <span><b>LOC</b> · Singapore</span>
+      <span><b>EXP</b> · 14+ Years Regional BD</span>
+      <span><b>STATUS</b> · <span class="signal">● Available</span></span>
+    </div>
+
+    <h1>
+      <span class="h-anim d2"><span class="ray">Ray</span></span>
+      <span class="sur h-anim d3">Lim.</span>
+    </h1>
+
+    <p class="tag h-anim d4">
+      Regional <b>Business Development</b> leadership fused with engineering-grade
+      <b>AI automation</b> — bridging C-suite commercial strategy and the kind of
+      Python &amp; agentic tooling that actually ships.
+    </p>
+
+    <div class="hero-roles h-anim d5">
+      <span>Channel &amp; Distributor Strategy</span>
+      <span>Market Expansion</span>
+      <span>Python · Agentic AI</span>
+      <span>Executive Analytics</span>
+    </div>
+
+    <div class="hero-cta h-anim d6">
+      <a href="#contact" class="btn primary">Get in touch ↗</a>
+      <a href="#experience" class="btn">View track record</a>
+      <a href="/projects/" class="btn">View demos ↗</a>
+    </div>
+    </div>
+
+    <figure class="hero-portrait h-anim d3">
+      <div class="frame">
+        <img src="portrait.jpg" alt="Portrait of Ray Lim" width="900" height="1244" />
+        <span class="bracket tl"></span>
+        <span class="bracket br"></span>
+        <figcaption>
+          <span>LIM "RAY" ZIRUI</span>
+          <span class="signal">● SG</span>
+        </figcaption>
+      </div>
+    </figure>
+   </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <span class="bar"></span>
+  </div>
+</header>
+
+<!-- ─────────────────────────── PROFILE ─────────────────────────── -->
+<section id="profile">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="idx">01</span>
+      <h2>The hybrid profile</h2>
+      <span class="rule"></span>
+    </div>
+
+    <div class="profile-grid">
+      <p class="profile-lead reveal">
+        An aerospace-trained commercial leader who codes — pairing
+        <em>revenue accountability</em> across Southeast Asia with
+        <em>top-1% applied AI</em> tooling.
+      </p>
+      <div class="profile-body reveal">
+        <p>
+          14+ years of regional Business Development across five companies and markets
+          spanning Southeast Asia, Hong Kong, LATAM and Canada — <b>revenue growth,
+          distributor management, and market relaunch</b>.
+        </p>
+        <p>
+          At Singapore's Ministry of Health, led a team of four delivering Python,
+          Power BI and GenAI dashboards across 30+ agencies during the COVID-19
+          response — work recognised with the <b>National Commendation Medal</b>.
+        </p>
+        <p>
+          Now deploying Claude Code, Codex and agentic workflows to automate complex
+          business operations. <b>MBA from SMU (4.0 GPA)</b>, NTU Aerospace Engineering
+          foundation, and a Divemaster's calm under pressure.
+        </p>
+      </div>
+    </div>
+
+    <!-- METRICS -->
+    <div class="metrics reveal" style="margin-top:62px;">
+      <div class="metric">
+        <div class="num"><span data-count="14" data-suffix="+">0</span></div>
+        <div class="cap">Years regional<br>BD leadership</div>
+      </div>
+      <div class="metric">
+        <div class="num"><span data-count="4">0</span><span class="unit">.00</span></div>
+        <div class="cap">SMU MBA GPA<br>Dean's List</div>
+      </div>
+      <div class="metric">
+        <div class="num"><span class="unit">US$</span><span data-count="8" data-suffix="M">0</span></div>
+        <div class="cap">Regional sales<br>delivered, +50%</div>
+      </div>
+      <div class="metric">
+        <div class="num">Top <span data-count="1" data-suffix="%">0</span></div>
+        <div class="cap">Non-professional devs<br>applied agentic AI</div>
+      </div>
+    </div>
+
+    <!-- PROJECTS CALLOUT -->
+    <div class="demos-callout reveal">
+      <div class="demos-callout-left">
+        <span class="label">Live AI Demos</span>
+        <p>Two interactive dashboards built for Director-level commercial work — showing how AI transforms how a function operates.</p>
+      </div>
+      <a href="/projects/" class="btn">View demos ↗</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────── RESULTS ─────────────────────────── -->
+<section id="results">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="idx">02</span>
+      <h2>Signature results</h2>
+      <span class="rule"></span>
+    </div>
+
+    <div class="results stagger">
+      <div class="result">
+        <div class="big">+127%</div>
+        <div class="ctx">Higher revenue in Q4 2019 by rebuilding distribution networks and key partnerships across Southeast Asia.</div>
+        <div class="org">D'Addario APAC · SEA</div>
+      </div>
+      <div class="result">
+        <div class="big">SG$10M</div>
+        <div class="ctx">Doubled annual revenue through incentive redesign, training protocols, and a CEO-partnered commercial turnaround.</div>
+        <div class="org">iQuartz · SEA</div>
+      </div>
+      <div class="result">
+        <div class="big">US$8M · +50%</div>
+        <div class="ctx">Grew regional revenue 50% and margins 10% across audio, gaming and PC peripherals through distributor strategy.</div>
+        <div class="org">Creative Technology · SEA / HK / LATAM</div>
+      </div>
+      <div class="result">
+        <div class="big">RMB 10M</div>
+        <div class="ctx">Secured and delivered a flagship building-automation contract on time and on budget, coordinating 20+ stakeholders.</div>
+        <div class="org">CNA China · Beijing</div>
+      </div>
+      <div class="result">
+        <div class="big">100%</div>
+        <div class="ctx">Team productivity gain at MOH, coaching four analysts through weekly structured sessions on GenAI &amp; Python delivery.</div>
+        <div class="org">Ministry of Health · Singapore</div>
+      </div>
+      <div class="result">
+        <div class="big">30→50</div>
+        <div class="ctx">Agencies served by long-running COVID-19 operational dashboards, processing millions of data points daily at peak.</div>
+        <div class="org">Ministry of Health · Singapore</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────── AI EXECUTION ─────────────────────────── -->
+<section id="ai">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="idx">03</span>
+      <h2>AI-enabled execution</h2>
+      <span class="rule"></span>
+    </div>
+
+    <div class="profile-grid">
+      <p class="profile-lead reveal">
+        Not a software engineer — a BD leader who <em>builds with AI</em>, hands on the keyboard.
+      </p>
+      <div class="profile-body reveal">
+        <p>
+          The Python foundation is real and pre-dates the GenAI era: at MOH I wrote, inherited and
+          improved <b>30+ production data workflows</b> when Excel and Power BI alone could no longer
+          move millions of data points.
+        </p>
+        <p>
+          Today I orchestrate <b>Claude Code, Codex, ChatGPT, NotebookLM, Perplexity, OpenClaw &amp;
+          Hermes</b> — plus local LLMs self-hosted on a Mac mini — to code, prototype apps, extract
+          documents, and run commercial research at speed.
+        </p>
+        <p>
+          The edge isn't engineering depth. It's the <b>bridge</b> — translating platform capability
+          into partner adoption, customer value and commercial growth.
+        </p>
+      </div>
+    </div>
+
+    <div class="metrics reveal" style="margin-top:62px;">
+      <div class="metric">
+        <div class="num">~<span data-count="10" data-suffix="x">0</span></div>
+        <div class="cap">Personal productivity<br>lift from AI workflows</div>
+      </div>
+      <div class="metric">
+        <div class="num">~<span data-count="100">0</span></div>
+        <div class="cap">Curated roles researched<br>&amp; packaged per day</div>
+      </div>
+      <div class="metric">
+        <div class="num"><span data-count="30" data-suffix="+">0</span></div>
+        <div class="cap">Python workflows built<br>&amp; deployed at MOH</div>
+      </div>
+      <div class="metric">
+        <div class="num"><span data-count="50" data-suffix="%">0</span></div>
+        <div class="cap">Manual processing<br>time cut at MOH</div>
+      </div>
+    </div>
+
+    <p class="label reveal" style="margin-top:26px; line-height:1.8; max-width:760px;">
+      ⌁ This page is self-hosted on a Mac&nbsp;mini and served through a Cloudflare&nbsp;tunnel —
+      the AI-and-automation habit, running in the open.
+    </p>
+  </div>
+</section>
+
+<!-- ─────────────────────────── AI IN PRACTICE ─────────────────────────── -->
+<section id="practice">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="idx">04</span>
+      <h2>AI in practice</h2>
+      <span class="rule"></span>
+    </div>
+
+    <p class="profile-lead reveal" style="max-width:760px; margin-bottom:48px;">
+      Proof over claims — the systems and artifacts behind the numbers.
+    </p>
+
+    <!-- pipeline schematic -->
+    <div class="pipeline reveal">
+      <div class="pipe-readout">
+        <span class="label">Job-search engine</span>
+        <span class="big">~100 <em>roles / day</em></span>
+      </div>
+      <div class="pipe-flow">
+        <div class="pnode"><span class="pn">01</span><span class="pl">Discover</span></div>
+        <div class="pconn"></div>
+        <div class="pnode"><span class="pn">02</span><span class="pl">Parse&nbsp;JD</span></div>
+        <div class="pconn"></div>
+        <div class="pnode"><span class="pn">03</span><span class="pl">Score&nbsp;fit</span></div>
+        <div class="pconn"></div>
+        <div class="pnode"><span class="pn">04</span><span class="pl">Tailor&nbsp;résumé</span></div>
+        <div class="pconn"></div>
+        <div class="pnode"><span class="pn">05</span><span class="pl">Draft&nbsp;letter</span></div>
+        <div class="pconn"></div>
+        <div class="pnode"><span class="pn">06</span><span class="pl">Track</span></div>
+      </div>
+      <div class="pipe-foot">
+        <div class="pipe-tools">
+          <span class="label">Stack</span>
+          <span class="chip">Claude Code</span>
+          <span class="chip">Codex</span>
+          <span class="chip">Python</span>
+          <span class="chip">OpenClaw</span>
+          <span class="chip">Hermes</span>
+        </div>
+        <div class="pipe-hitl"><span class="hdot"></span> Human-in-the-loop · part automated, part supervised</div>
+      </div>
+    </div>
+
+    <!-- built in the open -->
+    <div class="open-grid">
+      <div class="open-note reveal">
+        <h3>Built in the open</h3>
+        <p>
+          You're looking at the proof. This site was designed and coded with <b>Claude Code</b>,
+          then self-hosted on a <b>Mac mini</b> and served to the world through a
+          <b>Cloudflare tunnel</b> — a single hand-built file, no page builder, no framework.
+        </p>
+        <div class="open-stack">
+          <span class="chip">HTML / CSS / JS</span>
+          <span class="chip">Claude Code</span>
+          <span class="chip">Caddy</span>
+          <span class="chip">cloudflared</span>
+          <span class="chip">Mac mini</span>
+        </div>
+      </div>
+      <div class="term reveal">
+        <div class="term-bar"><i></i><i></i><i></i><small>raylim.me — build</small></div>
+        <div class="term-body"><span class="pr">$</span> <span class="cm">claude "design &amp; build my profile site"</span>
+  ⌁ scaffolding index.html · cockpit aesthetic
+  <span class="ok">✓</span> self-contained · zero build step
+<span class="pr">$</span> <span class="cm">caddy file-server</span>
+<span class="pr">$</span> <span class="cm">cloudflared tunnel run ray-profile</span>
+  <span class="ok">✓</span> raylim.me live — served from a Mac mini</div>
+      </div>
+    </div>
+
+    <!-- capability tiles -->
+    <h3 class="section-sub reveal" style="margin-top:60px; margin-bottom:22px;">Personal AI projects</h3>
+    <div class="tiles">
+      <div class="tile reveal">
+        <div class="tn">› 01</div>
+        <h4>Multimodal video forensics</h4>
+        <div class="tile-flow"><span class="tstep">Multi-angle footage</span><span class="tarr">→</span><span class="tstep">Frame extraction &amp; motion tracking</span><span class="tarr">→</span><span class="tstep">Complete event timeline</span></div>
+        <p>Turns chaotic raw video into a usable chronological record.</p>
+      </div>
+      <div class="tile reveal">
+        <div class="tn">› 02</div>
+        <h4>AI video enhancement</h4>
+        <div class="tile-flow"><span class="tstep">Low-res / low-fps video</span><span class="tarr">→</span><span class="tstep">AI interpolation &amp; upscaling</span><span class="tarr">→</span><span class="tstep">Smooth slow-motion playback</span></div>
+        <p>Makes poor footage forensically useful — clarity where there was none.</p>
+      </div>
+      <div class="tile reveal">
+        <div class="tn">› 03</div>
+        <h4>Physics-based visual reconstruction</h4>
+        <div class="tile-flow"><span class="tstep">Scene measurements</span><span class="tarr">→</span><span class="tstep">Optics &amp; reflection modelling</span><span class="tarr">→</span><span class="tstep">Spatial event reconstruction</span></div>
+        <p>Rebuilds what happened from geometry — aerospace analytical mindset applied.</p>
+      </div>
+      <div class="tile reveal">
+        <div class="tn">› 04</div>
+        <h4>Large-document synthesis</h4>
+        <div class="tile-flow"><span class="tstep">Hundreds of pages of dense PDFs</span><span class="tarr">→</span><span class="tstep">NotebookLM synthesis</span><span class="tarr">→</span><span class="tstep">Structured briefs &amp; findings</span></div>
+        <p>Compresses weeks of reading into hours — extracts signal from noise.</p>
+      </div>
+      <div class="tile reveal">
+        <div class="tn">› 05</div>
+        <h4>Automated data extraction</h4>
+        <div class="tile-flow"><span class="tstep">Scattered emails &amp; documents</span><span class="tarr">→</span><span class="tstep">API batch pipelines with resume checkpoints</span><span class="tarr">→</span><span class="tstep">Organized, searchable dataset</span></div>
+        <p>Turns a messy haystack into a queryable, reliable evidence base.</p>
+      </div>
+      <div class="tile reveal">
+        <div class="tn">› 06</div>
+        <h4>Local LLM hosting</h4>
+        <div class="tile-flow"><span class="tstep">Sensitive personal documents</span><span class="tarr">→</span><span class="tstep">Self-hosted models on a Mac mini</span><span class="tarr">→</span><span class="tstep">Private AI analysis, zero cloud exposure</span></div>
+        <p>Full AI power on private data — nothing leaves the machine.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────── BD AT AI SPEED ─────────────────────────── -->
+<section id="bd-systems">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="idx">05</span>
+      <h2>BD at AI speed</h2>
+      <span class="rule"></span>
+    </div>
+
+    <p class="profile-lead reveal" style="max-width:760px; margin-bottom:48px;">
+      Every system below maps to an enterprise BD operation — built by a domain expert directing AI, not by a career engineer.
+    </p>
+
+    <!-- enterprise capability map -->
+    <div class="cap-map reveal">
+      <div class="cap-header">
+        <span>Capability</span>
+        <span>System built</span>
+        <span>Enterprise application</span>
+      </div>
+      <div class="cap-row">
+        <div class="c-label">Market &amp; competitive intel</div>
+        <div class="c-built">Research daemon — 159 cells across 7 sectors, auto-uploaded to NotebookLM</div>
+        <div class="c-enterprise">CI pipeline · RFP response · Due diligence</div>
+      </div>
+      <div class="cap-row">
+        <div class="c-label">Pipeline automation at scale</div>
+        <div class="c-built">Custom Chrome extension — 8 ATS platforms with per-platform detection logic</div>
+        <div class="c-enterprise">Multi-portal form automation · Procurement · Government filings</div>
+      </div>
+      <div class="cap-row">
+        <div class="c-label">AI cost governance</div>
+        <div class="c-built">Tiered model routing — 90%+ tasks on cost-optimised models, 10–50× cost reduction</div>
+        <div class="c-enterprise">Enterprise AI vendor rationalization · Cost attribution</div>
+      </div>
+      <div class="cap-row">
+        <div class="c-label">Institutional knowledge capture</div>
+        <div class="c-built">235+ skills, 27 slash commands, codified decision trees</div>
+        <div class="c-enterprise">SOP enforcement · Onboarding accelerators · Compliance rules</div>
+      </div>
+      <div class="cap-row">
+        <div class="c-label">Deal acceleration</div>
+        <div class="c-built">AI-generated partnership proposals, BD decks, financial projections</div>
+        <div class="c-enterprise">RFP response · Investor presentations · Board decks</div>
+      </div>
+      <div class="cap-row">
+        <div class="c-label">Agent team orchestration</div>
+        <div class="c-built">8 parallel AI agents delivered a full-stack Sales Pipeline App</div>
+        <div class="c-enterprise">AI-augmented dev teams · PMO dashboards · Parallel workstreams</div>
+      </div>
+    </div>
+
+    <!-- research pipeline deep-dive -->
+    <div class="pipeline reveal">
+      <div class="pipe-readout">
+        <span class="label">Autonomous research pipeline</span>
+        <span class="big">159+ <em>research cells across 7 sectors</em></span>
+      </div>
+      <div class="pipe-flow">
+        <div class="pnode"><span class="pn">01</span><span class="pl">Watch&nbsp;folder</span></div>
+        <div class="pconn"></div>
+        <div class="pnode"><span class="pn">02</span><span class="pl">AI&nbsp;agents</span></div>
+        <div class="pconn"></div>
+        <div class="pnode"><span class="pn">03</span><span class="pl">4&nbsp;structured outputs</span></div>
+        <div class="pconn"></div>
+        <div class="pnode"><span class="pn">04</span><span class="pl">NotebookLM</span></div>
+      </div>
+      <div class="pipe-foot">
+        <div class="pipe-tools">
+          <span class="label">Stack</span>
+          <span class="chip">Python</span><span class="chip">MiniMax</span><span class="chip">Claude Code</span><span class="chip">NotebookLM</span>
+        </div>
+        <div class="pipe-hitl"><span class="hdot"></span> Auto-generates briefs, decks, talking points &amp; contact intelligence</div>
+      </div>
+    </div>
+
+    <!-- sector breakdown -->
+    <p class="label reveal" style="margin-top:24px; line-height:2.2; max-width:760px;">
+      <span style="color:var(--paper-faint);">Sectors:</span>
+      Semiconductor (49) · Consumer Electronics (24) · SaaS (24) · Consumer Goods (20) · Consulting (16) · Data Analytics (16) · Financial Services (10)
+    </p>
+
+    <p class="profile-lead reveal" style="margin-top:48px; max-width:760px;">
+      Every manual BD process has a systems-shaped solution. These are the ones I've already built and run.
+    </p>
+  </div>
+</section>
+
+<!-- ─────────────────────────── EXPERIENCE ─────────────────────────── -->
+<section id="experience">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="idx">06</span>
+      <h2>Track record</h2>
+      <span class="rule"></span>
+    </div>
+
+    <div class="tl">
+
+      <div class="job reveal">
+        <div class="when">Jan 2024 —<br>Present</div>
+        <div class="node"></div>
+        <div class="body">
+          <div class="role">MBA &amp; AI Workflow Development</div>
+          <div class="co">Independent · Singapore <span class="note">— recovery &amp; recalibration</span></div>
+          <ul>
+            <li>Completed a full-time <b>SMU MBA (4.00 GPA, Dean's List)</b> including an in-person exchange at Nagoya University of Commerce &amp; Business, Japan.</li>
+            <li>Built personal AI-enabled systems for resume tailoring, job discovery, application tracking, market research and commercial analysis.</li>
+            <li>Recovered fully from an April 2024 traffic accident; earned <b>Certified Divemaster</b> — composure and calm decision-making under pressure. Now fully fit and ready for work.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="job reveal">
+        <div class="when">Jul 2020 —<br>Dec 2023</div>
+        <div class="node"></div>
+        <div class="body">
+          <div class="role">Senior Manager, Data Analyst</div>
+          <div class="co">Ministry of Health · Singapore</div>
+          <ul>
+            <li>Awarded the <b>National Commendation Medal</b> and Resilience Medal for the COVID-19 response.</li>
+            <li>Led 4 analysts delivering GenAI, Python &amp; Power BI solutions across <b>30+ agencies (50 at peak)</b>, processing millions of data points daily.</li>
+            <li>Automated analytics workflows in Python, pandas, Power Query &amp; VBA for <b>20–50% time savings</b> and 3-to-1 headcount leverage.</li>
+            <li>Designed governance frameworks and SOPs meeting Permanent Secretary-level standards for accuracy and defensibility.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="job reveal">
+        <div class="when">Sep 2019 —<br>Apr 2020</div>
+        <div class="node"></div>
+        <div class="body">
+          <div class="role">Regional Sales &amp; BD Manager, SEA</div>
+          <div class="co">D'Addario APAC <span class="note">— global musical accessories brand, HQ New York</span></div>
+          <ul>
+            <li>Rebuilt SEA distribution networks and partnerships, driving <b>127% higher revenue</b> in Q4 2019.</li>
+            <li>Improved margins 5% through pricing actions; built monthly forecasting and channel inventory systems maintaining 2–4 month stock cover.</li>
+            <li>Preserved ~20% of revenue by resolving fulfilment issues, including authorising air freight from the marketing budget.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="job reveal">
+        <div class="when">Oct 2015 —<br>Mar 2018</div>
+        <div class="node"></div>
+        <div class="body">
+          <div class="role">Regional Sales &amp; BD Manager</div>
+          <div class="co">Creative Technology <span class="note">— global consumer electronics, HQ Singapore · SEA / HK / LATAM / Canada</span></div>
+          <ul>
+            <li>Increased regional revenue <b>50%</b> and margins 10%, delivering <b>US$8M</b> across headphones, speakers, gaming audio and PC peripherals.</li>
+            <li>Reintroduced the brand into Malaysia and Indonesia after a multi-year hiatus, securing 5 channel partners.</li>
+            <li>Built custom reporting tools in Excel VBA, Power BI &amp; Python tracking revenue, margin, forecast and stock across 30+ accounts.</li>
+            <li>Co-led roadshows, IT shows and dealer activations; trained distributors, promoters and retail staff across the region.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="job reveal">
+        <div class="when">2014 — 2015<br>&amp; 2018 — 2019</div>
+        <div class="node"></div>
+        <div class="body">
+          <div class="role">Regional BD &amp; Business Manager, SEA</div>
+          <div class="co">iQuartz · Singapore <span class="note">— quartz surface producer with precision photogrammetry</span></div>
+          <ul>
+            <li>Partnered the CEO on a commercial turnaround — restructuring incentives, territories and hiring — <b>doubling revenue to SG$10M</b>.</li>
+            <li>Expanded into Malaysia and the Philippines, generating <b>US$300K</b> within 6 months via a new distributor network.</li>
+            <li>Stood up an engineering &amp; software hub in Jakarta, recruiting 4 engineers through a Binus University hackathon.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="job reveal">
+        <div class="when">Aug 2011 —<br>Aug 2013</div>
+        <div class="node"></div>
+        <div class="body">
+          <div class="role">Project &amp; Sales Manager (Management Trainee)</div>
+          <div class="co">CNA China · Beijing</div>
+          <ul>
+            <li>Secured an <b>RMB 10M</b> flagship contract — building automation, HVAC, CCTV, structured cabling — owning the full tender cycle and 20+ stakeholders.</li>
+            <li>Delivered the Beijing International School project on time, on budget, at better margin, securing add-on scope and maintenance agreements.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────── CAPABILITIES ─────────────────────────── -->
+<section id="capabilities">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="idx">07</span>
+      <h2>Two fluencies, one operator</h2>
+      <span class="rule"></span>
+    </div>
+
+    <div class="cap-grid">
+      <div class="cap-col reveal">
+        <h3>Commercial</h3>
+        <div class="chips">
+          <span class="chip">Regional Business Development</span>
+          <span class="chip">Channel &amp; Distributor Management</span>
+          <span class="chip">Market Expansion &amp; Relaunch</span>
+          <span class="chip">Pricing &amp; Margin Management</span>
+          <span class="chip">Sales Forecasting</span>
+          <span class="chip">Inventory Planning</span>
+          <span class="chip">Sell-In / Sellout</span>
+          <span class="chip">Strategic Partnerships</span>
+          <span class="chip">Negotiation</span>
+          <span class="chip">Solution Selling</span>
+        </div>
+      </div>
+      <div class="cap-col reveal">
+        <h3>Technical</h3>
+        <div class="chips">
+          <span class="chip">Python (Full Coder)</span>
+          <span class="chip">pandas</span>
+          <span class="chip">Power BI</span>
+          <span class="chip">Power Query</span>
+          <span class="chip">Excel VBA</span>
+          <span class="chip">Claude Code</span>
+          <span class="chip">Codex</span>
+          <span class="chip">Agentic AI Architectures</span>
+          <span class="chip">GenAI Workflow Automation</span>
+          <span class="chip">Executive Dashboards</span>
+          <span class="chip">Data Governance</span>
+          <span class="chip">Semiconductor Domain</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────── EDUCATION / AWARDS ─────────────────────────── -->
+<section id="education">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="idx">08</span>
+      <h2>Foundations &amp; honours</h2>
+      <span class="rule"></span>
+    </div>
+
+    <div class="ea-grid">
+      <div class="reveal">
+        <div class="edu-item">
+          <div class="deg">Master of Business Administration</div>
+          <div class="meta">Singapore Management University · 2024 · <span class="gpa">GPA 4.00, Dean's List</span></div>
+          <p>Formal grounding in business analytics, corporate finance, strategic management and stakeholder decision-making. Included a full-time exchange at Nagoya University of Commerce &amp; Business, Japan.</p>
+        </div>
+        <div class="edu-item">
+          <div class="deg">B.Eng, Aerospace Engineering</div>
+          <div class="meta">Nanyang Technological University · 2007–2011</div>
+          <p>Simulation concepts, thermodynamics, fluid systems and physics-based modelling — transferable grounding for systems thinking and operational analytics.</p>
+        </div>
+        <div class="extra">
+          <span class="label">Languages &amp; affiliations</span>
+          <p>English &amp; Mandarin — native / fluent. Elected Internal Auditor, Mensa Singapore. Interests: scuba (Divemaster), skiing, vipassana, hiking, singing.</p>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <span class="label" style="display:block; margin-bottom:8px;">Awards</span>
+        <ul class="awards">
+          <li><span class="yr">2023</span> National Commendation Medal, Government of Singapore</li>
+          <li><span class="yr">2023</span> Resilience Medal, Government of Singapore</li>
+          <li><span class="yr">SMU</span> Academic Excellence Scholarship</li>
+          <li><span class="yr">NTU</span> First Prize — Safety &amp; Security, Technopreneurship</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────── CONTACT ─────────────────────────── -->
+<footer id="contact">
+  <div class="wrap">
+    <div class="sec-head reveal" style="margin-bottom:40px;">
+      <span class="idx">09</span>
+      <span class="rule"></span>
+    </div>
+
+    <h2 class="contact-lead reveal">
+      Let's build the <em>commercial &amp; technical</em> bridge together.
+    </h2>
+
+    <div class="contact-grid reveal">
+      <a href="mailto:limzirui@gmail.com">
+        <span class="label">Email</span>
+        <span class="val">limzirui@gmail.com</span>
+      </a>
+      <a href="tel:+6596639504">
+        <span class="label">Phone</span>
+        <span class="val">+65 9663 9504</span>
+      </a>
+      <a href="https://www.linkedin.com/in/raylim-citynomad" target="_blank" rel="noopener">
+        <span class="label">LinkedIn</span>
+        <span class="val">in/raylim-citynomad ↗</span>
+      </a>
+    </div>
+
+    <div class="foot-bar">
+      <span class="mono">© 2026 Lim "Ray" Zirui · Singapore</span>
+      <span class="mono">● Available for regional BD &amp; AI-enabled commercial roles</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // nav dock on scroll
+  const nav = document.getElementById('nav');
+  addEventListener('scroll', () => {
+    nav.classList.toggle('docked', scrollY > 40);
+  }, { passive:true });
+
+  // reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold:0.15, rootMargin:'0px 0px -8% 0px' });
+  document.querySelectorAll('.reveal, .stagger').forEach(el => io.observe(el));
+
+  // animated metric counters
+  const counted = new WeakSet();
+  const countIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting || counted.has(e.target)) return;
+      counted.add(e.target);
+      e.target.querySelectorAll('[data-count]').forEach(el => {
+        const target = parseFloat(el.dataset.count);
+        const dec = parseInt(el.dataset.decimals || '0', 10);
+        const suffix = el.dataset.suffix || '';
+        const dur = 1300;
+        const t0 = performance.now();
+        const tick = (now) => {
+          const p = Math.min((now - t0) / dur, 1);
+          const eased = 1 - Math.pow(1 - p, 3);
+          const v = target * eased;
+          el.textContent = v.toFixed(dec) + (p === 1 ? suffix : '');
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      });
+    });
+  }, { threshold:0.4 });
+  document.querySelectorAll('.metrics .metric').forEach(el => countIO.observe(el));
+</script>
+</body>
+</html>
