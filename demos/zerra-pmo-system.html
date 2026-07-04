@@ -105,6 +105,7 @@ VIEWS.home = { title: "System", render(el) {
       ["radar","03 · Market & Competitor Radar","AirTrunk / NextDC / Nxera moves, dated and cited."],
       ["collapse","04 · Workflow Collapser","Six project reports → one portfolio RAID, in seconds."],
       ["hub","05 · PMO Knowledge Hub","Governed, searchable PMBOK + process knowledge."],
+      ["live","06 Live","Type a query → live research → cited brief added to the store."],
       ["governance","Governance","Ownership, versions, access tiers, audit trail — built in."],
     ].map(([k,t,d]) => `<a class="card" style="display:block;text-decoration:none"
       href="#/${k}"><h2>${t}</h2><p class="dim">${d}</p></a>`).join("") + "</div>"; } };
@@ -243,6 +244,52 @@ VIEWS.hub = { title: "05 Hub", render(el, id) {
        ${govBadge(r)}<p class="dim small">${hits} matches · ${esc(r.type)} ·
        ${r.citations.length} sources</p></a>`).join("") ||
       `<p class="dim">no matches</p>`;
+  }; } };
+
+VIEWS.live = { title: "06 Live", render(el) {
+  el.innerHTML = `<div class="card"><h2>Live Query</h2>
+    <p class="dim">Type a new region, customer or competitor — the system researches it live
+    and adds a cited brief to the store. Requires <code>python -m tools.live</code> running.</p>
+    <div style="display:flex;gap:8px;margin:10px 0">
+      <input type="search" id="live-q" placeholder="e.g. Hyderabad India · AWS Sydney · Equinix"
+        style="flex:2" autocomplete="off">
+      <select id="live-type" style="padding:10px;border-radius:6px;border:1px solid var(--line);
+        background:var(--panel-2);color:var(--text);font:14px var(--sans)">
+        <option value="region_brief">Region brief</option>
+        <option value="customer_brief">Customer brief</option>
+        <option value="competitor_brief">Competitor brief</option>
+      </select>
+      <button class="run" id="live-go">Generate</button></div>
+    <div id="live-out"></div></div>`;
+  const show = (html) => { $("#live-out").innerHTML = html; };
+  $("#live-go").onclick = async () => {
+    const q = $("#live-q").value.trim(), t = $("#live-type").value;
+    if (!q) { show('<p class="dim">Enter a query.</p>'); return; }
+    show('<p class="dim">Researching…</p>');
+    try {
+      const resp = await fetch("/api/query", {
+        method: "POST", headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({query: q, type: t})
+      });
+      if (!resp.ok) {
+        const e = await resp.json();
+        show(`<p class="sev-medium">${esc(e.error)}</p>` +
+          '<p class="dim small">Static demo still works. Start the backend: <code>python -m tools.live</code></p>');
+        return;
+      }
+      const record = await resp.json();
+      window.STORE.records.push(record);
+      logAudit(record.id, "live query generated");
+      show(`<div class="card" style="background:var(--bg)">
+        <h2>✓ Generated: ${esc(record.title)}</h2>
+        ${govBadge(record)}
+        <p><a href="#/hub/${record.id}">View in Knowledge Hub</a></p>
+        <p class="dim small">${record.citations.length} cited sources · added to all module views</p>
+      </div>`);
+    } catch (err) {
+      show(`<p class="sev-medium">Backend not reachable. Start with <code>python -m tools.live</code></p>
+        <p class="dim small">Static demo still works offline — all 17 pre-built records are available.</p>`);
+    }
   }; } };
 
 VIEWS.governance = { title: "Governance", render(el) {
