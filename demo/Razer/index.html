@@ -1410,6 +1410,95 @@
             font-weight: 500;
         }
 
+        /* ===== Welcome Overlay ===== */
+        #welcome-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #welcome-overlay.dismissed {
+            display: none;
+        }
+        .welcome-bg {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(4px);
+        }
+        .welcome-card {
+            position: relative;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            padding: 32px 36px 28px;
+            max-width: 480px;
+            text-align: center;
+            clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
+        }
+        .welcome-card h2 {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 14px;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+        .welcome-card p {
+            font-family: var(--font-ui);
+            font-weight: 300;
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            letter-spacing: 0.02em;
+            margin-bottom: 22px;
+        }
+        .welcome-btn {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 11px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 10px 28px;
+            cursor: pointer;
+            background: var(--accent-dim);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            border-radius: 2px;
+            transition: all 0.2s;
+        }
+        .welcome-btn:hover {
+            background: rgba(68,214,44,0.22);
+        }
+
+        /* ===== Pulse animation on demo path button ===== */
+        @keyframes pulse-border {
+            0%, 100% { border-color: var(--border); box-shadow: 0 0 0 0 rgba(68,214,44,0); }
+            50%      { border-color: var(--accent); box-shadow: 0 0 8px 2px rgba(68,214,44,0.18); }
+        }
+        .hdr-btn.pulse {
+            animation: pulse-border 2s ease-in-out infinite;
+            color: var(--accent);
+            position: relative;
+        }
+        .hdr-btn.pulse::after {
+            content: '← Start here';
+            position: absolute;
+            top: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: var(--font-mono);
+            font-size: 9px;
+            letter-spacing: 0.05em;
+            color: var(--accent);
+            white-space: nowrap;
+            opacity: 0.85;
+            animation: pulse-border 2s ease-in-out infinite;
+        }
+
         /* ===== Demo Path Card (placeholder — Task 8) ===== */
         .demo-path-card {
             position: fixed;
@@ -1641,6 +1730,17 @@
     </style>
 </head>
 <body>
+
+<!-- ===== WELCOME OVERLAY ===== -->
+<div id="welcome-overlay">
+  <div class="welcome-bg"></div>
+  <div class="welcome-card">
+    <h2>BEFORE YOU EXPLORE</h2>
+    <p>Everything on this page is simulated. Real product lines, real market structure, real cited benchmarks, but every revenue, funnel, ticket, and LTV figure is a demonstration. I have no internal Razer data.</p>
+    <button class="welcome-btn" onclick="dismissWelcome()">GOT IT — LET'S GO</button>
+  </div>
+</div>
+
 <div class="main-container">
   <header class="fade-section">
     <div>
@@ -1651,7 +1751,7 @@
       <span class="week-stamp">WEEK 27 · FY2026</span>
       <span class="sim-badge">SIMULATED DATA — REAL PRODUCT LINES, REAL MARKET STRUCTURE</span>
       <button class="hdr-btn" onclick="openSourcesDrawer()">SOURCES &amp; ASSUMPTIONS</button>
-      <button class="hdr-btn" onclick="startDemoPath()">90-SECOND DEMO PATH</button>
+      <button class="hdr-btn pulse" id="demo-path-hdr-btn" onclick="startDemoPath()">90-SECOND DEMO PATH</button>
     </div>
   </header>
   <nav class="view-nav fade-section">
@@ -2697,11 +2797,20 @@ function closeSourcesDrawer(){
 }
 document.addEventListener('keydown', function(e){
   if (e.key === 'Escape') {
+    dismissWelcome();
     closeSourcesDrawer();
     closeDemoPath();
     closeGlossaryPopover();
   }
 });
+
+/* ===== WELCOME OVERLAY ===== */
+function dismissWelcome(){
+  var overlay = document.getElementById('welcome-overlay');
+  if (overlay) overlay.classList.add('dismissed');
+  var btn = document.getElementById('demo-path-hdr-btn');
+  if (btn) btn.classList.remove('pulse');
+}
 
 /* ===== GLOSSARY POPOVERS ===== */
 var glossaryRegistry = {
