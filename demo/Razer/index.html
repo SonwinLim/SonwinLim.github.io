@@ -2911,12 +2911,16 @@ var demoPathStops = [
     desc: 'Razer.com direct commerce. Revenue, conversion, channel mix, and the 22% DTC share that drives margin.' },
   { label: '7. Commerce: Channel lens + MAP', view: 'commerce', target: 'commerce-channel', action: 'scroll',
     desc: 'SKU-level price parity vs Amazon street price. DeathAdder and Kraken MAP breaches flagged.' },
-  { label: '8. SUPPORT — the retention system', view: 'support', target: 'support-kpis', action: 'scroll',
+  { label: '8. Try EXPLAIN ⚡ on any panel', view: 'commerce', target: null, action: 'explain', chipId: 'c7',
+    desc: 'Every dashboard panel has an EXPLAIN button. Click it and the AI analyst answers with commercial reasoning.' },
+  { label: '9. SUPPORT — the retention system', view: 'support', target: 'support-kpis', action: 'scroll',
     desc: 'Customer Advocacy P&L. Containment, CSAT, NPS — and the callback queue ranked by LTV-at-risk, not ticket age.' },
-  { label: '9. Support: Containment panel', view: 'support', target: 'support-containment', action: 'scroll',
+  { label: '10. Support: Containment panel', view: 'support', target: 'support-containment', action: 'scroll',
     desc: 'AI-resolved customers repurchase at parity with human-resolved. The risk is the unresolved 11%.' },
-  { label: '10. Bridge: Action Queue', view: 'bridge', target: 'bridge-actions', action: 'scroll',
-    desc: 'Six prioritized actions. Each with an owner, business impact, and guardrail.' }
+  { label: '11. Bridge: Action Queue', view: 'bridge', target: 'bridge-actions', action: 'scroll',
+    desc: 'Six prioritized actions. Each with an owner, business impact, and guardrail.' },
+  { label: '12. Toggle RECOVERY PLAN', view: 'bridge', target: 'bridge-kpis', action: 'scenario',
+    desc: 'See the estimated impact: LTV-at-Risk drops $612K→$438K, Revenue Protected rises to $2.16M.' }
 ];
 var demoPathIndex = -1;
 var demoHighlightTimeout = null;
@@ -2935,6 +2939,7 @@ function closeDemoPath(){
   demoPathIndex = -1;
   if (demoHighlightTimeout) { clearTimeout(demoHighlightTimeout); demoHighlightTimeout = null; }
   document.querySelectorAll('.demo-highlight').forEach(function(el){ el.classList.remove('demo-highlight'); });
+  applyScenario('current');
 }
 
 function renderPathStops(){
@@ -2980,6 +2985,8 @@ function demoPathNext(){
     }
   } else if (stop.action === 'explain' && stop.chipId) {
     triggerExplain(stop.chipId);
+  } else if (stop.action === 'scenario') {
+    applyScenario('recovery');
   }
 }
 var scenarioData = {
