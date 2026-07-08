@@ -314,9 +314,10 @@ VIEWS.live = { title: "06 Live", render(el) {
     show('<p class="dim">Searching Wikipedia…</p>');
     try {
       const api = "https://en.wikipedia.org/w/api.php?origin=*&format=json";
-      const searchUrl = api + "&action=query&list=search&srsearch=" + encodeURIComponent(q) + "&srlimit=5";
+      const searchUrl = api + "&action=query&generator=search&gsrsearch=" + encodeURIComponent(q) + "&gsrlimit=3&prop=extracts&exintro&explaintext";
       const sr = await fetch(searchUrl).then(r => r.json());
-      const pages = (sr.query && sr.query.search) || [];
+      const pd = (sr.query && sr.query.pages) || {};
+      const pages = Object.values(pd);
       if (!pages.length) { show('<p class="dim">No results. Try a more specific query.</p>'); return; }
       const today = new Date().toISOString().slice(0,10);
       const slug = "live-" + q.toLowerCase().replace(/[^a-z0-9]+/g,"-").slice(0,30);
@@ -332,8 +333,8 @@ VIEWS.live = { title: "06 Live", render(el) {
         record.citations.push({ id: cid, title: title, publisher: "Wikipedia",
           url: "https://en.wikipedia.org/wiki/" + encodeURIComponent(title.replace(/ /g,"_")),
           accessed: today });
-        record.sections.push({ heading: title, body_md: "Wikipedia snippet: " +
-          (p.snippet || "").replace(/<[^>]+>/g,"") + " [" + cid + "]", citations: [cid] });
+        record.sections.push({ heading: title, body_md: (p.extract || "") + " [" + cid + "]",
+          citations: [cid] });
       });
       if (t === "region_brief") record.scorecard.push({ dimension: "Rapid screen",
         rating: 3, summary: "Live-generated — verify before production use. " + q + " [live-c1]",
