@@ -1980,7 +1980,7 @@
                   <div class="wf-bar green-bar" style="height:92px;width:75px;"></div>
                 </div>
                 <div class="wf-value" style="margin-top:4px;color:#44D62C;">$346K</div>
-                <div class="wf-label">RECOVERED VIA<br>SUPPORT RECOVERY PLAYS</div>
+                <div class="wf-label">RECOVERED VIA<br>SUPPORT RECOVERY PLAYS <span class="glossary-icon" onclick="event.stopPropagation();openGlossary('recovery-play-return')" style="margin-left:2px;">?</span></div>
               </div>
               <div class="wf-connector" style="height:150px;position:relative;width:32px;flex-shrink:0;">
                 <svg viewBox="0 0 32 150" style="position:absolute;bottom:0;left:0;width:32px;height:150px;">
@@ -2212,7 +2212,7 @@
             </div>
           </div>
           <div class="anomaly-callout">
-            <strong>DROP-DAY FRICTION</strong> — Espeon &amp; Umbreon collab launch (Jul 3): sessions on collab PDPs spiked 4.1×, but checkout completion fell 50.6% → 31.9%. Queue/bot pressure at checkout. Est. unconverted demand: <strong><span data-scenario-key="checkout-leakage">$412K</span></strong>.
+            <strong>DROP-DAY FRICTION</strong> <span class="glossary-icon" onclick="event.stopPropagation();openGlossary('checkout-leakage')">?</span> — Espeon &amp; Umbreon collab launch (Jul 3): sessions on collab PDPs spiked 4.1×, but checkout completion fell 50.6% → 31.9%. Queue/bot pressure at checkout. Est. unconverted demand: <strong><span data-scenario-key="checkout-leakage">$412K</span></strong>.
           </div>
         </section>
 
@@ -2246,7 +2246,7 @@
                   <th>RAZER.COM</th>
                   <th>AMAZON</th>
                   <th>GAP</th>
-                  <th>FLAG</th>
+                  <th>FLAG <span class="glossary-icon" onclick="event.stopPropagation();openGlossary('map-flag')" style="margin-left:2px;font-size:7px;">?</span></th>
                 </tr>
               </thead>
               <tbody>
@@ -2415,7 +2415,7 @@
         <!-- Support Containment -->
         <section class="panel clipped fade-section" id="support-containment">
           <div class="panel-inner">
-            <div class="panel-title-row"><div class="section-title">DOES CONTAINMENT PROTECT REVENUE?</div><button class="explain-btn" onclick="triggerExplain('b2')">EXPLAIN ⚡</button></div>
+            <div class="panel-title-row"><div class="section-title">DOES CONTAINMENT PROTECT REVENUE? <span class="glossary-icon" onclick="event.stopPropagation();openGlossary('containment-quality')">?</span></div><button class="explain-btn" onclick="triggerExplain('b2')">EXPLAIN ⚡</button></div>
             <p class="section-caption" style="margin-bottom:8px;">The question a support dashboard can't answer alone: do AI-resolved customers come back and buy again?</p>
             <p class="section-caption" style="margin-bottom:16px;font-weight:400;color:#E8EFE9;">Containment closes tickets. The bridge metric asks whether it also keeps customers buying.</p>
             <div class="bar-chart-group">
@@ -2467,7 +2467,7 @@
                   </tr>
                   <tr>
                     <td class="priority-p1">#2</td>
-                    <td>Blade owners, repeated contact same issue</td>
+                    <td>Blade owners, repeated contact same issue <span class="glossary-icon" onclick="event.stopPropagation();openGlossary('repeat-contact-risk')" style="margin-left:3px;">?</span></td>
                     <td>64 <span class="sim-marker">SIM</span></td>
                     <td>$218K <span class="sim-marker">SIM</span></td>
                     <td>Auto-escalation on 2nd contact</td>
@@ -2599,6 +2599,7 @@
   <h4>90-SECOND DEMO PATH</h4>
   <div id="path-stops"></div>
   <div class="path-btns">
+    <button class="path-btn" id="path-back-btn" onclick="demoPathBack()" style="display:none;">◂ BACK</button>
     <button class="path-btn" id="path-next-btn" onclick="demoPathNext()">NEXT ▸</button>
     <button class="path-exit" onclick="closeDemoPath()">EXIT</button>
   </div>
@@ -2931,6 +2932,7 @@ function startDemoPath(){
   demoPathIndex = -1;
   card.classList.add('open');
   renderPathStops();
+  updatePathButtons();
 }
 
 function closeDemoPath(){
@@ -2958,6 +2960,24 @@ function renderPathStops(){
   }).join('');
 }
 
+function updatePathButtons(){
+  var backBtn = document.getElementById('path-back-btn');
+  if (backBtn) backBtn.style.display = demoPathIndex > 0 ? '' : 'none';
+}
+
+function demoPathBack(){
+  if (demoPathIndex <= 0) return;
+  demoPathIndex--;
+  renderPathStops();
+  updatePathButtons();
+  var stop = demoPathStops[demoPathIndex];
+  if (stop.view !== appState.view) switchView(stop.view);
+  if (stop.target) {
+    var el = document.getElementById(stop.target);
+    if (el) el.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+}
+
 function demoPathNext(){
   demoPathIndex++;
   if (demoPathIndex >= demoPathStops.length) {
@@ -2965,6 +2985,7 @@ function demoPathNext(){
     return;
   }
   renderPathStops();
+  updatePathButtons();
 
   var stop = demoPathStops[demoPathIndex];
 
