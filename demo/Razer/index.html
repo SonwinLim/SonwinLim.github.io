@@ -1802,7 +1802,7 @@
 
         <!-- Bridge KPI Row -->
         <section class="kpi-grid fade-section" id="bridge-kpis">
-          <div class="panel-title-row" style="grid-column:1/-1;margin-bottom:0;"><div class="panel-title" style="font-size:11px;">BRIDGE KPI ROW — DUAL P&amp;L</div><button class="explain-btn" onclick="triggerExplain('b4')">EXPLAIN ⚡</button></div>
+          <div class="panel-title-row" style="grid-column:1/-1;margin-bottom:0;"><div class="panel-title" style="font-size:11px;">BRIDGE KPI ROW — DUAL P&amp;L <span class="glossary-icon" onclick="event.stopPropagation();openGlossary('bridge-kpi-row')">?</span></div><button class="explain-btn" onclick="triggerExplain('b4')">EXPLAIN ⚡</button></div>
           <!-- Tile 1: Revenue Protected -->
           <div class="kpi-tile bridge-metric">
             <div class="bridge-tag">BRIDGE METRIC — NEW</div>
@@ -2857,7 +2857,8 @@ var glossaryRegistry = {
   'csat': "Customer Satisfaction Score, rated 1–5 post-interaction. This week: 4.31/5. Measures quality of resolution from the customer's perspective.",
   'nps': "Net Promoter Score, range −100 to +100. This week: 47. Measures likelihood to recommend — above 50 is excellent, above 30 is strong.",
   'aht': "Average Handle Time — total interaction duration per ticket. This week: 9m 12s (down 26s WoW). Speed is only valuable if resolution quality holds.",
-  'wow': "Week over Week — change compared to the previous week. \"pp\" = percentage points (the absolute difference, not relative %)."
+  'wow': "Week over Week — change compared to the previous week. \"pp\" = percentage points (the absolute difference, not relative %).",
+  'bridge-kpi-row': "Six metrics spanning both of Grace's P&Ls. Revenue Protected and LTV-at-Risk are bridge metrics — they only exist when commerce and support ledgers are joined at customer grain."
 };
 
 var currentPopover = null;
