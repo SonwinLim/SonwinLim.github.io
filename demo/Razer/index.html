@@ -1,0 +1,2831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CX Command Center — One Operating Picture</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0B0F0C;
+            --surface: #111713;
+            --surface-alt: #16201A;
+            --border: rgba(255, 255, 255, 0.06);
+            --accent: #44D62C;
+            --accent-dim: rgba(68, 214, 44, 0.12);
+            --red: #FF4D4D;
+            --amber: #FFB347;
+            --text-primary: #E8EFE9;
+            --text-secondary: #7E8C82;
+            --text-faint: #3D4A41;
+            --font-ui: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+            --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-primary);
+            font-family: var(--font-ui);
+            font-weight: 400;
+            min-height: 100vh;
+            position: relative;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.35;
+            background:
+                repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(68, 214, 44, 0.06) 39px, rgba(68, 214, 44, 0.06) 40px),
+                repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(68, 214, 44, 0.06) 39px, rgba(68, 214, 44, 0.06) 40px);
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px 32px;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-section {
+            animation: fadeInUp 0.5s ease-out both;
+        }
+        .fade-section:nth-child(1) { animation-delay: 0ms; }
+        .fade-section:nth-child(2) { animation-delay: 60ms; }
+        .fade-section:nth-child(3) { animation-delay: 120ms; }
+        .fade-section:nth-child(4) { animation-delay: 180ms; }
+        .fade-section:nth-child(5) { animation-delay: 240ms; }
+        .fade-section:nth-child(6) { animation-delay: 300ms; }
+        .fade-section:nth-child(7) { animation-delay: 360ms; }
+        .fade-section:nth-child(8) { animation-delay: 420ms; }
+        .fade-section:nth-child(9) { animation-delay: 480ms; }
+
+        /* ===== SHELL: Header ===== */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .app-title {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 18px;
+            letter-spacing: 0.08em;
+            color: var(--text-primary);
+            text-transform: uppercase;
+        }
+        .app-subtitle {
+            font-family: var(--font-ui);
+            font-weight: 300;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            letter-spacing: 0.02em;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .week-stamp {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 13px;
+            color: var(--text-primary);
+            letter-spacing: 0.06em;
+            white-space: nowrap;
+        }
+        .sim-badge {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-weight: 400;
+            font-size: 9px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--amber);
+            border: 1px solid var(--amber);
+            border-radius: 999px;
+            padding: 5px 12px;
+            white-space: nowrap;
+            background: rgba(255, 179, 71, 0.04);
+            line-height: 1;
+        }
+        .hdr-btn {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 10px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 6px 14px;
+            cursor: pointer;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            border-radius: 2px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            outline: none;
+        }
+        .hdr-btn:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        /* ===== SHELL: View Navigation ===== */
+        .view-nav {
+            display: flex;
+            gap: 0;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+            align-items: center;
+        }
+        .nav-tab {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 11px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 10px 24px;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+            position: relative;
+            border-radius: 2px 2px 0 0;
+            outline: none;
+        }
+        .nav-tab:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .nav-tab.active {
+            color: var(--accent);
+            background: rgba(68, 214, 44, 0.06);
+            border-bottom: 2px solid var(--accent);
+        }
+        .scenario-slot {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-mono);
+            font-size: 9px;
+            letter-spacing: 0.05em;
+            color: var(--text-faint);
+        }
+
+        /* ===== SHELL: Content Layout ===== */
+        .content-row {
+            display: flex;
+            gap: 0;
+            align-items: flex-start;
+        }
+        .views-col {
+            flex: 1;
+            min-width: 0;
+            padding-right: 20px;
+        }
+        #analyst-panel {
+            width: 360px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 24px;
+            max-height: calc(100vh - 180px);
+        }
+        .view {
+            /* visible by default when not hidden */;
+        }
+        .view[hidden] {
+            display: none;
+        }
+
+        /* ===== SHELL: Footer ===== */
+        .app-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding-top: 16px;
+            margin-top: 32px;
+            border-top: 1px solid var(--border);
+            font-family: var(--font-ui);
+            font-weight: 300;
+            font-size: 11px;
+            color: var(--text-faint);
+            letter-spacing: 0.02em;
+            line-height: 1.5;
+        }
+        .footer-right {
+            font-weight: 400;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        /* ===== KPI Row (from Demo 1) ===== */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .kpi-tile {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            padding: 16px 14px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 0 100%);
+            min-width: 0;
+            position: relative;
+        }
+        .kpi-label {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 10px;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .kpi-value {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 26px;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+            line-height: 1;
+        }
+        .kpi-value.accent-green {
+            color: var(--accent);
+        }
+        .kpi-delta {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 12px;
+            letter-spacing: 0.03em;
+        }
+        .kpi-delta.up { color: var(--accent); }
+        .kpi-delta.down { color: var(--red); }
+        .kpi-sub-line {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 10px;
+            letter-spacing: 0.04em;
+            color: var(--red);
+            margin-top: -2px;
+        }
+        .kpi-sparkline {
+            margin-top: 6px;
+            width: 100%;
+            height: 32px;
+            flex-shrink: 0;
+        }
+        .kpi-sparkline svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* ===== Funnel (from Demo 1) ===== */
+        .funnel-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            padding: 20px 20px 16px;
+            margin-bottom: 24px;
+            clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
+        }
+        .funnel-panel .panel-title {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 11px;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 18px;
+        }
+        .funnel-stages {
+            display: flex;
+            align-items: stretch;
+            gap: 0;
+            flex-wrap: nowrap;
+            position: relative;
+        }
+        .funnel-stage {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            padding: 10px 6px;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .funnel-stage-num {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 20px;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+            white-space: nowrap;
+        }
+        .funnel-stage-label {
+            font-family: var(--font-mono);
+            font-weight: 400;
+            font-size: 9px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--text-faint);
+            margin-top: 2px;
+            white-space: nowrap;
+        }
+        .funnel-junction {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 44px;
+            position: relative;
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 10px;
+            color: var(--text-secondary);
+            letter-spacing: 0.03em;
+        }
+        .funnel-junction::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 2px;
+            right: 2px;
+            height: 1px;
+            background: var(--border);
+            z-index: 0;
+        }
+        .funnel-junction span {
+            background: var(--surface);
+            padding: 2px 6px;
+            position: relative;
+            z-index: 1;
+            white-space: nowrap;
+        }
+        .anomaly-callout {
+            margin-top: 16px;
+            padding: 14px 16px;
+            background: rgba(255, 179, 71, 0.04);
+            border: 1px solid rgba(255, 179, 71, 0.3);
+            border-radius: 2px;
+            font-family: var(--font-ui);
+            font-weight: 400;
+            font-size: 12px;
+            color: var(--amber);
+            line-height: 1.55;
+            letter-spacing: 0.02em;
+        }
+        .anomaly-callout strong {
+            color: #ffc978;
+            font-weight: 500;
+        }
+
+        /* ===== Retention (from Demo 1) ===== */
+        .retention-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            padding: 20px 20px 16px;
+            margin-bottom: 24px;
+            clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
+        }
+        .retention-panel .panel-title {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 11px;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 18px;
+        }
+        .retention-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .retention-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .retention-bar-label {
+            font-family: var(--font-mono);
+            font-weight: 400;
+            font-size: 11px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            width: 160px;
+            flex-shrink: 0;
+            text-align: right;
+        }
+        .retention-bar-track {
+            flex: 1;
+            height: 22px;
+            background: var(--surface-alt);
+            border-radius: 1px;
+            overflow: hidden;
+            position: relative;
+        }
+        .retention-bar-fill {
+            height: 100%;
+            border-radius: 1px;
+            transition: width 0.6s ease;
+        }
+        .retention-bar-fill.guest { background: var(--text-faint); width: 9.2%; }
+        .retention-bar-fill.member { background: var(--accent-dim); width: 21.4%; }
+        .retention-bar-fill.silver { background: var(--accent); width: 38.1%; }
+        .retention-bar-value {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--text-primary);
+            width: 50px;
+            flex-shrink: 0;
+            text-align: left;
+            letter-spacing: -0.02em;
+        }
+        .retention-caption {
+            font-family: var(--font-ui);
+            font-weight: 300;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 14px;
+            letter-spacing: 0.02em;
+            line-height: 1.5;
+        }
+
+        /* ===== Channel Lens (from Demo 1) ===== */
+        .channel-lens-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .channel-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            padding: 20px;
+            clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
+        }
+        .channel-panel .panel-title {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 11px;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+        .donut-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            justify-content: center;
+        }
+        .donut-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .donut-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-mono);
+            font-weight: 400;
+            font-size: 11px;
+            letter-spacing: 0.03em;
+            color: var(--text-secondary);
+        }
+        .donut-legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 1px;
+            flex-shrink: 0;
+        }
+        .donut-legend-dot.green { background: var(--accent); }
+        .donut-legend-dot.grey1 { background: #5A6560; }
+        .donut-legend-dot.grey2 { background: #3D4A41; }
+        .donut-legend-val {
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-left: auto;
+        }
+        .channel-caption {
+            font-family: var(--font-ui);
+            font-weight: 300;
+            font-size: 11px;
+            color: var(--text-faint);
+            margin-top: 12px;
+            text-align: center;
+            letter-spacing: 0.02em;
+        }
+        .parity-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--font-mono);
+            font-weight: 400;
+            font-size: 11px;
+            letter-spacing: 0.03em;
+        }
+        .parity-table th {
+            text-align: left;
+            font-weight: 500;
+            font-size: 9px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text-faint);
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+        .parity-table td {
+            padding: 9px 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            color: var(--text-primary);
+            white-space: nowrap;
+        }
+        .parity-table .flag-red { color: var(--red); font-weight: 500; font-size: 10px; letter-spacing: 0.04em; }
+        .parity-table .flag-amber { color: var(--amber); font-weight: 500; font-size: 10px; letter-spacing: 0.04em; }
+        .parity-table .flag-green { color: var(--accent); font-weight: 500; font-size: 10px; letter-spacing: 0.04em; }
+        .parity-table .gap-red { color: var(--red); }
+        .parity-table .gap-amber { color: var(--amber); }
+        .parity-table .gap-green { color: var(--accent); }
+        .parity-footnote {
+            font-family: var(--font-ui);
+            font-weight: 300;
+            font-size: 10px;
+            color: var(--text-faint);
+            margin-top: 10px;
+            letter-spacing: 0.02em;
+            line-height: 1.4;
+        }
+
+        /* ===== Benchmark Strip (from Demo 1) ===== */
+        .benchmark-strip {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .benchmark-card {
+            background: var(--surface-alt);
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            padding: 14px;
+        }
+        .benchmark-stat {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 20px;
+            color: var(--accent);
+            letter-spacing: -0.02em;
+        }
+        .benchmark-context {
+            font-family: var(--font-ui);
+            font-weight: 400;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            letter-spacing: 0.02em;
+            line-height: 1.4;
+        }
+        .benchmark-source {
+            font-family: var(--font-ui);
+            font-weight: 300;
+            font-size: 9px;
+            color: var(--text-faint);
+            margin-top: 6px;
+            letter-spacing: 0.03em;
+        }
+
+        /* ===== EXPLAIN button ===== */
+        .explain-btn {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 9px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            cursor: pointer;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-faint);
+            border-radius: 2px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            outline: none;
+            float: right;
+            margin-left: 12px;
+        }
+        .explain-btn:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        /* ===== Panel title row (for EXPLAIN button alignment) ===== */
+        .panel-title-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .panel-title-row .panel-title {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 11px;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+        }
+        .kpi-row > .panel-title-row {
+            grid-column: 1 / -1;
+            margin-bottom: 0;
+        }
+
+        /* ===== SHELL: Demo highlight (for Task 8) ===== */
+        .demo-highlight {
+            outline: 2px solid var(--accent) !important;
+            outline-offset: 4px;
+            transition: outline 0.3s ease, outline-offset 0.3s ease;
+        }
+
+        /* ===== Demo 2: KPI Grid (for support/bridge KPIs) ===== */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .kpi-tile.bridge-metric {
+            border-top: 2px solid var(--accent);
+        }
+        .kpi-tile .bridge-tag {
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            font-family: var(--font-mono);
+            font-size: 7px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent);
+            background: var(--accent-dim);
+            padding: 2px 6px;
+            border-radius: 1px;
+        }
+        .kpi-tile .sparkline-wrap {
+            margin-top: 8px;
+            height: 26px;
+            width: 100%;
+        }
+        .kpi-tile .sparkline-wrap svg {
+            width: 100%;
+            height: 100%;
+        }
+        .mono-label {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            line-height: 1;
+        }
+        .mono-value {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+        .mono-value.lg {
+            font-size: 28px;
+            letter-spacing: -0.01em;
+        }
+        .mono-value.accent { color: var(--accent); }
+        .mono-value.red { color: var(--red); }
+        .mono-value.amber { color: var(--amber); }
+        .sub-line {
+            font-family: var(--font-ui);
+            font-size: 11px;
+            font-weight: 400;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            margin-top: 2px;
+        }
+        .sub-line.red-sub { color: var(--red); opacity: 0.85; }
+        .wow-tag {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            margin-top: 4px;
+        }
+        .wow-tag.good { color: var(--accent); opacity: 0.9; }
+        .wow-tag.bad { color: var(--red); opacity: 0.85; }
+
+        /* ===== Demo 2: Panels ===== */
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .panel.clipped {
+            clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+        }
+        .panel-inner {
+            padding: 20px 22px;
+        }
+        .section-title-row {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .section-title {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-primary);
+        }
+        .section-caption {
+            font-family: var(--font-ui);
+            font-weight: 300;
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            max-width: 700px;
+        }
+        .section-caption strong {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        /* ===== Demo 2: Bar charts ===== */
+        .bar-chart-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .bar-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+        }
+        .bar-label {
+            width: 210px;
+            flex-shrink: 0;
+            font-size: 10px;
+            letter-spacing: 0.04em;
+            color: var(--text-secondary);
+            text-align: right;
+            line-height: 1.3;
+        }
+        .bar-track {
+            flex: 1;
+            height: 22px;
+            background: var(--surface-alt);
+            border-radius: 1px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .bar-fill {
+            height: 100%;
+            border-radius: 1px;
+            transition: width 0.6s ease;
+            display: flex;
+            align-items: center;
+            padding-left: 8px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 500;
+            color: #fff;
+            min-width: 50px;
+        }
+        .bar-fill.green { background: var(--accent); color: #0B0F0C; }
+        .bar-fill.neutral { background: #4a5a50; color: #E8EFE9; }
+        .bar-fill.red { background: var(--red); color: #fff; }
+        .callout-line {
+            font-family: var(--font-ui);
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        .callout-line strong {
+            font-weight: 500;
+            color: var(--text-primary);
+            font-style: normal;
+        }
+
+        /* ===== Demo 2: Waterfall ===== */
+        .waterfall-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 0;
+            position: relative;
+            padding: 10px 0 0;
+            flex-wrap: wrap;
+            min-height: 200px;
+        }
+        .wf-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .wf-bar-wrap {
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            width: 90px;
+        }
+        .wf-bar {
+            width: 70px;
+            border-radius: 2px 2px 0 0;
+            position: relative;
+            transition: height 0.5s ease;
+            min-height: 20px;
+        }
+        .wf-bar.dark { background: #2a332e; border: 1px solid rgba(255,255,255,0.08); }
+        .wf-bar.amber-bar { background: rgba(255,179,71,0.55); border: 1px solid rgba(255,179,71,0.4); }
+        .wf-bar.green-bar { background: var(--accent); border: 1px solid rgba(68,214,44,0.5); }
+        .wf-bar.red-bar { background: var(--red); border: 1px solid rgba(255,77,77,0.5); }
+        .wf-connector {
+            width: 28px;
+            flex-shrink: 0;
+            position: relative;
+            align-self: stretch;
+            display: flex;
+            align-items: flex-end;
+            padding-bottom: 0;
+        }
+        .wf-connector svg {
+            width: 28px;
+            height: 100%;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+        .wf-label {
+            font-family: var(--font-mono);
+            font-size: 8px;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-top: 8px;
+            max-width: 95px;
+            line-height: 1.3;
+        }
+        .wf-value {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-primary);
+            text-align: center;
+            margin-top: 2px;
+            white-space: nowrap;
+        }
+        .wf-annotation {
+            font-family: var(--font-ui);
+            font-size: 11px;
+            font-weight: 400;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-top: 12px;
+            font-style: italic;
+            border-left: 2px solid rgba(68,214,44,0.18);
+            padding-left: 12px;
+            max-width: 600px;
+        }
+
+        /* ===== Demo 2: Tables ===== */
+        .table-wrap {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 0;
+        }
+        table.unified-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 0.03em;
+            min-width: 900px;
+        }
+        table.unified-table thead th {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-faint);
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface-alt);
+            white-space: nowrap;
+        }
+        table.unified-table tbody td {
+            padding: 11px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.035);
+            color: var(--text-primary);
+            vertical-align: top;
+            line-height: 1.4;
+        }
+        table.unified-table tbody tr {
+            transition: background 0.15s;
+        }
+        table.unified-table tbody tr:hover {
+            background: rgba(255,255,255,0.015);
+        }
+        .churn-pill {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 2px;
+            white-space: nowrap;
+        }
+        .churn-pill.low { color: var(--accent); background: var(--accent-dim); }
+        .churn-pill.high { color: var(--red); background: rgba(255,77,77,0.15); }
+        .churn-pill.elevated { color: var(--amber); background: rgba(255,179,71,0.15); }
+
+        /* ===== Demo 2: Bench Strip ===== */
+        .bench-strip {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        .bench-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            padding: 16px 16px 14px;
+            clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+        }
+        .bench-stat {
+            font-family: var(--font-mono);
+            font-size: 26px;
+            font-weight: 500;
+            color: var(--accent);
+            margin-bottom: 4px;
+            letter-spacing: -0.01em;
+        }
+        .bench-context {
+            font-family: var(--font-ui);
+            font-size: 12px;
+            color: var(--text-primary);
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+        .bench-source {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            color: var(--text-faint);
+            letter-spacing: 0.03em;
+            line-height: 1.3;
+        }
+
+        /* ===== Data Readiness (for Task 4) ===== */
+        .readiness-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 20px;
+        }
+        .readiness-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .readiness-label {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.04em;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+        .readiness-chip {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            padding: 3px 10px;
+            border-radius: 2px;
+            white-space: nowrap;
+        }
+        .readiness-chip.green { color: var(--accent); background: var(--accent-dim); }
+        .readiness-chip.amber { color: var(--amber); background: rgba(255,179,71,0.15); }
+        .readiness-chip.cyan  { color: #6BD6E8; background: rgba(107,214,232,0.12); }
+
+        /* ===== Action Queue table (mono) ===== */
+        .mono-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.03em;
+        }
+        .mono-table thead th {
+            text-align: left;
+            font-weight: 500;
+            font-size: 8px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-faint);
+            padding: 10px 10px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface-alt);
+            white-space: nowrap;
+        }
+        .mono-table tbody td {
+            padding: 10px 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            color: var(--text-primary);
+            vertical-align: top;
+            line-height: 1.45;
+        }
+        .mono-table tbody tr:hover {
+            background: rgba(255,255,255,0.015);
+        }
+        .mono-table .priority-p1 { color: var(--red); font-weight: 500; }
+        .mono-table .priority-p2 { color: var(--amber); font-weight: 500; }
+        .mono-table .priority-p3 { color: var(--text-faint); font-weight: 500; }
+        .sim-marker {
+            font-family: var(--font-mono);
+            font-size: 8px;
+            letter-spacing: 0.05em;
+            color: var(--amber);
+            text-transform: uppercase;
+        }
+
+        /* ===== Glossary and drawer (placeholder — Task 6) ===== */
+        .glossary-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 1px solid var(--text-faint);
+            color: var(--text-faint);
+            font-family: var(--font-mono);
+            font-size: 9px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-left: 4px;
+            vertical-align: middle;
+        }
+        .glossary-icon:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* ===== AI Analyst Panel ===== */
+        #analyst-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: width 0.3s ease, min-width 0.3s ease;
+        }
+        #analyst-panel.collapsed {
+            width: 36px !important;
+            min-width: 36px !important;
+            flex-shrink: 0;
+        }
+        #analyst-panel.collapsed .analyst-body {
+            display: none;
+        }
+        #analyst-panel.collapsed .analyst-collapse-tab {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            padding: 12px 8px;
+        }
+        .analyst-header {
+            padding: 14px 18px 10px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+        .analyst-header-title {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 11px;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: var(--accent);
+        }
+        .analyst-header-sub {
+            font-family: var(--font-ui);
+            font-weight: 300;
+            font-size: 10px;
+            color: var(--text-faint);
+            margin-top: 2px;
+            letter-spacing: 0.02em;
+            line-height: 1.3;
+        }
+        .analyst-collapse-btn {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            cursor: pointer;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-faint);
+            padding: 3px 8px;
+            border-radius: 2px;
+            transition: all 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .analyst-collapse-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .analyst-body {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            overflow: hidden;
+        }
+        #analyst-transcript {
+            flex: 1;
+            overflow-y: auto;
+            padding: 14px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            min-height: 120px;
+            max-height: 400px;
+        }
+        #analyst-chips {
+            padding: 10px 18px 14px;
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .transcript-entry {
+            font-family: var(--font-ui);
+            font-size: 12px;
+            line-height: 1.55;
+            letter-spacing: 0.02em;
+        }
+        .transcript-q {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--accent);
+            letter-spacing: 0.04em;
+            margin-bottom: 6px;
+        }
+        .transcript-a {
+            color: var(--text-secondary);
+        }
+        .transcript-action {
+            color: var(--accent);
+            font-weight: 500;
+            margin-top: 8px;
+            font-size: 12px;
+        }
+        .analyst-chip {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.03em;
+            padding: 8px 12px;
+            cursor: pointer;
+            background: var(--surface-alt);
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            color: var(--text-secondary);
+            text-align: left;
+            transition: all 0.2s;
+            outline: none;
+            width: 100%;
+        }
+        .analyst-chip:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+            background: rgba(68,214,44,0.04);
+        }
+        .analyst-chip.asked {
+            opacity: 0.5;
+            border-color: rgba(255,255,255,0.03);
+        }
+        .analyst-chip.asked::after {
+            content: ' ✓';
+            color: var(--accent);
+            font-size: 8px;
+        }
+        .analyst-collapse-tab {
+            display: none;
+            width: 100%;
+            text-align: center;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.06em;
+            color: var(--accent);
+            cursor: pointer;
+            padding: 12px 4px;
+            user-select: none;
+        }
+        #analyst-panel.collapsed .analyst-collapse-tab {
+            display: block;
+        }
+        #analyst-panel.collapsed .analyst-header {
+            display: none;
+        }
+        #analyst-panel.collapsed .analyst-collapse-btn {
+            display: none;
+        }
+
+        /* ===== Sources Drawer (placeholder — Task 6) ===== */
+        #sources-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+        }
+        #sources-overlay.open {
+            display: block;
+        }
+        #sources-overlay .overlay-bg {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+        }
+        #sources-overlay .overlay-content {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 560px;
+            max-width: 100vw;
+            height: 100vh;
+            background: var(--surface);
+            border-left: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 28px 24px 40px;
+            font-family: var(--font-ui);
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            letter-spacing: 0.02em;
+        }
+        #sources-overlay .overlay-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-family: var(--font-mono);
+            font-size: 14px;
+            cursor: pointer;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-faint);
+            width: 32px;
+            height: 32px;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        #sources-overlay .overlay-close:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        #sources-overlay h3 {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin: 20px 0 8px;
+        }
+        #sources-overlay h3:first-of-type {
+            margin-top: 0;
+        }
+        #sources-overlay .src-block {
+            margin-bottom: 16px;
+        }
+        #sources-overlay .src-label {
+            font-family: var(--font-mono);
+            font-size: 8px;
+            letter-spacing: 0.06em;
+            color: var(--text-faint);
+            text-transform: uppercase;
+            margin-top: 12px;
+            margin-bottom: 2px;
+        }
+
+        /* ===== Glossary popover ===== */
+        .glossary-popover {
+            position: absolute;
+            z-index: 50;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            padding: 12px 14px;
+            max-width: 280px;
+            font-family: var(--font-ui);
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            letter-spacing: 0.02em;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+        .glossary-popover strong {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* ===== Demo Path Card (placeholder — Task 8) ===== */
+        .demo-path-card {
+            position: fixed;
+            bottom: 60px;
+            left: 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            padding: 18px 20px;
+            z-index: 90;
+            max-width: 360px;
+            clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
+            display: none;
+        }
+        .demo-path-card.open {
+            display: block;
+        }
+        .demo-path-card h4 {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+        .demo-path-card .path-stop {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.03em;
+            color: var(--text-faint);
+            padding: 4px 0;
+        }
+        .demo-path-card .path-stop.active {
+            color: var(--accent);
+        }
+        .demo-path-card .path-stop.done {
+            color: var(--text-secondary);
+        }
+        .demo-path-card .path-btns {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .demo-path-card .path-btn {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.05em;
+            padding: 6px 14px;
+            cursor: pointer;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            border-radius: 2px;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+        .demo-path-card .path-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .demo-path-card .path-exit {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.05em;
+            padding: 6px 14px;
+            cursor: pointer;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-faint);
+            border-radius: 2px;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+        .demo-path-card .path-exit:hover {
+            border-color: var(--red);
+            color: var(--red);
+        }
+
+        /* ===== Scenario toggle ===== */
+        .scenario-btn {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 10px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            cursor: pointer;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-faint);
+            border-radius: 2px;
+            transition: all 0.2s;
+            white-space: nowrap;
+            outline: none;
+        }
+        .scenario-btn.active {
+            color: var(--accent);
+            border-color: var(--accent);
+            background: var(--accent-dim);
+        }
+        .scenario-btn:hover {
+            border-color: var(--text-secondary);
+        }
+        .scenario-label {
+            font-family: var(--font-ui);
+            font-size: 9px;
+            color: var(--text-faint);
+            letter-spacing: 0.03em;
+            margin-left: 4px;
+        }
+
+        /* ===== Media Queries ===== */
+        @media (max-width: 1200px) {
+            .kpi-row {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .kpi-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .benchmark-strip {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .bench-strip {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .channel-lens-row {
+                grid-template-columns: 1fr;
+            }
+            #analyst-panel {
+                width: 320px;
+            }
+        }
+        @media (max-width: 1024px) {
+            .main-container {
+                padding: 16px;
+            }
+            .kpi-row {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            .kpi-value {
+                font-size: 22px;
+            }
+            .content-row {
+                flex-direction: column;
+            }
+            .views-col {
+                padding-right: 0;
+            }
+            #analyst-panel {
+                width: 100%;
+                position: static;
+                max-height: none;
+                margin-top: 24px;
+            }
+            header {
+                gap: 10px;
+            }
+            .app-title {
+                font-size: 15px;
+            }
+            .funnel-stage-num {
+                font-size: 16px;
+            }
+            .benchmark-strip {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .bench-strip {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .channel-lens-row {
+                grid-template-columns: 1fr;
+            }
+            .donut-container {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .funnel-stages {
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+            .funnel-junction {
+                width: 30px;
+                font-size: 9px;
+            }
+            .retention-bar-label {
+                width: 120px;
+                font-size: 10px;
+            }
+        }
+
+        /* ===== Print CSS ===== */
+        @media print {
+            #analyst-panel, .hdr-btn, .view-nav, .explain-btn, .demo-path-card,
+            #sources-overlay, .glossary-popover, .analyst-collapse-btn, .scenario-slot {
+                display: none !important;
+            }
+            .view[hidden] {
+                display: block !important;
+            }
+            body::before {
+                display: none;
+            }
+            .fade-section {
+                animation: none;
+            }
+            .content-row {
+                display: block;
+            }
+            .views-col {
+                padding-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="main-container">
+  <header class="fade-section">
+    <div>
+      <h1 class="app-title">CUSTOMER EXPERIENCE COMMAND CENTER</h1>
+      <p class="app-subtitle">Razer.com Commerce + Customer Advocacy — One Operating Picture</p>
+    </div>
+    <div class="header-right">
+      <span class="week-stamp">WEEK 27 · FY2026</span>
+      <span class="sim-badge">SIMULATED DATA — REAL PRODUCT LINES, REAL MARKET STRUCTURE</span>
+      <button class="hdr-btn" onclick="openSourcesDrawer()">SOURCES &amp; ASSUMPTIONS</button>
+      <button class="hdr-btn" onclick="startDemoPath()">90-SECOND DEMO PATH</button>
+    </div>
+  </header>
+  <nav class="view-nav fade-section">
+    <button class="nav-tab active" data-view="bridge" onclick="switchView('bridge')">THE BRIDGE</button>
+    <button class="nav-tab" data-view="commerce" onclick="switchView('commerce')">COMMERCE</button>
+    <button class="nav-tab" data-view="support" onclick="switchView('support')">SUPPORT</button>
+    <span class="scenario-slot" id="scenario-slot">
+      <button class="scenario-btn active" data-scenario="current" onclick="applyScenario('current')">CURRENT WEEK</button>
+      <button class="scenario-btn" data-scenario="recovery" onclick="applyScenario('recovery')">RECOVERY PLAN</button>
+      <span class="scenario-label">simulated scenario estimates</span>
+    </span>
+  </nav>
+  <div class="content-row">
+    <main class="views-col">
+      <section id="view-bridge" class="view">
+        <!-- Thesis line -->
+        <p style="font-family:var(--font-ui);font-weight:300;font-style:italic;font-size:18px;color:var(--text-secondary);margin-bottom:24px;letter-spacing:0.01em;line-height:1.4;" class="fade-section">Support is a revenue system. Every ticket is a retention event.</p>
+
+        <!-- Bridge KPI Row -->
+        <section class="kpi-grid fade-section" id="bridge-kpis">
+          <div class="panel-title-row" style="grid-column:1/-1;margin-bottom:0;"><div class="panel-title" style="font-size:11px;">BRIDGE KPI ROW — DUAL P&amp;L</div><button class="explain-btn" onclick="triggerExplain('b4')">EXPLAIN ⚡</button></div>
+          <!-- Tile 1: Revenue Protected -->
+          <div class="kpi-tile bridge-metric">
+            <div class="bridge-tag">BRIDGE METRIC — NEW</div>
+            <div class="mono-label">REVENUE PROTECTED (90D) <span class="glossary-icon" onclick="event.stopPropagation();openGlossary('revenue-protected')">?</span></div>
+            <div class="mono-value lg accent" data-scenario-key="revenue-protected">$1.84M</div>
+            <div class="sub-line">LTV of at-risk customers retained after support recovery</div>
+            <div class="wow-tag good"><span class="arrow">▲</span> WoW +$214K</div>
+            <div class="sparkline-wrap">
+              <svg viewBox="0 0 120 26" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="sp5g" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#44D62C" stop-opacity="0.22"/>
+                    <stop offset="100%" stop-color="#44D62C" stop-opacity="0.01"/>
+                  </linearGradient>
+                </defs>
+                <path d="M0,22 L10,20 L20,21 L30,18 L40,16 L50,14 L60,15 L70,11 L80,9 L90,7 L100,5 L110,4 L120,2" fill="none" stroke="#44D62C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+                <path d="M0,22 L10,20 L20,21 L30,18 L40,16 L50,14 L60,15 L70,11 L80,9 L90,7 L100,5 L110,4 L120,2 L120,26 L0,26 Z" fill="url(#sp5g)" opacity="0.55"/>
+              </svg>
+            </div>
+          </div>
+          <!-- Tile 2: LTV At Risk -->
+          <div class="kpi-tile bridge-metric">
+            <div class="bridge-tag">BRIDGE METRIC — NEW</div>
+            <div class="mono-label">LTV AT RISK (OPEN) <span class="glossary-icon" onclick="event.stopPropagation();openGlossary('ltv-at-risk')">?</span></div>
+            <div class="mono-value lg red" data-scenario-key="ltv-at-risk">$612K</div>
+            <div class="sub-line red-sub">Open exposure from unresolved or poor support experiences</div>
+            <div class="wow-tag bad"><span class="arrow">▲</span> WoW +$38K</div>
+            <div class="sparkline-wrap">
+              <svg viewBox="0 0 120 26" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="sp6g" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#FF4D4D" stop-opacity="0.2"/>
+                    <stop offset="100%" stop-color="#FF4D4D" stop-opacity="0.01"/>
+                  </linearGradient>
+                </defs>
+                <path d="M0,12 L10,11 L20,13 L30,9 L40,11 L50,8 L60,9 L70,7 L80,9 L90,6 L100,7 L110,5 L120,4" fill="none" stroke="#FF4D4D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+                <path d="M0,12 L10,11 L20,13 L30,9 L40,11 L50,8 L60,9 L70,7 L80,9 L90,6 L100,7 L110,5 L120,4 L120,26 L0,26 Z" fill="url(#sp6g)" opacity="0.5"/>
+              </svg>
+            </div>
+          </div>
+          <!-- Tile 3: Revenue vs Target -->
+          <div class="kpi-tile">
+            <div class="mono-label">REVENUE VS TARGET</div>
+            <div class="mono-value lg red">−8.4%</div>
+            <div class="sub-line red-sub">$6.10M vs $6.66M plan</div>
+            <div class="wow-tag bad" style="margin-top:16px;"><span class="arrow">▼</span> 5th consecutive week below plan</div>
+          </div>
+          <!-- Tile 4: Containment -->
+          <div class="kpi-tile">
+            <div class="mono-label">CONTAINMENT RATE</div>
+            <div class="mono-value lg accent">61.4%</div>
+            <div class="wow-tag good"><span class="arrow">▲</span> WoW +1.2pp</div>
+          </div>
+          <!-- Tile 5: CSAT -->
+          <div class="kpi-tile">
+            <div class="mono-label">CSAT</div>
+            <div class="mono-value lg">4.31 <span style="font-size:14px;color:#7E8C82;">/ 5</span></div>
+            <div class="wow-tag good"><span class="arrow">▲</span> WoW +0.03</div>
+          </div>
+          <!-- Tile 6: Open High-Value Tickets -->
+          <div class="kpi-tile">
+            <div class="mono-label">OPEN HIGH-VALUE TICKETS</div>
+            <div class="mono-value lg amber">312</div>
+            <div class="sub-line" style="color:var(--amber);">Blade owners with tickets open &gt;7 days <span class="sim-marker">SIM</span></div>
+          </div>
+        </section>
+
+        <!-- Unified Customer Table (from Demo 2) -->
+        <section class="panel clipped fade-section" id="bridge-table">
+          <div class="panel-inner">
+            <div class="panel-title-row"><div class="section-title">ONE CUSTOMER, BOTH LEDGERS</div><button class="explain-btn" onclick="triggerExplain('b1')">EXPLAIN ⚡</button></div>
+            <p class="section-caption" style="margin-bottom:14px;">Commerce knows what they buy. Support knows when they struggle. Neither ledger alone predicts who leaves.</p>
+            <div class="table-wrap">
+              <table class="unified-table">
+                <thead>
+                  <tr>
+                    <th>SEGMENT</th>
+                    <th>CUSTOMERS</th>
+                    <th>AVG LTV</th>
+                    <th>SUPPORT SIGNAL</th>
+                    <th>CHURN RISK</th>
+                    <th>NEXT BEST ACTION</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Blade owners · 2+ purchases · CSAT ≥4</td>
+                    <td>8,420</td>
+                    <td>$3,180</td>
+                    <td>Healthy — 0.4 tickets/yr</td>
+                    <td><span class="churn-pill low">LOW</span></td>
+                    <td>Silver tier upgrade offer</td>
+                  </tr>
+                  <tr>
+                    <td>Blade owners · open ticket &gt;7d</td>
+                    <td>312</td>
+                    <td>$3,410</td>
+                    <td>Unresolved — avg 11.2d open</td>
+                    <td><span class="churn-pill high">HIGH</span></td>
+                    <td>Human callback within 24h</td>
+                  </tr>
+                  <tr>
+                    <td>Peripheral multi-buyers · AI-resolved &lt;24h</td>
+                    <td>24,150</td>
+                    <td>$486</td>
+                    <td>Resolved fast — CSAT 4.4</td>
+                    <td><span class="churn-pill low">LOW</span></td>
+                    <td>Cross-category bundle at next login</td>
+                  </tr>
+                  <tr>
+                    <td>Peripheral buyers · 2+ contacts same issue</td>
+                    <td>4,890</td>
+                    <td>$512</td>
+                    <td>Repeat contact — friction signal</td>
+                    <td><span class="churn-pill elevated">ELEVATED</span></td>
+                    <td>Route to senior agent + goodwill credit</td>
+                  </tr>
+                  <tr>
+                    <td>Collab-drop first-timers · shipping ticket</td>
+                    <td>2,260</td>
+                    <td>$214</td>
+                    <td>First experience = a problem</td>
+                    <td><span class="churn-pill elevated">ELEVATED</span></td>
+                    <td>Proactive status message + Silver welcome bonus</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Revenue-at-Risk Waterfall (from Demo 2) -->
+        <section class="panel clipped fade-section" id="bridge-waterfall">
+          <div class="panel-inner">
+            <div class="panel-title-row"><div class="section-title">FROM BAD EXPERIENCE TO LOST LTV</div><button class="explain-btn" onclick="triggerExplain('b4')">EXPLAIN ⚡</button></div>
+            <div class="waterfall-container" style="display:flex;align-items:flex-end;gap:0;padding:20px 0 10px;flex-wrap:wrap;justify-content:center;">
+              <div class="wf-step" style="align-self:flex-end;">
+                <div class="wf-bar-wrap" style="height:150px;">
+                  <div class="wf-bar dark" style="height:120px;width:70px;"></div>
+                </div>
+                <div class="wf-value" style="margin-top:4px;">7,462</div>
+                <div class="wf-label">POOR SUPPORT<br>EXPERIENCES (WK 27)</div>
+              </div>
+              <div class="wf-connector" style="height:150px;position:relative;width:32px;flex-shrink:0;">
+                <svg viewBox="0 0 32 150" style="position:absolute;bottom:0;left:0;width:32px;height:150px;">
+                  <line x1="0" y1="30" x2="32" y2="18" stroke="rgba(255,255,255,0.25)" stroke-width="1" stroke-dasharray="3,2"/>
+                </svg>
+              </div>
+              <div class="wf-step" style="align-self:flex-end;">
+                <div class="wf-bar-wrap" style="height:150px;">
+                  <div class="wf-bar dark" style="height:132px;width:56px;"></div>
+                </div>
+                <div class="wf-value" style="margin-top:4px;">+18pp avg</div>
+                <div class="wf-label">CHURN-PROB<br>UPLIFT</div>
+              </div>
+              <div class="wf-connector" style="height:150px;position:relative;width:32px;flex-shrink:0;">
+                <svg viewBox="0 0 32 150" style="position:absolute;bottom:0;left:0;width:32px;height:150px;">
+                  <line x1="0" y1="18" x2="32" y2="14" stroke="rgba(255,255,255,0.25)" stroke-width="1" stroke-dasharray="3,2"/>
+                </svg>
+              </div>
+              <div class="wf-step" style="align-self:flex-end;">
+                <div class="wf-bar-wrap" style="height:150px;">
+                  <div class="wf-bar amber-bar" style="height:145px;width:80px;"></div>
+                </div>
+                <div class="wf-value" style="margin-top:4px;color:#FFB347;">$958K</div>
+                <div class="wf-label">LTV EXPOSURE</div>
+              </div>
+              <div class="wf-connector" style="height:150px;position:relative;width:32px;flex-shrink:0;">
+                <svg viewBox="0 0 32 150" style="position:absolute;bottom:0;left:0;width:32px;height:150px;">
+                  <polyline points="0,14 16,14 16,92 32,92" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1" stroke-dasharray="3,2"/>
+                </svg>
+              </div>
+              <div class="wf-step" style="align-self:flex-end;">
+                <div class="wf-bar-wrap" style="height:150px;">
+                  <div class="wf-bar green-bar" style="height:92px;width:75px;"></div>
+                </div>
+                <div class="wf-value" style="margin-top:4px;color:#44D62C;">$346K</div>
+                <div class="wf-label">RECOVERED VIA<br>SUPPORT RECOVERY PLAYS</div>
+              </div>
+              <div class="wf-connector" style="height:150px;position:relative;width:32px;flex-shrink:0;">
+                <svg viewBox="0 0 32 150" style="position:absolute;bottom:0;left:0;width:32px;height:150px;">
+                  <line x1="0" y1="92" x2="32" y2="70" stroke="rgba(255,255,255,0.3)" stroke-width="1" stroke-dasharray="3,2"/>
+                </svg>
+              </div>
+              <div class="wf-step" style="align-self:flex-end;">
+                <div class="wf-bar-wrap" style="height:150px;">
+                  <div class="wf-bar red-bar" style="height:70px;width:80px;"></div>
+                </div>
+                <div class="wf-value" style="margin-top:4px;color:#FF4D4D;" data-scenario-key="ltv-at-risk-waterfall">$612K</div>
+                <div class="wf-label">NET OPEN<br>EXPOSURE</div>
+              </div>
+            </div>
+            <p class="wf-annotation">TIER EFFECT — a Blade owner at risk carries ~10× the LTV of a mouse-only buyer. Exposure is concentrated: 312 Blade tickets = $1.06M of the gross exposure.</p>
+          </div>
+        </section>
+
+        <!-- Recommended Action Queue (NEW) -->
+        <section class="panel clipped fade-section" id="bridge-actions">
+          <div class="panel-inner">
+            <div class="panel-title-row"><div class="section-title">RECOMMENDED ACTION QUEUE — INSIGHT INTO MOTION</div><button class="explain-btn" onclick="triggerExplain('b3')">EXPLAIN ⚡</button></div>
+            <div class="table-wrap">
+              <table class="mono-table">
+                <thead>
+                  <tr>
+                    <th>P</th>
+                    <th>ACTION</th>
+                    <th>OWNER</th>
+                    <th>WHY IT MATTERS</th>
+                    <th>IMPACT</th>
+                    <th>GUARDRAIL</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="priority-p1">P1</td>
+                    <td>Escalate 312 Blade owners with unresolved tickets to human callback</td>
+                    <td>Customer Advocacy</td>
+                    <td>$1.06M LTV concentrated in one cohort</td>
+                    <td>Protect ~$346K/qtr <span class="sim-marker">SIM</span></td>
+                    <td>CSAT ≥ 4 on recovery contacts</td>
+                  </tr>
+                  <tr>
+                    <td class="priority-p1">P1</td>
+                    <td>Queue-harden checkout before Wuthering Waves drop</td>
+                    <td>Ecommerce Eng</td>
+                    <td>Last drop leaked $412K at checkout</td>
+                    <td>Recover ~$280K/drop <span class="sim-marker">SIM</span></td>
+                    <td>No added friction for members</td>
+                  </tr>
+                  <tr>
+                    <td class="priority-p2">P2</td>
+                    <td>Member-shipping pilot on orders &gt;$99</td>
+                    <td>Ecommerce + Loyalty</td>
+                    <td>Answers the Prime gap at neutral margin</td>
+                    <td>+0.3–0.5pp conversion <span class="sim-marker">SIM</span></td>
+                    <td>Margin-neutral shipping cost cap</td>
+                  </tr>
+                  <tr>
+                    <td class="priority-p2">P2</td>
+                    <td>Add 90-day repurchase-after-contact to containment scorecard</td>
+                    <td>Customer Advocacy</td>
+                    <td>Containment must protect revenue, not just close tickets</td>
+                    <td>Quality guardrail <span class="sim-marker">SIM</span></td>
+                    <td>Do not slow resolution SLAs</td>
+                  </tr>
+                  <tr>
+                    <td class="priority-p3">P3</td>
+                    <td>SKU-level MAP evidence pack for channel governance</td>
+                    <td>Commercial Analytics</td>
+                    <td>DeathAdder &amp; Kraken breaches erode DTC pricing power</td>
+                    <td>Restore parity on 2 hero SKUs <span class="sim-marker">SIM</span></td>
+                    <td>Neutral, factual evidence only</td>
+                  </tr>
+                  <tr>
+                    <td class="priority-p3">P3</td>
+                    <td>Bridge metrics v1 — join commerce + support ledgers</td>
+                    <td>Commercial Analytics</td>
+                    <td>The seam neither dashboard sees today</td>
+                    <td>One source of truth <span class="sim-marker">SIM</span></td>
+                    <td>Data governance sign-off</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Data Readiness (NEW) -->
+        <section class="panel clipped fade-section" id="bridge-readiness">
+          <div class="panel-inner">
+            <div class="panel-title-row"><div class="section-title">DATA READINESS — WHAT THIS NEEDS IN PRODUCTION <span class="glossary-icon" onclick="openGlossary('data-readiness')">?</span></div></div>
+            <div class="readiness-grid">
+              <div class="readiness-row"><span class="readiness-label">Commerce orders</span><span class="readiness-chip green">READY</span></div>
+              <div class="readiness-row"><span class="readiness-label">Product ownership registry</span><span class="readiness-chip amber">PARTIAL</span></div>
+              <div class="readiness-row"><span class="readiness-label">Support tickets</span><span class="readiness-chip green">READY</span></div>
+              <div class="readiness-row"><span class="readiness-label">Loyalty tier</span><span class="readiness-chip green">READY</span></div>
+              <div class="readiness-row"><span class="readiness-label">Channel price feed</span><span class="readiness-chip amber">NEEDS GOVERNANCE</span></div>
+              <div class="readiness-row"><span class="readiness-label">90-day repurchase linkage</span><span class="readiness-chip cyan">BUILD V1</span></div>
+              <div class="readiness-row"><span class="readiness-label">Containment quality labels</span><span class="readiness-chip cyan">DEFINE METRIC</span></div>
+              <div class="readiness-row"><span class="readiness-label">MAP evidence workflow</span><span class="readiness-chip cyan">BUILD WORKFLOW</span></div>
+            </div>
+            <p style="font-family:var(--font-ui);font-weight:300;font-size:11px;color:var(--text-faint);margin-top:14px;letter-spacing:0.02em;font-style:italic;">Dashboards are the last mile. This is the plumbing map.</p>
+          </div>
+        </section>
+
+        <!-- Bridge Benchmark Strip -->
+        <section class="fade-section" id="bridge-bench">
+          <div class="section-title-row" style="margin-bottom:12px;">
+            <div class="section-title">MARKET CONTEXT — REAL FIGURES, CITED</div>
+          </div>
+          <div class="bench-strip" style="grid-template-columns:repeat(2,1fr);">
+            <div class="bench-card">
+              <div class="bench-stat">32%</div>
+              <div class="bench-context">of customers stop buying from a brand they love after a single bad experience.</div>
+              <div class="bench-source">PwC, Future of CX (15,000 respondents), accessed 2026-07-08</div>
+            </div>
+            <div class="bench-card">
+              <div class="bench-stat">25–95%</div>
+              <div class="bench-context">Profit increase from a 5% retention-rate improvement across studied industries.</div>
+              <div class="bench-source">Bain / Reichheld via HBR, accessed 2026-07-08</div>
+            </div>
+          </div>
+        </section>
+      </section>
+      <section id="view-commerce" class="view" hidden>
+        <!-- Commerce KPIs -->
+        <section class="kpi-row fade-section" id="commerce-kpis">
+          <div class="panel-title-row"><div class="panel-title" style="grid-column:1/-1;margin-bottom:0;">EXECUTIVE KPI ROW</div><button class="explain-btn" onclick="triggerExplain('c5')">EXPLAIN ⚡</button></div>
+          <div class="kpi-tile">
+            <div class="kpi-label">NET REVENUE</div>
+            <div class="kpi-value">$6.10M</div>
+            <div class="kpi-delta up">▲ +2.1% WoW</div>
+            <div class="kpi-sub-line">−8.4% VS TARGET</div>
+            <div class="kpi-sparkline">
+              <svg viewBox="0 0 112 28" preserveAspectRatio="none">
+                <line x1="0" y1="2.4" x2="112" y2="2.4" stroke="rgba(255,77,77,0.45)" stroke-width="0.8" stroke-dasharray="3,4" />
+                <polyline points="0,25.2 10.18,22.8 20.36,26.4 30.55,21.6 40.73,19.2 50.91,23.4 61.09,16.8 71.27,20.4 81.45,24.0 91.64,18.0 101.82,22.2 112,16.8" fill="none" stroke="#44D62C" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" />
+                <circle cx="112" cy="16.8" r="2.5" fill="#44D62C" />
+                <text x="110" y="5" fill="rgba(255,77,77,0.6)" font-family="'JetBrains Mono',monospace" font-size="7" text-anchor="end">TARGET $6.66M</text>
+              </svg>
+            </div>
+          </div>
+          <div class="kpi-tile">
+            <div class="kpi-label">CONVERSION RATE</div>
+            <div class="kpi-value">1.72%</div>
+            <div class="kpi-delta down">▼ −0.09pp WoW</div>
+            <div class="kpi-sparkline">
+              <svg viewBox="0 0 112 28" preserveAspectRatio="none">
+                <polyline points="0,3.5 10.18,8.0 20.36,5.5 30.55,10.5 40.73,15.0 50.91,17.5 61.09,19.5 71.27,21.5 81.45,24.0 91.64,26.5 101.82,21.5 112,24.0" fill="none" stroke="#FF4D4D" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" />
+                <circle cx="112" cy="24.0" r="2.5" fill="#FF4D4D" />
+              </svg>
+            </div>
+          </div>
+          <div class="kpi-tile">
+            <div class="kpi-label">AVG ORDER VALUE</div>
+            <div class="kpi-value">$128</div>
+            <div class="kpi-delta up">▲ +$3 WoW</div>
+            <div class="kpi-sparkline">
+              <svg viewBox="0 0 112 28" preserveAspectRatio="none">
+                <polyline points="0,18.0 10.18,12.0 20.36,18.0 30.55,8.0 40.73,12.0 50.91,8.0 61.09,4.0 71.27,8.0 81.45,12.0 91.64,8.0 101.82,4.0 112,4.0" fill="none" stroke="#44D62C" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" />
+                <circle cx="112" cy="4.0" r="2.5" fill="#44D62C" />
+              </svg>
+            </div>
+          </div>
+          <div class="kpi-tile">
+            <div class="kpi-label">REPEAT PURCHASE (90D)</div>
+            <div class="kpi-value">24.6%</div>
+            <div class="kpi-delta up">▲ +0.4pp WoW</div>
+            <div class="kpi-sparkline">
+              <svg viewBox="0 0 112 28" preserveAspectRatio="none">
+                <polyline points="0,19.0 10.18,15.0 20.36,23.0 30.55,11.0 40.73,15.0 50.91,7.0 61.09,19.0 71.27,11.0 81.45,7.0 91.64,15.0 101.82,3.5 112,3.5" fill="none" stroke="#44D62C" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" />
+                <circle cx="112" cy="3.5" r="2.5" fill="#44D62C" />
+              </svg>
+            </div>
+          </div>
+          <div class="kpi-tile">
+            <div class="kpi-label">RAZER ID SIGNUPS</div>
+            <div class="kpi-value accent-green">18.4K</div>
+            <div class="kpi-delta up">▲ +31% WoW</div>
+            <div class="kpi-sparkline">
+              <svg viewBox="0 0 112 28" preserveAspectRatio="none">
+                <polyline points="0,25.0 10.18,23.5 20.36,24.5 30.55,22.5 40.73,20.0 50.91,21.5 61.09,20.5 71.27,18.0 81.45,17.0 91.64,12.5 101.82,6.0 112,2.0" fill="none" stroke="#44D62C" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" />
+                <circle cx="112" cy="2.0" r="2.5" fill="#44D62C" />
+              </svg>
+            </div>
+          </div>
+          <div class="kpi-tile">
+            <div class="kpi-label">SILVER ENGAGEMENT</div>
+            <div class="kpi-value">11.2%</div>
+            <div class="kpi-delta up">▲ +0.8pp WoW</div>
+            <div class="kpi-sparkline">
+              <svg viewBox="0 0 112 28" preserveAspectRatio="none">
+                <polyline points="0,21.0 10.18,18.5 20.36,23.5 30.55,16.0 40.73,18.5 50.91,13.5 61.09,16.0 71.27,11.0 81.45,13.5 91.64,8.5 101.82,6.0 112,2.0" fill="none" stroke="#44D62C" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" />
+                <circle cx="112" cy="2.0" r="2.5" fill="#44D62C" />
+              </svg>
+            </div>
+          </div>
+        </section>
+
+        <!-- Commerce Funnel -->
+        <section class="funnel-panel fade-section" id="commerce-funnel">
+          <div class="panel-title-row"><div class="panel-title">ACQUISITION → PURCHASE FUNNEL</div><button class="explain-btn" onclick="triggerExplain('c6')">EXPLAIN ⚡</button></div>
+          <div class="funnel-stages">
+            <div class="funnel-stage">
+              <div class="funnel-stage-num">3.55M</div>
+              <div class="funnel-stage-label">SESSIONS</div>
+            </div>
+            <div class="funnel-junction"><span>45.6%</span></div>
+            <div class="funnel-stage">
+              <div class="funnel-stage-num">1.62M</div>
+              <div class="funnel-stage-label">PRODUCT PAGE</div>
+            </div>
+            <div class="funnel-junction"><span>13.2%</span></div>
+            <div class="funnel-stage">
+              <div class="funnel-stage-num">214K</div>
+              <div class="funnel-stage-label">CART</div>
+            </div>
+            <div class="funnel-junction"><span>56.5%</span></div>
+            <div class="funnel-stage">
+              <div class="funnel-stage-num">121K</div>
+              <div class="funnel-stage-label">CHECKOUT</div>
+            </div>
+            <div class="funnel-junction"><span>50.5%</span></div>
+            <div class="funnel-stage">
+              <div class="funnel-stage-num">61.1K</div>
+              <div class="funnel-stage-label">PURCHASE</div>
+            </div>
+          </div>
+          <div class="anomaly-callout">
+            <strong>DROP-DAY FRICTION</strong> — Espeon &amp; Umbreon collab launch (Jul 3): sessions on collab PDPs spiked 4.1×, but checkout completion fell 50.6% → 31.9%. Queue/bot pressure at checkout. Est. unconverted demand: <strong><span data-scenario-key="checkout-leakage">$412K</span></strong>.
+          </div>
+        </section>
+
+        <!-- Commerce Channel Lens (always visible, no toggle) -->
+        <section class="channel-lens-row fade-section" id="commerce-channel">
+          <div class="channel-panel">
+            <div class="panel-title-row"><div class="panel-title">CHANNEL MIX — REVENUE SHARE</div><button class="explain-btn" onclick="triggerExplain('c7')">EXPLAIN ⚡</button></div>
+            <div class="donut-container">
+              <svg width="140" height="140" viewBox="0 0 140 140">
+                <circle cx="70" cy="70" r="54" fill="none" stroke="#1c2922" stroke-width="22" />
+                <circle cx="70" cy="70" r="54" fill="none" stroke="#44D62C" stroke-width="22" stroke-dasharray="74.64 264.65" stroke-dashoffset="0" transform="rotate(-90 70 70)" />
+                <circle cx="70" cy="70" r="54" fill="none" stroke="#5A6560" stroke-width="22" stroke-dasharray="128.93 210.36" stroke-dashoffset="-74.64" transform="rotate(-90 70 70)" />
+                <circle cx="70" cy="70" r="54" fill="none" stroke="#3D4A41" stroke-width="22" stroke-dasharray="135.72 203.57" stroke-dashoffset="-203.57" transform="rotate(-90 70 70)" />
+                <text x="70" y="66" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-weight="500" font-size="20" fill="#44D62C">22%</text>
+                <text x="70" y="82" text-anchor="middle" font-family="'Inter',sans-serif" font-weight="300" font-size="9" fill="#7E8C82" letter-spacing="0.04em">DTC</text>
+              </svg>
+              <div class="donut-legend">
+                <div class="donut-legend-item"><span class="donut-legend-dot green"></span> DTC RAZER.COM <span class="donut-legend-val">22%</span></div>
+                <div class="donut-legend-item"><span class="donut-legend-dot grey1"></span> AMAZON &amp; MARKETPLACES <span class="donut-legend-val">38%</span></div>
+                <div class="donut-legend-item"><span class="donut-legend-dot grey2"></span> DISTRIBUTOR &amp; RETAIL <span class="donut-legend-val">40%</span></div>
+              </div>
+            </div>
+            <div class="channel-caption">DTC is the margin engine but the minority channel.</div>
+          </div>
+          <div class="channel-panel">
+            <div class="panel-title">PRICE PARITY MONITOR — RAZER.COM VS AMAZON STREET</div>
+            <table class="parity-table">
+              <thead>
+                <tr>
+                  <th>PRODUCT</th>
+                  <th>RAZER.COM</th>
+                  <th>AMAZON</th>
+                  <th>GAP</th>
+                  <th>FLAG</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>DeathAdder V3 Pro</td>
+                  <td>$159.99</td>
+                  <td>$129.99</td>
+                  <td class="gap-red">−18.8%</td>
+                  <td class="flag-red">MAP BREACH</td>
+                </tr>
+                <tr>
+                  <td>Kraken V4</td>
+                  <td>$99.99</td>
+                  <td>$84.99</td>
+                  <td class="gap-red">−15.0%</td>
+                  <td class="flag-red">MAP BREACH</td>
+                </tr>
+                <tr>
+                  <td>BlackShark V2 Pro</td>
+                  <td>$199.99</td>
+                  <td>$178.50</td>
+                  <td class="gap-amber">−10.7%</td>
+                  <td class="flag-amber">DRIFT</td>
+                </tr>
+                <tr>
+                  <td>BlackWidow V4 Pro</td>
+                  <td>$229.99</td>
+                  <td>$229.99</td>
+                  <td class="gap-green">0.0%</td>
+                  <td class="flag-green">PARITY</td>
+                </tr>
+                <tr>
+                  <td>Blade 16</td>
+                  <td>$2,999.99</td>
+                  <td>$2,999.99</td>
+                  <td class="gap-green">0.0%</td>
+                  <td class="flag-green">PARITY</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="parity-footnote">SG-US GRAY MARKET WATCH: DeathAdder V3 Pro SG list S$219 (≈US$162) vs US street $129.99 — arbitrage corridor open.</div>
+          </div>
+        </section>
+
+        <!-- Commerce Retention -->
+        <section class="retention-panel fade-section" id="commerce-retention">
+          <div class="panel-title-row"><div class="panel-title">ECOSYSTEM RETENTION — REPEAT PURCHASE WITHIN 90 DAYS</div><button class="explain-btn" onclick="triggerExplain('c8')">EXPLAIN ⚡</button></div>
+          <div class="retention-bars">
+            <div class="retention-bar-row">
+              <span class="retention-bar-label">GUEST CHECKOUT</span>
+              <div class="retention-bar-track"><div class="retention-bar-fill guest"></div></div>
+              <span class="retention-bar-value">9.2%</span>
+            </div>
+            <div class="retention-bar-row">
+              <span class="retention-bar-label">RAZER ID MEMBER</span>
+              <div class="retention-bar-track"><div class="retention-bar-fill member"></div></div>
+              <span class="retention-bar-value">21.4%</span>
+            </div>
+            <div class="retention-bar-row">
+              <span class="retention-bar-label">SILVER-ACTIVE MEMBER</span>
+              <div class="retention-bar-track"><div class="retention-bar-fill silver"></div></div>
+              <span class="retention-bar-value">38.1%</span>
+            </div>
+          </div>
+          <div class="retention-caption">Silver-active members repurchase at 4.1× the rate of guests — the ecosystem is the conversion strategy.</div>
+        </section>
+
+        <!-- Commerce Benchmark Strip -->
+        <section class="benchmark-strip fade-section" id="commerce-bench">
+          <div class="benchmark-card">
+            <div class="benchmark-stat">1.4–1.6%</div>
+            <div class="benchmark-context">Consumer-electronics ecommerce conversion benchmark (all-vertical avg 2–3%). This week's 1.72% runs above the vertical norm.</div>
+            <div class="benchmark-source">Smart Insights / Speed Commerce, accessed 2026-07-08</div>
+          </div>
+          <div class="benchmark-card">
+            <div class="benchmark-stat">70.2%</div>
+            <div class="benchmark-context">Average cart abandonment across ~50 studies — checkout UX fixes alone can lift conversion up to 35%.</div>
+            <div class="benchmark-source">Baymard Institute, accessed 2026-07-08</div>
+          </div>
+          <div class="benchmark-card">
+            <div class="benchmark-stat">15–25%</div>
+            <div class="benchmark-context">Electronics repeat-purchase benchmark (ecommerce avg ~28%). This week's 24.6% sits at the top of the electronics band.</div>
+            <div class="benchmark-source">MobiLoud / Finsi, accessed 2026-07-08</div>
+          </div>
+          <div class="benchmark-card">
+            <div class="benchmark-stat">+20–30%</div>
+            <div class="benchmark-context">Typical DTC margin advantage vs retail channel — industry rule of thumb, directional. Why the 22% DTC share matters.</div>
+            <div class="benchmark-source">Stock&amp;Ship industry analysis, accessed 2026-07-08</div>
+          </div>
+        </section>
+      </section>
+      <section id="view-support" class="view" hidden>
+        <!-- Support KPIs (4 tiles only — bridge tiles go in Task 4) -->
+        <section class="kpi-grid fade-section" id="support-kpis">
+          <div class="panel-title-row" style="grid-column:1/-1;margin-bottom:0;"><div class="panel-title" style="font-size:11px;">SUPPORT KPI ROW</div><button class="explain-btn" onclick="triggerExplain('s12')">EXPLAIN ⚡</button></div>
+          <div class="kpi-tile">
+            <div class="mono-label">CONTAINMENT RATE</div>
+            <div class="mono-value lg accent">61.4%</div>
+            <div class="wow-tag good"><span class="arrow">▲</span> WoW +1.2pp</div>
+            <div class="sparkline-wrap">
+              <svg viewBox="0 0 120 26" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="sp1g" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#44D62C" stop-opacity="0.2"/>
+                    <stop offset="100%" stop-color="#44D62C" stop-opacity="0.01"/>
+                  </linearGradient>
+                </defs>
+                <path d="M0,19 L10,17 L20,18 L30,15 L40,14 L50,13 L60,12 L70,10 L80,11 L90,8 L100,7 L110,5 L120,4" fill="none" stroke="#44D62C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+                <path d="M0,19 L10,17 L20,18 L30,15 L40,14 L50,13 L60,12 L70,10 L80,11 L90,8 L100,7 L110,5 L120,4 L120,26 L0,26 Z" fill="url(#sp1g)" opacity="0.5"/>
+              </svg>
+            </div>
+          </div>
+          <div class="kpi-tile">
+            <div class="mono-label">CSAT</div>
+            <div class="mono-value lg">4.31 <span style="font-size:14px;color:#7E8C82;">/ 5</span></div>
+            <div class="wow-tag good"><span class="arrow">▲</span> WoW +0.03</div>
+            <div class="sparkline-wrap">
+              <svg viewBox="0 0 120 26" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="sp2g" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#E8EFE9" stop-opacity="0.15"/>
+                    <stop offset="100%" stop-color="#E8EFE9" stop-opacity="0.01"/>
+                  </linearGradient>
+                </defs>
+                <path d="M0,14 L10,15 L20,13 L30,14 L40,16 L45,13 L55,15 L65,14 L75,12 L85,13 L95,11 L105,10 L120,9" fill="none" stroke="#E8EFE9" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+                <path d="M0,14 L10,15 L20,13 L30,14 L40,16 L45,13 L55,15 L65,14 L75,12 L85,13 L95,11 L105,10 L120,9 L120,26 L0,26 Z" fill="url(#sp2g)" opacity="0.4"/>
+              </svg>
+            </div>
+          </div>
+          <div class="kpi-tile">
+            <div class="mono-label">NPS</div>
+            <div class="mono-value lg">47</div>
+            <div class="wow-tag good"><span class="arrow">▲</span> WoW +2</div>
+            <div class="sparkline-wrap">
+              <svg viewBox="0 0 120 26" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="sp3g" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#44D62C" stop-opacity="0.18"/>
+                    <stop offset="100%" stop-color="#44D62C" stop-opacity="0.01"/>
+                  </linearGradient>
+                </defs>
+                <path d="M0,20 L10,18 L20,19 L30,16 L40,14 L50,13 L60,15 L70,12 L80,10 L90,9 L100,7 L110,6 L120,4" fill="none" stroke="#44D62C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+                <path d="M0,20 L10,18 L20,19 L30,16 L40,14 L50,13 L60,15 L70,12 L80,10 L90,9 L100,7 L110,6 L120,4 L120,26 L0,26 Z" fill="url(#sp3g)" opacity="0.5"/>
+              </svg>
+            </div>
+          </div>
+          <div class="kpi-tile">
+            <div class="mono-label">AVG HANDLE TIME</div>
+            <div class="mono-value lg">9m 12s</div>
+            <div class="wow-tag good"><span class="arrow">▼</span> WoW −0m 26s</div>
+            <div class="sparkline-wrap">
+              <svg viewBox="0 0 120 26" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="sp4g" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#7E8C82" stop-opacity="0.2"/>
+                    <stop offset="100%" stop-color="#7E8C82" stop-opacity="0.01"/>
+                  </linearGradient>
+                </defs>
+                <path d="M0,6 L10,7 L20,5 L30,8 L40,6 L50,9 L60,10 L70,8 L80,12 L90,11 L100,14 L110,15 L120,17" fill="none" stroke="#7E8C82" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+                <path d="M0,6 L10,7 L20,5 L30,8 L40,6 L50,9 L60,10 L70,8 L80,12 L90,11 L100,14 L110,15 L120,17 L120,26 L0,26 Z" fill="url(#sp4g)" opacity="0.4"/>
+              </svg>
+            </div>
+          </div>
+        </section>
+
+        <!-- Support Containment -->
+        <section class="panel clipped fade-section" id="support-containment">
+          <div class="panel-inner">
+            <div class="panel-title-row"><div class="section-title">DOES CONTAINMENT PROTECT REVENUE?</div><button class="explain-btn" onclick="triggerExplain('b2')">EXPLAIN ⚡</button></div>
+            <p class="section-caption" style="margin-bottom:8px;">The question a support dashboard can't answer alone: do AI-resolved customers come back and buy again?</p>
+            <p class="section-caption" style="margin-bottom:16px;font-weight:400;color:#E8EFE9;">Containment closes tickets. The bridge metric asks whether it also keeps customers buying.</p>
+            <div class="bar-chart-group">
+              <div class="bar-row">
+                <div class="bar-label">AI-RESOLVED, FIRST CONTACT</div>
+                <div class="bar-track">
+                  <div class="bar-fill green" style="width:89.3%;">26.8%</div>
+                </div>
+              </div>
+              <div class="bar-row">
+                <div class="bar-label">HUMAN-RESOLVED</div>
+                <div class="bar-track">
+                  <div class="bar-fill neutral" style="width:83.7%;">25.1%</div>
+                </div>
+              </div>
+              <div class="bar-row">
+                <div class="bar-label">UNRESOLVED / ABANDONED</div>
+                <div class="bar-track">
+                  <div class="bar-fill red" style="width:37.7%;">11.3%</div>
+                </div>
+              </div>
+            </div>
+            <p class="callout-line" style="margin-top:14px;">Fast AI resolution retains as well as human resolution — the risk isn't the AI, it's the <strong>11.3%: tickets nobody closed.</strong> That's where <strong>$612K of LTV</strong> sits.</p>
+          </div>
+        </section>
+
+        <!-- Support Human Callback Queue (NEW) -->
+        <section class="panel clipped fade-section" id="support-callback">
+          <div class="panel-inner">
+            <div class="panel-title-row"><div class="section-title">HUMAN CALLBACK QUEUE — RANKED BY LTV-AT-RISK, NOT TICKET AGE</div><button class="explain-btn" onclick="triggerExplain('s9')">EXPLAIN ⚡</button></div>
+            <div class="table-wrap">
+              <table class="mono-table">
+                <thead>
+                  <tr>
+                    <th>RANK</th>
+                    <th>COHORT</th>
+                    <th>COUNT</th>
+                    <th>LTV AT RISK</th>
+                    <th>TRIGGER</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="priority-p1">#1</td>
+                    <td>Silver-active members, unresolved >48h</td>
+                    <td><span data-scenario-key="callback-p1-count">17</span> <span class="sim-marker">SIM</span></td>
+                    <td>$41K <span class="sim-marker">SIM</span></td>
+                    <td>Tier-aware routing</td>
+                  </tr>
+                  <tr>
+                    <td class="priority-p1">#2</td>
+                    <td>Blade owners, repeated contact same issue</td>
+                    <td>64 <span class="sim-marker">SIM</span></td>
+                    <td>$218K <span class="sim-marker">SIM</span></td>
+                    <td>Auto-escalation on 2nd contact</td>
+                  </tr>
+                  <tr>
+                    <td class="priority-p2">#3</td>
+                    <td>Collector-drop first-timers, delivery issue</td>
+                    <td>2,260 <span class="sim-marker">SIM</span></td>
+                    <td>$483K <span class="sim-marker">SIM</span></td>
+                    <td>Proactive status messaging</td>
+                  </tr>
+                  <tr>
+                    <td class="priority-p2">#4</td>
+                    <td>High-AOV customers, CSAT ≤ 2 after contact</td>
+                    <td>141 <span class="sim-marker">SIM</span></td>
+                    <td>$96K <span class="sim-marker">SIM</span></td>
+                    <td>Recovery play: callback + goodwill credit</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p style="font-family:var(--font-ui);font-weight:300;font-size:11px;color:var(--text-faint);margin-top:12px;letter-spacing:0.02em;">FIFO answers tickets. LTV-ranked answers the business. <span class="sim-marker">SIM</span></p>
+          </div>
+        </section>
+
+        <!-- Support Benchmark Strip (3 cards — PwC 32% goes to bridge) -->
+        <section class="fade-section" id="support-bench">
+          <div class="section-title-row" style="margin-bottom:12px;">
+            <div class="section-title">MARKET CONTEXT — REAL FIGURES, CITED</div>
+          </div>
+          <div class="bench-strip">
+            <div class="bench-card">
+              <div class="bench-stat">+140%</div>
+              <div class="bench-context">Higher spend by customers with the best past experiences vs the poorest — experience is an LTV lever.</div>
+              <div class="bench-source">Harvard Business Review / Medallia, accessed 2026-07-08</div>
+            </div>
+            <div class="bench-card">
+              <div class="bench-stat">2/3</div>
+              <div class="bench-context">of Klarna's service chats handled by its AI assistant at CSAT parity with human agents (company-reported).</div>
+              <div class="bench-source">Klarna press release, 2024, accessed 2026-07-08</div>
+            </div>
+            <div class="bench-card">
+              <div class="bench-stat">$8.01 vs $0.10</div>
+              <div class="bench-context">Cost per live service contact vs self-service — but only 9% fully resolve via self-service. Quality decides the economics.</div>
+              <div class="bench-source">Gartner, 2019, accessed 2026-07-08</div>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+    <aside id="analyst-panel">
+      <div class="analyst-collapse-tab" onclick="toggleAnalystPanel()">AI ▸</div>
+      <div class="analyst-header">
+        <div>
+          <div class="analyst-header-title">AI ANALYST — ASK THE DATA</div>
+          <div class="analyst-header-sub">Pre-computed demonstration of an LLM analyst layer. In production: live, connected to the warehouse.</div>
+        </div>
+        <button class="analyst-collapse-btn" onclick="toggleAnalystPanel()" title="Collapse panel">◂</button>
+      </div>
+      <div class="analyst-body">
+        <div id="analyst-transcript"></div>
+        <div id="analyst-chips"></div>
+      </div>
+    </aside>
+  </div>
+  <footer class="app-footer">
+    <span>Built by Ray Lim in one evening with an AI-assisted workflow · Concept demonstration for discussion — not affiliated with or endorsed by Razer Inc. · All operational data simulated.</span>
+    <span class="footer-right">raylim.me</span>
+  </footer>
+</div>
+
+<!-- ===== SOURCES & ASSUMPTIONS DRAWER ===== -->
+<div id="sources-overlay">
+  <div class="overlay-bg" onclick="closeSourcesDrawer()"></div>
+  <div class="overlay-content">
+    <button class="overlay-close" onclick="closeSourcesDrawer()" title="Close">✕</button>
+    <h3>SOURCES &amp; ASSUMPTIONS</h3>
+
+    <div class="src-block">
+      <h3>1. REAL PUBLIC FACTS</h3>
+      <p>Razer privatized May 2022; last public revenue US$1.62B (2021); dual HQ Singapore + Irvine; Blade 18 launched June 2026; Espeon &amp; Umbreon and Wuthering Waves collaborations July 2026.</p>
+      <div class="src-label">Source: Wikipedia — Razer Inc.; Razer Newsroom — accessed 2026-07-07/08</div>
+    </div>
+
+    <div class="src-block">
+      <h3>2. REAL PRODUCT NAMES — FACTUAL REFERENCES ONLY</h3>
+      <p>DeathAdder V3 Pro, Kraken V4, BlackShark V2 Pro, BlackWidow V4 Pro, Blade 14/16/18, Razer ID, Razer Gold, Razer Silver.</p>
+      <div class="src-label">Product names identify real product lines; every number attached to them here is simulated.</div>
+    </div>
+
+    <div class="src-block">
+      <h3>3. CITED BENCHMARKS</h3>
+      <p><strong>1.4–1.6%</strong> — Consumer-electronics ecommerce conversion benchmark. Smart Insights / Speed Commerce, accessed 2026-07-08.</p>
+      <p><strong>70.2%</strong> — Average cart abandonment across ~50 studies. Baymard Institute, accessed 2026-07-08.</p>
+      <p><strong>15–25%</strong> — Electronics repeat-purchase benchmark. MobiLoud / Finsi, accessed 2026-07-08.</p>
+      <p><strong>+20–30%</strong> — Typical DTC margin advantage vs retail channel. Stock&amp;Ship industry analysis, accessed 2026-07-08.</p>
+      <p><strong>32%</strong> — Customers stop buying after a single bad experience. PwC, Future of CX (15,000 respondents), accessed 2026-07-08.</p>
+      <p><strong>+140%</strong> — Higher spend by best-experience customers vs poorest. HBR / Medallia, accessed 2026-07-08.</p>
+      <p><strong>2/3</strong> — Klarna service chats handled by AI at CSAT parity. Klarna press release, 2024, accessed 2026-07-08.</p>
+      <p><strong>$8.01 vs $0.10</strong> — Cost per live service contact vs self-service. Gartner, 2019, accessed 2026-07-08.</p>
+    </div>
+
+    <div class="src-block">
+      <h3>4. SIMULATED OPERATIONAL DATA</h3>
+      <p>All revenue, funnel, ticket, cohort, LTV, containment and queue figures are simulated for demonstration. They are calibrated to the cited industry benchmarks so magnitudes are plausible, but none are Razer internal data — I have none.</p>
+    </div>
+
+    <div class="src-block">
+      <h3>5. DEMONSTRATION ASSUMPTIONS</h3>
+      <p>AOV ~$128 vs the ~$111 electronics revenue-per-user benchmark; conversion 1.72% within the 1.2–3.6% electronics range; repeat-purchase 24.6% at the top of the 15–25% electronics band; churn-uplift and recovery-rate parameters are directional estimates. Scenario toggle values are illustrative cause-and-effect, not forecasts.</p>
+    </div>
+
+    <div class="src-block">
+      <h3>6. CONNECTED IN PRODUCTION</h3>
+      <p>Order and product-ownership tables (SAP Commerce), support platform tickets, loyalty tier, channel price feeds, and a warehouse join at customer grain — replacing every simulated array in this file with live queries.</p>
+    </div>
+
+    <div class="src-block">
+      <h3>KPI CALCULATION NOTES</h3>
+      <p><strong>Revenue Protected</strong> = recovered customer LTV × expected repeat-purchase recovery rate</p>
+      <p><strong>LTV-at-Risk</strong> = open high-risk customer count × estimated LTV × churn-risk uplift</p>
+      <p><strong>Containment Quality</strong> = AI-contained cases that maintain CSAT, avoid repeat contact, and preserve 90-day repurchase behaviour</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DEMO PATH CARD ===== -->
+<div class="demo-path-card" id="demo-path-card">
+  <h4>90-SECOND DEMO PATH</h4>
+  <div id="path-stops"></div>
+  <div class="path-btns">
+    <button class="path-btn" id="path-next-btn" onclick="demoPathNext()">NEXT ▸</button>
+    <button class="path-exit" onclick="closeDemoPath()">EXIT</button>
+  </div>
+</div>
+
+<script>
+/* ===== APP STATE ===== */
+const appState = { view: 'bridge', scenario: 'current', asked: new Set() };
+
+function switchView(name){
+  appState.view = name;
+  document.querySelectorAll('.view').forEach(function(v){ v.hidden = (v.id !== 'view-'+name); });
+  document.querySelectorAll('.nav-tab').forEach(function(t){ t.classList.toggle('active', t.dataset.view === name); });
+  renderChips(name);
+}
+
+/* ===== CHIP REGISTRY — 12 pre-authored answers ===== */
+const chipRegistry = {
+ b1:{view:'bridge',q:'Which customers matter most this week?',
+  answer:"Not the loudest queue — the most concentrated one. 312 Blade owners with tickets open beyond seven days carry roughly $1.06M in lifetime value, about 10× the exposure-per-customer of the peripheral cohorts. A first-in-first-out queue treats these 312 like any other ticket; an LTV-ranked queue treats them like the revenue events they are. Ranking by value-at-risk, loyalty tier, and repeat-contact signals costs nothing to pilot — it is a sort order, not a system rebuild.",
+  action:"Ship a tier-aware routing rule: LTV-ranked callback queue, starting with the Blade cohort."},
+ b2:{view:'bridge',q:'Is the support AI helping or hurting?',
+  answer:"The data suggests it is holding the line where it operates: AI-resolved customers repurchase at 26.8% over 90 days — parity with human resolution at 25.1% — and CSAT held at 4.31 while containment rose. The commercial risk is not the AI; it is the 11.3% repurchase rate among unresolved tickets, where $612K of lifetime value currently sits. Containment measured by close rate alone can hide that gap; containment measured by what customers do afterward cannot.",
+  action:"Judge containment by 90-day repurchase and repeat-contact rate, not close rate alone."},
+ b3:{view:'bridge',q:'What would you do in your first 30 days?',
+  answer:"Diagnose before transforming. Week one: a KPI glossary — one definition, one owner, one source per metric, because most cross-functional arguments are secretly definition arguments. Weeks two to three: join the two ledgers at customer grain — orders, ownership, tickets, tier — even as a v1 table refreshed daily. Week four: bridge metrics v1 live (Revenue Protected, LTV-at-Risk) plus one automation candidate identified from the manual-workflow inventory. Small, visible, and it compounds.",
+  action:"Deliver bridge metrics v1 by week 4; no transformation decks before the ledgers are joined."},
+ b4:{view:'bridge',q:'How much revenue does support actually protect?',
+  answer:"This week's simulated estimate: $1.84M in retained lifetime value from at-risk customers recovered after support intervention. The recovery economics are the interesting part — customers who received a recovery play repurchased at 22.7% versus 11.3% untreated, roughly doubling retention among the customers most likely to walk. That reframes recovery spend as a revenue investment with a measurable return, not a cost line to be minimized.",
+  action:"Expand recovery-play budget, gated by an LTV threshold so spend follows value."},
+ c5:{view:'commerce',q:'Why is revenue below target?',
+  answer:"Fifth consecutive week below plan, and the gap is concentrated, not general: peripherals, where marketplace street prices undercut razer.com by 15–19% on hero SKUs and win the comparison shopper. Traffic is not the problem — the Espeon & Umbreon drop proved demand. The compounding leaks are checkout friction on drop days and a membership value proposition that is not yet strong enough to beat a price gap at the moment of decision.",
+  action:"Sequence the fixes: checkout leak first (cheapest revenue back), then the membership push."},
+ c6:{view:'commerce',q:'What happened during the Pokemon drop?',
+  answer:"The brand's best acquisition moment leaked at the last step. Collab product pages took 4.1× normal sessions and Razer ID signups jumped 31% — but checkout completion fell from 50.6% to 31.9% under queue and bot pressure, leaving an estimated $412K unconverted. Drop-day demand is inelastic and time-boxed; every point of checkout friction converts directly to lost revenue and a first impression of failure for new-to-brand buyers.",
+  action:"Queue hardening plus a guest fast-lane before the Wuthering Waves drop."},
+ c7:{view:'commerce',q:'Should we price-match Amazon?',
+  answer:"The trade-off is stark: matching recovers some conversion but destroys the margin DTC exists to protect — and it trains customers to wait for parity everywhere. The stronger counter changes the comparison instead of losing it: a razer.com bundle anchored on ecosystem value — hero SKU plus Silver bonus plus member shipping — that Amazon structurally cannot replicate. Meanwhile the MAP breaches on DeathAdder V3 Pro and Kraken V4 are a governance problem, best fought with a SKU-level evidence pack, not a price war.",
+  action:"Bundle counter plus MAP evidence pack for channel governance — not a price match."},
+ c8:{view:'commerce',q:'Why does membership matter so much?',
+  answer:"Because it is the conversion strategy, not a loyalty garnish. Silver-active members repurchase at 38.1% within 90 days versus 9.2% for guest checkout — a 4.1× gap that dwarfs any single campaign effect. Membership also answers the structural Prime gap: member shipping on orders above $99 gives razer.com a convenience story at neutral margin, where a price war would cost margin and still lose on logistics.",
+  action:"Pilot member-exclusive shipping >$99; push membership at checkout instead of discounting."},
+ s9:{view:'support',q:'Where should human callbacks go first?',
+  answer:"To the highest value-at-risk, not the oldest ticket. Concrete example from this week's simulated queue: 17 Silver-active members with tickets unresolved past five days — $41K of combined lifetime value — sitting in the general queue behind lower-stakes tickets, because FIFO cannot see loyalty tier or customer value. These are precisely the customers a bad experience converts into vocal detractors, and precisely the ones a fast human callback retains.",
+  action:"Silver-active members skip to human callback at 48 hours; rank the rest by LTV-at-risk."},
+ s10:{view:'support',q:"What's the strongest churn early-warning signal?",
+  answer:"Repeat contact on the same issue. In the joined dataset it correlates with a 2.3× churn-risk uplift — stronger than CSAT dips or handle-time outliers, because it measures the customer's experience of non-resolution directly. It is also cheap to act on: the second contact is a discrete, detectable event that can trigger escalation automatically, with the full case context attached so the customer never repeats themselves.",
+  action:"Auto-escalate second contact on the same issue to a senior queue, context attached."},
+ s11:{view:'support',q:'Are collab drops creating support debt?',
+  answer:"Yes — and it is a timing problem, not a quality problem. This week 2,260 collector-drop first-timers hit support with shipping issues, meaning their first-ever brand interaction is a problem ticket. These are exactly the new customers the drops were designed to acquire. A proactive status message — sent before the customer has to ask — converts a complaint queue into a loyalty moment, and pairing it with a small Silver welcome bonus turns recovery into activation.",
+  action:"Proactive shipping-status messaging for collab-drop cohorts, paired with a Silver welcome nudge."},
+ s12:{view:'support',q:'What does AHT improvement actually buy?',
+  answer:"Only what it protects. Handle time fell 26 seconds this week — genuinely useful capacity — but speed that comes from closing conversations early shows up later as repeat contacts and churn, which cost far more than the seconds saved. The guardrail is to pair every AHT target with repurchase-after-contact and repeat-contact rate, so efficiency gains are only counted when resolution quality holds.",
+  action:"Add a resolution-quality guardrail metric to the AHT target before optimizing it further."}
+};
+
+/* ===== ANALYST PANEL RENDERING ===== */
+var currentStreamTimer = null;
+
+function renderChips(viewName){
+  var container = document.getElementById('analyst-chips');
+  if (!container) return;
+  container.innerHTML = '';
+  Object.keys(chipRegistry).forEach(function(id){
+    var chip = chipRegistry[id];
+    if (chip.view !== viewName) return;
+    var btn = document.createElement('button');
+    btn.className = 'analyst-chip' + (appState.asked.has(id) ? ' asked' : '');
+    btn.textContent = chip.q;
+    btn.onclick = function(){ streamAnswer(id); };
+    container.appendChild(btn);
+  });
+}
+
+/* Complete (not abandon) whatever stream is running */
+var currentStreamFinish = null;
+function finishCurrentStream(){
+  if (currentStreamTimer) { clearInterval(currentStreamTimer); currentStreamTimer = null; }
+  if (currentStreamFinish) { var f = currentStreamFinish; currentStreamFinish = null; f(); }
+}
+
+function streamAnswer(id){
+  var chip = chipRegistry[id];
+  if (!chip) return;
+
+  /* Finish any running stream so no text is left truncated */
+  finishCurrentStream();
+
+  var transcript = document.getElementById('analyst-transcript');
+  if (!transcript) return;
+
+  /* Create entry block */
+  var entry = document.createElement('div');
+  entry.className = 'transcript-entry';
+
+  var qDiv = document.createElement('div');
+  qDiv.className = 'transcript-q';
+  qDiv.textContent = 'YOU ▸ ' + chip.q;
+  entry.appendChild(qDiv);
+
+  var aDiv = document.createElement('div');
+  aDiv.className = 'transcript-a';
+  entry.appendChild(aDiv);
+
+  var actionDiv = document.createElement('div');
+  actionDiv.className = 'transcript-action';
+  actionDiv.style.display = 'none';
+  entry.appendChild(actionDiv);
+
+  transcript.appendChild(entry);
+
+  /* Typewriter — time-based so browser timer throttling can't slow it */
+  var fullText = chip.answer;
+  var i = 0;
+  var start = Date.now();
+
+  function complete(){
+    aDiv.textContent = fullText;
+    actionDiv.style.display = '';
+    actionDiv.textContent = '→ RECOMMENDED ACTION: ' + chip.action;
+    transcript.scrollTop = transcript.scrollHeight;
+  }
+
+  function tick(){
+    var target = Math.min(fullText.length, Math.floor((Date.now() - start) / 12));
+    if (target > i) {
+      i = target;
+      aDiv.textContent = fullText.slice(0, i);
+      transcript.scrollTop = transcript.scrollHeight;
+    }
+    if (i >= fullText.length) {
+      clearInterval(currentStreamTimer);
+      currentStreamTimer = null;
+      currentStreamFinish = null;
+      complete();
+    }
+  }
+
+  /* Click on streaming block completes it instantly */
+  entry.style.cursor = 'pointer';
+  entry.title = 'Click to skip animation';
+  entry.onclick = finishCurrentStream;
+
+  currentStreamFinish = complete;
+  currentStreamTimer = setInterval(tick, 30);
+
+  /* Mark as asked */
+  appState.asked.add(id);
+  renderChips(appState.view);
+}
+
+function triggerExplain(id){
+  var chip = chipRegistry[id];
+  if (!chip) return;
+  /* Switch view if needed */
+  if (chip.view !== appState.view) {
+    switchView(chip.view);
+  }
+  /* Open panel if collapsed */
+  var panel = document.getElementById('analyst-panel');
+  if (panel && panel.classList.contains('collapsed')) {
+    toggleAnalystPanel();
+  }
+  /* Stream */
+  streamAnswer(id);
+}
+
+function toggleAnalystPanel(){
+  var panel = document.getElementById('analyst-panel');
+  if (!panel) return;
+  panel.classList.toggle('collapsed');
+}
+
+/* ===== OPENING BRIEF ===== */
+document.addEventListener('DOMContentLoaded', function(){
+  var transcript = document.getElementById('analyst-transcript');
+  if (!transcript) return;
+  var briefText = "Good morning. Revenue closed 8.4% below target — but the bigger story this week sits between the ledgers: $612K of lifetime value is parked in unresolved support tickets, and 312 of those customers are Blade owners. Ask me why.";
+
+  var entry = document.createElement('div');
+  entry.className = 'transcript-entry';
+
+  var aDiv = document.createElement('div');
+  aDiv.className = 'transcript-a';
+  entry.appendChild(aDiv);
+  transcript.appendChild(entry);
+
+  var i = 0;
+  var start = Date.now();
+  var chipsRendered = false;
+
+  function complete(){
+    aDiv.textContent = briefText;
+    transcript.scrollTop = transcript.scrollHeight;
+    if (!chipsRendered) { chipsRendered = true; renderChips(appState.view); }
+  }
+
+  entry.style.cursor = 'pointer';
+  entry.title = 'Click to skip animation';
+  entry.onclick = finishCurrentStream;
+
+  function tick(){
+    var target = Math.min(briefText.length, Math.floor((Date.now() - start) / 12));
+    if (target > i) {
+      i = target;
+      aDiv.textContent = briefText.slice(0, i);
+      transcript.scrollTop = transcript.scrollHeight;
+    }
+    if (i >= briefText.length) {
+      clearInterval(currentStreamTimer);
+      currentStreamTimer = null;
+      currentStreamFinish = null;
+      complete();
+    }
+  }
+  currentStreamFinish = complete;
+  currentStreamTimer = setInterval(tick, 30);
+});
+
+/* ===== SOURCES DRAWER ===== */
+function openSourcesDrawer(){
+  document.getElementById('sources-overlay').classList.add('open');
+}
+function closeSourcesDrawer(){
+  document.getElementById('sources-overlay').classList.remove('open');
+}
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape') {
+    closeSourcesDrawer();
+    closeDemoPath();
+    closeGlossaryPopover();
+  }
+});
+
+/* ===== GLOSSARY POPOVERS ===== */
+var glossaryRegistry = {
+  'revenue-protected': "LTV of at-risk customers retained after a support recovery intervention. The support P&L's revenue line.",
+  'ltv-at-risk': "Open exposure: customers with unresolved or poor support experiences, weighted by their lifetime value and churn-risk uplift.",
+  'containment-quality': "Not \"did the AI close it\" but \"did the customer stay a customer\" — CSAT held, no repeat contact, 90-day repurchase preserved.",
+  'recovery-play-return': "Repurchase rate of treated at-risk customers vs untreated. Here: 22.7% vs 11.3% (simulated).",
+  'checkout-leakage': "Demand that reached checkout and did not convert — the cheapest revenue to recover because the customer already decided.",
+  'repeat-contact-risk': "Second contact on the same issue. Correlates with 2.3× churn-risk uplift (simulated) — the strongest early-warning signal in the joined data.",
+  'map-flag': "Minimum Advertised Price status vs marketplace street price. BREACH = sustained sub-MAP advertising; a channel-governance signal, not an accusation.",
+  'data-readiness': "Status of each source system needed to run this view live. Dashboards are the last mile; this is the plumbing."
+};
+
+var currentPopover = null;
+
+function openGlossary(metricId){
+  closeGlossaryPopover();
+  var def = glossaryRegistry[metricId];
+  if (!def) return;
+
+  /* Find the clicked icon to position the popover */
+  var icon = event && event.target ? event.target : null;
+  if (!icon || !icon.classList.contains('glossary-icon')) return;
+
+  var popover = document.createElement('div');
+  popover.className = 'glossary-popover';
+  popover.textContent = def;
+  document.body.appendChild(popover);
+
+  /* Position */
+  var rect = icon.getBoundingClientRect();
+  var top = rect.bottom + window.scrollY + 6;
+  var left = rect.left + window.scrollX - 140 + 8; /* center roughly */
+  if (left + 280 > window.innerWidth) left = window.innerWidth - 290;
+  if (left < 10) left = 10;
+  popover.style.top = top + 'px';
+  popover.style.left = left + 'px';
+
+  popover.onclick = function(e){ e.stopPropagation(); };
+  currentPopover = popover;
+
+  /* Close on outside click */
+  setTimeout(function(){
+    document.addEventListener('click', closeGlossaryPopover, {once: true});
+  }, 0);
+}
+
+function closeGlossaryPopover(){
+  if (currentPopover) {
+    currentPopover.remove();
+    currentPopover = null;
+  }
+}
+
+/* ===== 90-SECOND DEMO PATH ===== */
+var demoPathStops = [
+  { label: '1. Bridge KPI row', view: 'bridge', target: 'bridge-kpis', action: 'scroll' },
+  { label: '2. Unified customer table', view: 'bridge', target: 'bridge-table', action: 'scroll' },
+  { label: '3. Ask: Which customers matter?', view: 'bridge', target: null, action: 'explain', chipId: 'b1' },
+  { label: '4. Revenue-at-risk waterfall', view: 'bridge', target: 'bridge-waterfall', action: 'scroll' },
+  { label: '5. Commerce: Channel lens + MAP', view: 'commerce', target: 'commerce-channel', action: 'scroll' },
+  { label: '6. Support: Containment panel', view: 'support', target: 'support-containment', action: 'scroll' },
+  { label: '7. Bridge: Action Queue', view: 'bridge', target: 'bridge-actions', action: 'scroll' }
+];
+var demoPathIndex = -1;
+var demoHighlightTimeout = null;
+
+function startDemoPath(){
+  var card = document.getElementById('demo-path-card');
+  if (!card) return;
+  demoPathIndex = -1;
+  card.classList.add('open');
+  renderPathStops();
+}
+
+function closeDemoPath(){
+  var card = document.getElementById('demo-path-card');
+  if (card) card.classList.remove('open');
+  demoPathIndex = -1;
+  if (demoHighlightTimeout) { clearTimeout(demoHighlightTimeout); demoHighlightTimeout = null; }
+  document.querySelectorAll('.demo-highlight').forEach(function(el){ el.classList.remove('demo-highlight'); });
+}
+
+function renderPathStops(){
+  var container = document.getElementById('path-stops');
+  if (!container) return;
+  container.innerHTML = demoPathStops.map(function(s, i){
+    var cls = 'path-stop';
+    if (i < demoPathIndex) cls += ' done';
+    else if (i === demoPathIndex) cls += ' active';
+    return '<div class="'+cls+'">'+s.label+'</div>';
+  }).join('');
+}
+
+function demoPathNext(){
+  demoPathIndex++;
+  if (demoPathIndex >= demoPathStops.length) {
+    closeDemoPath();
+    return;
+  }
+  renderPathStops();
+
+  var stop = demoPathStops[demoPathIndex];
+
+  /* Switch view if needed */
+  if (stop.view !== appState.view) {
+    switchView(stop.view);
+  }
+
+  if (stop.action === 'scroll' && stop.target) {
+    var el = document.getElementById(stop.target);
+    if (el) {
+      el.scrollIntoView({behavior:'smooth', block:'center'});
+      el.classList.add('demo-highlight');
+      if (demoHighlightTimeout) clearTimeout(demoHighlightTimeout);
+      demoHighlightTimeout = setTimeout(function(){
+        el.classList.remove('demo-highlight');
+      }, 2500);
+    }
+  } else if (stop.action === 'explain' && stop.chipId) {
+    triggerExplain(stop.chipId);
+  }
+}
+var scenarioData = {
+  current:  { 'ltv-at-risk':'$612K', 'ltv-at-risk-waterfall':'$612K', 'revenue-protected':'$1.84M', 'checkout-leakage':'$412K', 'callback-p1-count':'17' },
+  recovery: { 'ltv-at-risk':'$438K', 'ltv-at-risk-waterfall':'$438K', 'revenue-protected':'$2.16M', 'checkout-leakage':'$286K', 'callback-p1-count':'6'  }
+};
+function applyScenario(name){
+  appState.scenario = name;
+  var d = scenarioData[name];
+  Object.keys(d).forEach(function(k){
+    document.querySelectorAll('[data-scenario-key="'+k+'"]').forEach(function(el){ el.textContent = d[k]; });
+  });
+  document.querySelectorAll('.scenario-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.scenario === name); });
+}
+</script>
+</body>
+</html>
