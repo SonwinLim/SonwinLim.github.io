@@ -1473,6 +1473,31 @@
         .welcome-btn:hover {
             background: rgba(68,214,44,0.22);
         }
+        .welcome-btn.secondary {
+            background: transparent;
+            border-color: var(--border);
+            color: var(--text-secondary);
+            margin-top: 10px;
+            display: block;
+            width: 100%;
+        }
+        .welcome-btn.secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(68,214,44,0.04);
+        }
+        .welcome-hint {
+            font-family: var(--font-ui);
+            font-weight: 300;
+            font-size: 11px;
+            color: var(--text-faint);
+            letter-spacing: 0.03em;
+            margin-bottom: 18px;
+        }
+        .welcome-hint strong {
+            font-weight: 500;
+            color: var(--accent);
+        }
 
         /* ===== Pulse animation on demo path button ===== */
         @keyframes pulse-border {
@@ -1737,7 +1762,9 @@
   <div class="welcome-card">
     <h2>BEFORE YOU EXPLORE</h2>
     <p>Everything on this page is simulated. Real product lines, real market structure, real cited benchmarks, but every revenue, funnel, ticket, and LTV figure is a demonstration. I have no internal Razer data.</p>
+    <p class="welcome-hint">Click <strong>90-SECOND DEMO PATH</strong> at the top right for a guided tour.</p>
     <button class="welcome-btn" onclick="dismissWelcome()">GOT IT — LET'S GO</button>
+    <button class="welcome-btn secondary" onclick="dismissWelcome();startDemoPath();">START 90-SECOND DEMO PATH</button>
   </div>
 </div>
 
