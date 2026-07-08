@@ -2899,17 +2899,24 @@ function closeGlossaryPopover(){
 var demoPathStops = [
   { label: '1. THE BRIDGE — joined view', view: 'bridge', target: 'bridge-kpis', action: 'scroll',
     desc: 'One pane across both P&Ls. Metrics that exist only when commerce and support ledgers are joined.' },
-  { label: '2. Bridge KPI row', view: 'bridge', target: 'bridge-kpis', action: 'scroll' },
-  { label: '3. Unified customer table', view: 'bridge', target: 'bridge-table', action: 'scroll' },
-  { label: '4. Ask: Which customers matter?', view: 'bridge', target: null, action: 'explain', chipId: 'b1' },
-  { label: '5. Revenue-at-risk waterfall', view: 'bridge', target: 'bridge-waterfall', action: 'scroll' },
+  { label: '2. Bridge KPI row', view: 'bridge', target: 'bridge-kpis', action: 'scroll',
+    desc: 'Six metrics spanning both P&Ls. Revenue Protected and LTV-at-Risk only exist when the ledgers are joined.' },
+  { label: '3. Unified customer table', view: 'bridge', target: 'bridge-table', action: 'scroll',
+    desc: 'One customer, both ledgers. Commerce knows what they buy. Support knows when they struggle.' },
+  { label: '4. Ask: Which customers matter?', view: 'bridge', target: null, action: 'explain', chipId: 'b1',
+    desc: 'The AI analyst answers in real time. Every answer comes with a recommended action.' },
+  { label: '5. Revenue-at-risk waterfall', view: 'bridge', target: 'bridge-waterfall', action: 'scroll',
+    desc: 'Bad experience → churn uplift → LTV exposure → what recovery plays clawed back.' },
   { label: '6. COMMERCE — the DTC engine', view: 'commerce', target: 'commerce-kpis', action: 'scroll',
     desc: 'Razer.com direct commerce. Revenue, conversion, channel mix, and the 22% DTC share that drives margin.' },
-  { label: '7. Commerce: Channel lens + MAP', view: 'commerce', target: 'commerce-channel', action: 'scroll' },
+  { label: '7. Commerce: Channel lens + MAP', view: 'commerce', target: 'commerce-channel', action: 'scroll',
+    desc: 'SKU-level price parity vs Amazon street price. DeathAdder and Kraken MAP breaches flagged.' },
   { label: '8. SUPPORT — the retention system', view: 'support', target: 'support-kpis', action: 'scroll',
     desc: 'Customer Advocacy P&L. Containment, CSAT, NPS — and the callback queue ranked by LTV-at-risk, not ticket age.' },
-  { label: '9. Support: Containment panel', view: 'support', target: 'support-containment', action: 'scroll' },
-  { label: '10. Bridge: Action Queue', view: 'bridge', target: 'bridge-actions', action: 'scroll' }
+  { label: '9. Support: Containment panel', view: 'support', target: 'support-containment', action: 'scroll',
+    desc: 'AI-resolved customers repurchase at parity with human-resolved. The risk is the unresolved 11%.' },
+  { label: '10. Bridge: Action Queue', view: 'bridge', target: 'bridge-actions', action: 'scroll',
+    desc: 'Six prioritized actions. Each with an owner, business impact, and guardrail.' }
 ];
 var demoPathIndex = -1;
 var demoHighlightTimeout = null;
