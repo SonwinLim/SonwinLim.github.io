@@ -91,13 +91,6 @@ a { color: var(--accent); }
   padding: 14px; margin-top: 10px; font-size: 13px; line-height: 1.6; display: none; }
 .explain-box.open { display: block; animation: fadeIn .3s ease; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-/* ===== SCENARIO TOGGLE ===== */
-.scenario-bar { display: flex; gap: 8px; margin-bottom: 14px; align-items: center; }
-.scenario-btn { background: var(--panel-2); color: var(--dim); border: 1px solid var(--line);
-  border-radius: 6px; padding: 8px 16px; font: 12px var(--mono); cursor: pointer; }
-.scenario-btn.active { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
-.scenario-btn.without.active { background: rgba(224,93,93,0.12); color: var(--red); border-color: var(--red); }
-.scenario-label { font-size: 11px; color: var(--dim); margin-left: 8px; }
 /* ===== WELCOME OVERLAY ===== */
 .welcome-overlay { display: flex; position: fixed; inset: 0; z-index: 500;
   background: rgba(0,0,0,0.85); align-items: center; justify-content: center; }
@@ -217,17 +210,14 @@ const recordPage = r => { logAudit(r.id, "viewed");
 
 const VIEWS = {};
 VIEWS.home = { title: "System", render(el) {
-  el.innerHTML = `<div class="fade-section"><div class="scenario-bar" id="scenario-bar">
-  <button class="scenario-btn with active" id="scenario-with" onclick="applyScenario('with')">WITH THE SYSTEM</button>
-  <button class="scenario-btn without" id="scenario-without" onclick="applyScenario('without')">WITHOUT THE SYSTEM</button>
-</div>
+  el.innerHTML = `<div class="fade-section">
 <div id="home-stats" class="stat-row">` + [
-    ["<span data-scenario-key='stat-markets-n'>3</span>","<span data-scenario-key='stat-markets'>APAC markets</span>","<span data-scenario-key='stat-markets-sub'>AU · JP · IN</span>"],
-    ["<span data-scenario-key='stat-records-n'>17</span>","<span data-scenario-key='stat-records'>governed records</span>","<span data-scenario-key='stat-records-sub'>owned + versioned + cited</span>"],
-    ["<span data-scenario-key='stat-sources-n'>53</span>","<span data-scenario-key='stat-sources'>cited sources</span>","<span data-scenario-key='stat-sources-sub'>every claim traceable</span>"],
-    ["<span data-scenario-key='stat-speed-n'>≥2d→s</span>","<span data-scenario-key='stat-speed'>workflow speed</span>","<span data-scenario-key='stat-speed-sub'>collapser pattern</span>"],
-  ].map(([n,l,s]) => `<div class="stat-card"><div class="big">${n}</div><div class="label">${l}</div><div class="label" style="font-size:10px">${s}</div></div>`).join("") + "</div>"
-    + `<div id="home-arch" class="card"><h2 data-scenario-key="arch-title">One system, five layers</h2>
+    ["3","APAC markets","AU · JP · IN"],
+    ["17","governed records","owned + versioned + cited"],
+    ["3","APAC markets","AU · JP · IN"],
+    ["17","governed records","owned + versioned + cited"],
+    ["53","cited sources","every claim traceable"],
+    ["≥2d→s","workflow speed","seconds, not days"],
     <div style="padding:8px 0">` + [
       ["05","Console","One shell, hash router, dark ops-console design language"],
       ["04","Governance","Owner · version · access · citations · audit — enforced at build"],
@@ -494,60 +484,6 @@ function triggerExplain(chipId) {
   box.classList.add("open");
 }
 
-/* ===== SCENARIO TOGGLE ===== */
-const SCENARIO = {
-  with: {
-    "stat-markets-n": "3", "stat-markets": "APAC markets", "stat-markets-sub": "AU · JP · IN",
-    "stat-records-n": "17", "stat-records": "governed records", "stat-records-sub": "owned + versioned + cited",
-    "stat-sources-n": "53", "stat-sources": "cited sources", "stat-sources-sub": "every claim traceable",
-    "stat-speed-n": "≥2d→s", "stat-speed": "workflow speed", "stat-speed-sub": "seconds, not days",
-    "arch-title": "One system, five layers",
-  },
-  without: {
-    "stat-markets-n": "0", "stat-markets": "siloed data", "stat-markets-sub": "per-team spreadsheets",
-    "stat-records-n": "0", "stat-records": "no shared store", "stat-records-sub": "email attachments",
-    "stat-sources-n": "0", "stat-sources": "unverified claims", "stat-sources-sub": "no single source of truth",
-    "stat-speed-n": "days", "stat-speed": "days of manual work", "stat-speed-sub": "hero dependent",
-    "arch-title": "A bag of AI tools",
-  }
-};
-function applyScenario(name) {
-  document.querySelectorAll(".scenario-btn").forEach(b => {
-    b.classList.toggle("active", b.id === "scenario-" + name);
-  });
-  document.querySelectorAll("[data-scenario-key]").forEach(el => {
-    const key = el.getAttribute("data-scenario-key");
-    if (SCENARIO[name] && SCENARIO[name][key]) {
-      el.textContent = SCENARIO[name][key];
-    }
-  });
-}
-
-/* ===== SOURCES DRAWER ===== */
-function openSourcesDrawer() {
-  const records = window.STORE.records;
-  let html = "";
-  records.forEach(r => {
-    if (!r.citations || !r.citations.length) return;
-    html += `<div class="src-group"><h4>${esc(r.title)} — ${r.citations.length} sources</h4>`;
-    r.citations.forEach(c => {
-      html += `<div class="src-item"><a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.title)}</a>
-        <div class="src-meta">${esc(c.publisher)} · accessed ${esc(c.accessed)}</div></div>`;
-    });
-    html += "</div>";
-  });
-  document.getElementById("sources-content").innerHTML = html || "<p>no citations loaded</p>";
-  document.getElementById("sources-backdrop").classList.add("open");
-  document.getElementById("sources-drawer").classList.add("open");
-}
-function closeSourcesDrawer() {
-  document.getElementById("sources-backdrop").classList.remove("open");
-  document.getElementById("sources-drawer").classList.remove("open");
-}
-document.addEventListener("keydown", function(e) {
-  if (e.key === "Escape") closeSourcesDrawer();
-});
-
 /* ===== 90-SECOND DEMO PATH ===== */
 const demoPathStops = [
   {label:"1. System: 5-layer architecture + KPI row",view:"home",target:"home-arch",action:"scroll"},
@@ -609,11 +545,13 @@ function demoScrollTo(stop) {
 }
 
 /* ===== WELCOME OVERLAY ===== */
-(function() {
-  document.getElementById("welcome-overlay").classList.remove("hidden");
-})();
+document.addEventListener("DOMContentLoaded", function() {
+  var el = document.getElementById("welcome-overlay");
+  if (el) el.classList.remove("hidden");
+});
 function dismissOverlay() {
-  document.getElementById("welcome-overlay").classList.add("hidden");
+  var el = document.getElementById("welcome-overlay");
+  if (el) el.classList.add("hidden");
 }
 </script>
 <div class="sources-backdrop" id="sources-backdrop" onclick="closeSourcesDrawer()"></div>
