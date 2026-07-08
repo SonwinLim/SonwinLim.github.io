@@ -222,10 +222,10 @@ VIEWS.home = { title: "System", render(el) {
   <button class="scenario-btn without" id="scenario-without" onclick="applyScenario('without')">WITHOUT THE SYSTEM</button>
 </div>
 <div id="home-stats" class="stat-row">` + [
-    ["3","<span data-scenario-key='stat-markets'>APAC markets</span>","<span data-scenario-key='stat-markets-sub'>AU · JP · IN</span>"],
-    ["17","<span data-scenario-key='stat-records'>governed records</span>","<span data-scenario-key='stat-records-sub'>owned + versioned + cited</span>"],
-    ["53","<span data-scenario-key='stat-sources'>cited sources</span>","<span data-scenario-key='stat-sources-sub'>every claim traceable</span>"],
-    ["≥2d→s","<span data-scenario-key='stat-speed'>workflow speed</span>","<span data-scenario-key='stat-speed-sub'>collapser pattern</span>"]
+    ["<span data-scenario-key='stat-markets-n'>3</span>","<span data-scenario-key='stat-markets'>APAC markets</span>","<span data-scenario-key='stat-markets-sub'>AU · JP · IN</span>"],
+    ["<span data-scenario-key='stat-records-n'>17</span>","<span data-scenario-key='stat-records'>governed records</span>","<span data-scenario-key='stat-records-sub'>owned + versioned + cited</span>"],
+    ["<span data-scenario-key='stat-sources-n'>53</span>","<span data-scenario-key='stat-sources'>cited sources</span>","<span data-scenario-key='stat-sources-sub'>every claim traceable</span>"],
+    ["<span data-scenario-key='stat-speed-n'>≥2d→s</span>","<span data-scenario-key='stat-speed'>workflow speed</span>","<span data-scenario-key='stat-speed-sub'>collapser pattern</span>"],
   ].map(([n,l,s]) => `<div class="stat-card"><div class="big">${n}</div><div class="label">${l}</div><div class="label" style="font-size:10px">${s}</div></div>`).join("") + "</div>"
     + `<div id="home-arch" class="card"><h2 data-scenario-key="arch-title">One system, five layers</h2>
     <div style="padding:8px 0">` + [
@@ -238,10 +238,6 @@ VIEWS.home = { title: "System", render(el) {
       <span style="font:600 16px var(--mono);color:var(--accent);min-width:28px">${id}</span>
       <span style="font:600 14px var(--mono);color:var(--text);min-width:110px">${name}</span>
       <span class="dim small">${desc}</span></div>`).join("") + "</div></div>"
-    + `<div id="home-pitch" class="card"><h2>systems, not tools</h2>
-    <p>Asvin Ang, PMO Director: <em>"We have to build systems, not just tools."</em></p>
-    <p class="dim" data-scenario-key="pitch-body">One knowledge layer · one engine · five lenses · governed.
-    Add intelligence once — every lens benefits. The IT Director's objection is answered by the architecture.</p></div>`
     + `<div class="card"><h2>Five lenses</h2><div class="grid">` + [
       ["sites","01 · Site & Market Screening","Region in → cited go/no-go screening brief out."],
       ["sales","02 · Sales Intelligence","Hyperscaler & neocloud demand signals → pitch angles."],
@@ -252,12 +248,12 @@ VIEWS.home = { title: "System", render(el) {
       ["governance","Governance","Ownership, versions, access tiers, audit trail — built in."],
     ].map(([k,t,d]) => `<a class="card" style="display:block;text-decoration:none"
       href="#/${k}"><h2>${t}</h2><p class="dim">${d}</p></a>`).join("") + "</div></div>"
-    + `<div class="card" id="home-chips"><h2>Live Q&A</h2><p class="dim small">Click any question — pre-authored answers from the meeting playbook.</p></div>`;
+    + `<div class="card" id="home-chips"><h2>Live Q&A</h2><p class="dim small">Click any question — pre-authored answers from the meeting playbook.</p></div></div>`;
   // Explain chips
   Object.entries(chipRegistry).forEach(([id,c]) => {
     el.querySelector("#home-chips").innerHTML += `<span class="chip" id="chip-${id}" onclick="triggerExplain('${id}')">${c.short}</span>`;
   });
-  el.querySelector("#home-chips").innerHTML += `<div class="explain-box" id="explain-box"></div></div>`;
+  el.querySelector("#home-chips").innerHTML += `<div class="explain-box" id="explain-box"></div>`;
   } };
 
 VIEWS.sites = { title: "01 Sites", render(el, id) {
@@ -501,20 +497,18 @@ function triggerExplain(chipId) {
 /* ===== SCENARIO TOGGLE ===== */
 const SCENARIO = {
   with: {
-    "stat-markets": "APAC markets", "stat-markets-sub": "AU · JP · IN",
-    "stat-records": "governed records", "stat-records-sub": "owned + versioned + cited",
-    "stat-sources": "cited sources", "stat-sources-sub": "every claim traceable",
-    "stat-speed": "workflow speed", "stat-speed-sub": "seconds, not days",
+    "stat-markets-n": "3", "stat-markets": "APAC markets", "stat-markets-sub": "AU · JP · IN",
+    "stat-records-n": "17", "stat-records": "governed records", "stat-records-sub": "owned + versioned + cited",
+    "stat-sources-n": "53", "stat-sources": "cited sources", "stat-sources-sub": "every claim traceable",
+    "stat-speed-n": "≥2d→s", "stat-speed": "workflow speed", "stat-speed-sub": "seconds, not days",
     "arch-title": "One system, five layers",
-    "pitch-body": "One knowledge layer · one engine · five lenses · governed. Add intelligence once — every lens benefits. The IT Director's objection is answered by the architecture."
   },
   without: {
-    "stat-markets": "siloed data", "stat-markets-sub": "per-team spreadsheets",
-    "stat-records": "no shared store", "stat-records-sub": "email attachments",
-    "stat-sources": "unverified claims", "stat-sources-sub": "no single source of truth",
-    "stat-speed": "days of manual work", "stat-speed-sub": "hero dependent",
+    "stat-markets-n": "0", "stat-markets": "siloed data", "stat-markets-sub": "per-team spreadsheets",
+    "stat-records-n": "0", "stat-records": "no shared store", "stat-records-sub": "email attachments",
+    "stat-sources-n": "0", "stat-sources": "unverified claims", "stat-sources-sub": "no single source of truth",
+    "stat-speed-n": "days", "stat-speed": "days of manual work", "stat-speed-sub": "hero dependent",
     "arch-title": "A bag of AI tools",
-    "pitch-body": "Pilots die. No shared knowledge. Hero dependency. Governance bolted on after. IT never signs off. Every team rebuilds context from scratch."
   }
 };
 function applyScenario(name) {
@@ -563,7 +557,7 @@ const demoPathStops = [
   {label:"5. Hub: Governed search + restricted record",view:"hub",target:"hub-search",action:"scroll"},
   {label:"6. Governance: Owner · version · access · audit",view:"governance",target:"gov-table",action:"scroll"},
   {label:"7. Live: Type a query → generated live",view:"live",target:"live-input",action:"scroll"},
-  {label:"8. Home: Why this beats a bag of tools",view:"home",target:"home-pitch",action:"scroll"}
+  {label:"8. Home: One system, five lenses",view:"home",target:"home-arch",action:"scroll"}
 ];
 let demoPathIndex = -1, demoHighlightTimeout = null;
 
@@ -616,13 +610,10 @@ function demoScrollTo(stop) {
 
 /* ===== WELCOME OVERLAY ===== */
 (function() {
-  if (!sessionStorage.getItem("zerra-overlay-dismissed")) {
-    document.getElementById("welcome-overlay").classList.remove("hidden");
-  }
+  document.getElementById("welcome-overlay").classList.remove("hidden");
 })();
 function dismissOverlay() {
   document.getElementById("welcome-overlay").classList.add("hidden");
-  sessionStorage.setItem("zerra-overlay-dismissed", "1");
 }
 </script>
 <div class="sources-backdrop" id="sources-backdrop" onclick="closeSourcesDrawer()"></div>
