@@ -294,8 +294,8 @@ VIEWS.hub = { title: "05 Hub", render(el, id) {
 
 VIEWS.live = { title: "06 Live", render(el) {
   el.innerHTML = `<div class="card"><h2>Live Query</h2>
-    <p class="dim">Type a new region, customer or competitor — the system researches it live
-    and adds a cited brief to the store. Requires <code>python -m tools.live</code> running.</p>
+    <p class="dim">Type a query — Wikipedia research runs directly in your browser.
+    No backend needed. Works on raylim.me.</p>
     <div style="display:flex;gap:8px;margin:10px 0">
       <input type="search" id="live-q" placeholder="e.g. Hyderabad India · AWS Sydney · Equinix"
         style="flex:2" autocomplete="off">
@@ -311,30 +311,43 @@ VIEWS.live = { title: "06 Live", render(el) {
   $("#live-go").onclick = async () => {
     const q = $("#live-q").value.trim(), t = $("#live-type").value;
     if (!q) { show('<p class="dim">Enter a query.</p>'); return; }
-    show('<p class="dim">Researching…</p>');
+    show('<p class="dim">Searching Wikipedia…</p>');
     try {
-      const resp = await fetch("/api/query", {
-        method: "POST", headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({query: q, type: t})
+      const api = "https://en.wikipedia.org/w/api.php?origin=*&format=json";
+      const searchUrl = api + "&action=query&list=search&srsearch=" + encodeURIComponent(q) + "&srlimit=5";
+      const sr = await fetch(searchUrl).then(r => r.json());
+      const pages = (sr.query && sr.query.search) || [];
+      if (!pages.length) { show('<p class="dim">No results. Try a more specific query.</p>'); return; }
+      const today = new Date().toISOString().slice(0,10);
+      const slug = "live-" + q.toLowerCase().replace(/[^a-z0-9]+/g,"-").slice(0,30);
+      const record = { id: slug, type: t, title: "Live: " + q, owner: "PMO — live query",
+        version: "0.1-draft", access: "internal", updated: today, sections: [], citations: [],
+        audit: [{ ts: new Date().toISOString(), actor: "live-query", action: "generated from: " + q }] };
+      if (t === "region_brief") record.scorecard = [];
+      if (t === "customer_brief") record.signals = [];
+      if (t === "competitor_brief") record.moves = [];
+      pages.slice(0,3).forEach(function(p, i) {
+        var cid = "live-c" + (i+1);
+        var title = p.title;
+        record.citations.push({ id: cid, title: title, publisher: "Wikipedia",
+          url: "https://en.wikipedia.org/wiki/" + encodeURIComponent(title.replace(/ /g,"_")),
+          accessed: today });
+        record.sections.push({ heading: title, body_md: "Wikipedia snippet: " +
+          (p.snippet || "").replace(/<[^>]+>/g,"") + " [" + cid + "]", citations: [cid] });
       });
-      if (!resp.ok) {
-        const e = await resp.json();
-        show(`<p class="sev-medium">${esc(e.error)}</p>` +
-          '<p class="dim small">Static demo still works. Start the backend: <code>python -m tools.live</code></p>');
-        return;
-      }
-      const record = await resp.json();
+      if (t === "region_brief") record.scorecard.push({ dimension: "Rapid screen",
+        rating: 3, summary: "Live-generated — verify before production use. " + q + " [live-c1]",
+        citations: ["live-c1"] });
       window.STORE.records.push(record);
       logAudit(record.id, "live query generated");
       show(`<div class="card" style="background:var(--bg)">
         <h2>✓ Generated: ${esc(record.title)}</h2>
         ${govBadge(record)}
         <p><a href="#/hub/${record.id}">View in Knowledge Hub</a></p>
-        <p class="dim small">${record.citations.length} cited sources · added to all module views</p>
+        <p class="dim small">${record.citations.length} Wikipedia sources · added to all module views</p>
       </div>`);
     } catch (err) {
-      show(`<p class="sev-medium">Backend not reachable. Start with <code>python -m tools.live</code></p>
-        <p class="dim small">Static demo still works offline — all 17 pre-built records are available.</p>`);
+      show('<p class="sev-medium">Wikipedia API unreachable. Check your internet connection.</p>');
     }
   }; } };
 
@@ -384,7 +397,7 @@ var demoPathStops = [
   { label:"6. Governance — the IT-Director answer", view:"governance", target:"gov-table", action:"scroll",
     desc:"Every record: owned, versioned, access-tiered, cited, audited. The architecture answers the objection." },
   { label:"7. 06 Live — generate on the fly", view:"live", target:"live-q", action:"scroll",
-    desc:"Type a query. Wikipedia research. New cited brief appended to the store — in seconds." }
+    desc:"Calls Wikipedia directly from your browser. No backend. Works on raylim.me." }
 ];
 var demoPathIndex = -1;
 var demoHighlightTimeout = null;
