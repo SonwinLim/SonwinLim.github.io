@@ -1845,7 +1845,7 @@
           </div>
           <!-- Tile 3: Revenue vs Target -->
           <div class="kpi-tile">
-            <div class="mono-label">REVENUE VS TARGET</div>
+            <div class="mono-label">REVENUE VS TARGET <span class="glossary-icon" onclick="event.stopPropagation();openGlossary('revenue-vs-target')">?</span></div>
             <div class="mono-value lg red">−8.4%</div>
             <div class="sub-line red-sub">$6.10M vs $6.66M plan</div>
             <div class="wow-tag bad" style="margin-top:16px;"><span class="arrow">▼</span> 5th consecutive week below plan</div>
@@ -1864,7 +1864,7 @@
           </div>
           <!-- Tile 6: Open High-Value Tickets -->
           <div class="kpi-tile">
-            <div class="mono-label">OPEN HIGH-VALUE TICKETS</div>
+            <div class="mono-label">OPEN HIGH-VALUE TICKETS <span class="glossary-icon" onclick="event.stopPropagation();openGlossary('open-high-value-tickets')">?</span></div>
             <div class="mono-value lg amber">312</div>
             <div class="sub-line" style="color:var(--amber);">Blade owners with tickets open &gt;7 days <span class="sim-marker">SIM</span></div>
           </div>
@@ -2112,7 +2112,7 @@
         <section class="kpi-row fade-section" id="commerce-kpis">
           <div class="panel-title-row"><div class="panel-title" style="grid-column:1/-1;margin-bottom:0;">EXECUTIVE KPI ROW</div><button class="explain-btn" onclick="triggerExplain('c5')">EXPLAIN ⚡</button></div>
           <div class="kpi-tile">
-            <div class="kpi-label">NET REVENUE</div>
+            <div class="kpi-label">NET REVENUE <span class="glossary-icon" onclick="event.stopPropagation();openGlossary('net-revenue')">?</span></div>
             <div class="kpi-value">$6.10M</div>
             <div class="kpi-delta up">▲ +2.1% WoW</div>
             <div class="kpi-sub-line">−8.4% VS TARGET</div>
@@ -2126,7 +2126,7 @@
             </div>
           </div>
           <div class="kpi-tile">
-            <div class="kpi-label">CONVERSION RATE</div>
+            <div class="kpi-label">CONVERSION RATE <span class="glossary-icon" onclick="event.stopPropagation();openGlossary('conversion-rate')">?</span></div>
             <div class="kpi-value">1.72%</div>
             <div class="kpi-delta down">▼ −0.09pp WoW</div>
             <div class="kpi-sparkline">
@@ -2137,7 +2137,7 @@
             </div>
           </div>
           <div class="kpi-tile">
-            <div class="kpi-label">AVG ORDER VALUE</div>
+            <div class="kpi-label">AVG ORDER VALUE <span class="glossary-icon" onclick="event.stopPropagation();openGlossary('aov')">?</span></div>
             <div class="kpi-value">$128</div>
             <div class="kpi-delta up">▲ +$3 WoW</div>
             <div class="kpi-sparkline">
@@ -2148,7 +2148,7 @@
             </div>
           </div>
           <div class="kpi-tile">
-            <div class="kpi-label">REPEAT PURCHASE (90D)</div>
+            <div class="kpi-label">REPEAT PURCHASE (90D) <span class="glossary-icon" onclick="event.stopPropagation();openGlossary('repeat-purchase')">?</span></div>
             <div class="kpi-value">24.6%</div>
             <div class="kpi-delta up">▲ +0.4pp WoW</div>
             <div class="kpi-sparkline">
@@ -2159,7 +2159,7 @@
             </div>
           </div>
           <div class="kpi-tile">
-            <div class="kpi-label">RAZER ID SIGNUPS</div>
+            <div class="kpi-label">RAZER ID SIGNUPS <span class="glossary-icon" onclick="event.stopPropagation();openGlossary('razer-id')">?</span></div>
             <div class="kpi-value accent-green">18.4K</div>
             <div class="kpi-delta up">▲ +31% WoW</div>
             <div class="kpi-sparkline">
@@ -2170,7 +2170,7 @@
             </div>
           </div>
           <div class="kpi-tile">
-            <div class="kpi-label">SILVER ENGAGEMENT</div>
+            <div class="kpi-label">SILVER ENGAGEMENT <span class="glossary-icon" onclick="event.stopPropagation();openGlossary('silver-engagement')">?</span></div>
             <div class="kpi-value">11.2%</div>
             <div class="kpi-delta up">▲ +0.8pp WoW</div>
             <div class="kpi-sparkline">
@@ -2377,7 +2377,7 @@
             </div>
           </div>
           <div class="kpi-tile">
-            <div class="mono-label">NPS</div>
+            <div class="mono-label">NPS <span class="glossary-icon" onclick="event.stopPropagation();openGlossary('nps')">?</span></div>
             <div class="mono-value lg">47</div>
             <div class="wow-tag good"><span class="arrow">▲</span> WoW +2</div>
             <div class="sparkline-wrap">
@@ -2394,7 +2394,7 @@
             </div>
           </div>
           <div class="kpi-tile">
-            <div class="mono-label">AVG HANDLE TIME</div>
+            <div class="mono-label">AVG HANDLE TIME <span class="glossary-icon" onclick="event.stopPropagation();openGlossary('aht')">?</span></div>
             <div class="mono-value lg">9m 12s</div>
             <div class="wow-tag good"><span class="arrow">▼</span> WoW −0m 26s</div>
             <div class="sparkline-wrap">
@@ -2858,7 +2858,15 @@ var glossaryRegistry = {
   'nps': "Net Promoter Score, range −100 to +100. This week: 47. Measures likelihood to recommend — above 50 is excellent, above 30 is strong.",
   'aht': "Average Handle Time — total interaction duration per ticket. This week: 9m 12s (down 26s WoW). Speed is only valuable if resolution quality holds.",
   'wow': "Week over Week — change compared to the previous week. \"pp\" = percentage points (the absolute difference, not relative %).",
-  'bridge-kpi-row': "Six metrics spanning both of Grace's P&Ls. Revenue Protected and LTV-at-Risk are bridge metrics — they only exist when commerce and support ledgers are joined at customer grain."
+  'bridge-kpi-row': "Six metrics spanning both of Grace's P&Ls. Revenue Protected and LTV-at-Risk are bridge metrics — they only exist when commerce and support ledgers are joined at customer grain.",
+  'revenue-vs-target': "Net revenue vs the weekly plan. This week: $6.10M actual vs $6.66M target (−8.4%). Fifth consecutive week below plan.",
+  'open-high-value-tickets': "Unresolved support tickets from high-LTV customers. This week: 312 Blade owners with tickets open >7 days. These are the most commercially important conversations in the queue.",
+  'net-revenue': "Total direct-to-consumer revenue on Razer.com for the week. This week: $6.10M. The −8.4% gap is concentrated in peripherals where marketplace undercuts win the comparison shopper.",
+  'conversion-rate': "Percentage of sessions that end in a purchase. This week: 1.72% — above the 1.4–1.6% electronics benchmark but down 0.09pp WoW.",
+  'aov': "Average Order Value — total revenue divided by number of orders. This week: $128, above the ~$111 electronics revenue-per-user benchmark.",
+  'repeat-purchase': "Percentage of customers who buy again within 90 days. This week: 24.6%, at the top of the 15–25% electronics band. Membership drives this — Silver-active repurchase at 38.1%.",
+  'razer-id': "Razer's loyalty account. Signups spiked 31% WoW driven by the Espeon & Umbreon collab drop. 71% of new signups are new-to-brand — the largest first-time cohort this quarter.",
+  'silver-engagement': "Percentage of active members at Razer Silver tier. Silver-active members repurchase at 4.1× the rate of guests — the ecosystem is the conversion strategy."
 };
 
 var currentPopover = null;
