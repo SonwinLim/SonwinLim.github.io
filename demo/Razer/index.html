@@ -2343,7 +2343,7 @@
         <section class="kpi-grid fade-section" id="support-kpis">
           <div class="panel-title-row" style="grid-column:1/-1;margin-bottom:0;"><div class="panel-title" style="font-size:11px;">SUPPORT KPI ROW</div><button class="explain-btn" onclick="triggerExplain('s12')">EXPLAIN ⚡</button></div>
           <div class="kpi-tile">
-            <div class="mono-label">CONTAINMENT RATE</div>
+            <div class="mono-label">CONTAINMENT RATE <span class="glossary-icon" onclick="event.stopPropagation();openGlossary('containment-rate')">?</span></div>
             <div class="mono-value lg accent">61.4%</div>
             <div class="wow-tag good"><span class="arrow">▲</span> WoW +1.2pp</div>
             <div class="sparkline-wrap">
@@ -2360,7 +2360,7 @@
             </div>
           </div>
           <div class="kpi-tile">
-            <div class="mono-label">CSAT</div>
+            <div class="mono-label">CSAT <span class="glossary-icon" onclick="event.stopPropagation();openGlossary('csat')">?</span></div>
             <div class="mono-value lg">4.31 <span style="font-size:14px;color:#7E8C82;">/ 5</span></div>
             <div class="wow-tag good"><span class="arrow">▲</span> WoW +0.03</div>
             <div class="sparkline-wrap">
@@ -2852,7 +2852,12 @@ var glossaryRegistry = {
   'checkout-leakage': "Demand that reached checkout and did not convert — the cheapest revenue to recover because the customer already decided.",
   'repeat-contact-risk': "Second contact on the same issue. Correlates with 2.3× churn-risk uplift (simulated) — the strongest early-warning signal in the joined data.",
   'map-flag': "Minimum Advertised Price status vs marketplace street price. BREACH = sustained sub-MAP advertising; a channel-governance signal, not an accusation.",
-  'data-readiness': "Status of each source system needed to run this view live. Dashboards are the last mile; this is the plumbing."
+  'data-readiness': "Status of each source system needed to run this view live. Dashboards are the last mile; this is the plumbing.",
+  'containment-rate': "Percentage of support tickets resolved by AI without human handoff. This week: 61.4%. Industry self-service resolution rates average ~9% (Gartner).",
+  'csat': "Customer Satisfaction Score, rated 1–5 post-interaction. This week: 4.31/5. Measures quality of resolution from the customer's perspective.",
+  'nps': "Net Promoter Score, range −100 to +100. This week: 47. Measures likelihood to recommend — above 50 is excellent, above 30 is strong.",
+  'aht': "Average Handle Time — total interaction duration per ticket. This week: 9m 12s (down 26s WoW). Speed is only valuable if resolution quality holds.",
+  'wow': "Week over Week — change compared to the previous week. \"pp\" = percentage points (the absolute difference, not relative %)."
 };
 
 var currentPopover = null;
