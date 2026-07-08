@@ -1445,6 +1445,17 @@
         .demo-path-card .path-stop.active {
             color: var(--accent);
         }
+        .demo-path-card .path-stop-desc {
+            font-family: var(--font-ui);
+            font-size: 10px;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--text-faint);
+            margin-top: 2px;
+            max-width: 280px;
+            letter-spacing: 0.02em;
+            line-height: 1.4;
+        }
         .demo-path-card .path-stop.done {
             color: var(--text-secondary);
         }
@@ -2747,13 +2758,19 @@ function closeGlossaryPopover(){
 
 /* ===== 90-SECOND DEMO PATH ===== */
 var demoPathStops = [
-  { label: '1. Bridge KPI row', view: 'bridge', target: 'bridge-kpis', action: 'scroll' },
-  { label: '2. Unified customer table', view: 'bridge', target: 'bridge-table', action: 'scroll' },
-  { label: '3. Ask: Which customers matter?', view: 'bridge', target: null, action: 'explain', chipId: 'b1' },
-  { label: '4. Revenue-at-risk waterfall', view: 'bridge', target: 'bridge-waterfall', action: 'scroll' },
-  { label: '5. Commerce: Channel lens + MAP', view: 'commerce', target: 'commerce-channel', action: 'scroll' },
-  { label: '6. Support: Containment panel', view: 'support', target: 'support-containment', action: 'scroll' },
-  { label: '7. Bridge: Action Queue', view: 'bridge', target: 'bridge-actions', action: 'scroll' }
+  { label: '1. THE BRIDGE — joined view', view: 'bridge', target: 'bridge-kpis', action: 'scroll',
+    desc: 'One pane across both P&Ls. Metrics that exist only when commerce and support ledgers are joined.' },
+  { label: '2. Bridge KPI row', view: 'bridge', target: 'bridge-kpis', action: 'scroll' },
+  { label: '3. Unified customer table', view: 'bridge', target: 'bridge-table', action: 'scroll' },
+  { label: '4. Ask: Which customers matter?', view: 'bridge', target: null, action: 'explain', chipId: 'b1' },
+  { label: '5. Revenue-at-risk waterfall', view: 'bridge', target: 'bridge-waterfall', action: 'scroll' },
+  { label: '6. COMMERCE — the DTC engine', view: 'commerce', target: 'commerce-kpis', action: 'scroll',
+    desc: 'Razer.com direct commerce. Revenue, conversion, channel mix, and the 22% DTC share that drives margin.' },
+  { label: '7. Commerce: Channel lens + MAP', view: 'commerce', target: 'commerce-channel', action: 'scroll' },
+  { label: '8. SUPPORT — the retention system', view: 'support', target: 'support-kpis', action: 'scroll',
+    desc: 'Customer Advocacy P&L. Containment, CSAT, NPS — and the callback queue ranked by LTV-at-risk, not ticket age.' },
+  { label: '9. Support: Containment panel', view: 'support', target: 'support-containment', action: 'scroll' },
+  { label: '10. Bridge: Action Queue', view: 'bridge', target: 'bridge-actions', action: 'scroll' }
 ];
 var demoPathIndex = -1;
 var demoHighlightTimeout = null;
@@ -2781,7 +2798,12 @@ function renderPathStops(){
     var cls = 'path-stop';
     if (i < demoPathIndex) cls += ' done';
     else if (i === demoPathIndex) cls += ' active';
-    return '<div class="'+cls+'">'+s.label+'</div>';
+    var html = '<div class="'+cls+'">'+s.label;
+    if (i === demoPathIndex && s.desc) {
+      html += '<div class="path-stop-desc">'+s.desc+'</div>';
+    }
+    html += '</div>';
+    return html;
   }).join('');
 }
 
