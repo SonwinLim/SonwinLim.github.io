@@ -227,7 +227,7 @@ VIEWS.radar = { title: "03 Radar", render(el, id) {
       <div class="card"><h2>${esc(r.title)}</h2>${govBadge(r)}
       <h3>Recent moves</h3><table>` +
       (r.moves || []).map(m => `<tr><td style="width:90px;font-family:var(--mono)">${esc(m.date)}</td>
-        <td><strong>${esc(m.headline)}</strong><br><span class="dim small">${md(m.why)}</span></td></tr>`).join("") +
+        <td><strong>${md(m.headline)}</strong><br><span class="dim small">${md(m.why)}</span></td></tr>`).join("") +
       `</table>${sections(r)}${citeList(r)}</div>`; return; }
   const all = byType("competitor_brief")
     .flatMap(r => (r.moves || []).map(m => ({ ...m, who: r.title, id: r.id })))
@@ -237,7 +237,7 @@ VIEWS.radar = { title: "03 Radar", render(el, id) {
     <p class="dim small">Gate 2 · Feasibility — is there a credible route to a viable powered campus?</p>
     <table><tr><th>when</th><th>who</th><th>move</th></tr>` +
     all.map(m => `<tr><td style="font-family:var(--mono)">${esc(m.date)}</td>
-      <td><a href="#/radar/${m.id}">${esc(m.who)}</a></td><td>${esc(m.headline)}</td></tr>`).join("") +
+      <td><a href="#/radar/${m.id}">${esc(m.who)}</a></td><td>${md(m.headline)}</td></tr>`).join("") +
     `</table></div><div class="grid">` +
     byType("competitor_brief").map(r => `<a class="card" style="display:block;text-decoration:none"
       href="#/radar/${r.id}"><h2>${esc(r.title)}</h2>${govBadge(r)}</a>`).join("") + "</div>"; } };
