@@ -159,7 +159,8 @@ VIEWS.home = { title: "System", render(el) {
       ["live","06 Live","Type a query → live research → cited brief added to the store."],
       ["governance","Governance","Ownership, versions, access tiers, audit trail - built in."],
     ].map(([k,t,d]) => `<a class="card" style="display:block;text-decoration:none"
-      href="#/${k}"><h2>${t}</h2><p class="dim">${d}</p></a>`).join("") + "</div>"; } };
+      href="#/${k}"><h2>${t}</h2><p class="dim">${d}</p></a>`).join("") + "</div>"
+    + `<p class="dim small" style="margin-top:12px">Each lens above covers one or more of Zerra's seven stage-gates: Site (1) → Feasibility (2) → Design (3) → Procure (4) → Build (5) → Commission (6) → Operate (7). The PMO owns the gate framework; functional leads own the technical decisions at each gate.</p>`; } };
 
 VIEWS.sites = { title: "01 Sites", render(el, id) {
   const briefs = byType("region_brief");
@@ -184,7 +185,8 @@ VIEWS.sites = { title: "01 Sites", render(el, id) {
       `</table>${sections(r)}${citeList(r)}</div>`; return; }
   el.innerHTML = `<div class="card"><h2>Greenfield Site & Market Screening</h2>
     <p class="dim">Region in → cited screening brief out: power, land, connectivity,
-    regulation, sustainability, demand. Same engine as modules 02–03, site lens.</p></div>
+    regulation, sustainability, demand. Same engine as modules 02-03, site lens.</p>
+    <p class="dim small">Gate 1 · Site — is this location worth investigating?</p></div>
     <div class="grid">` + briefs.map(r => {
       const avg = (r.scorecard.reduce((a, s) => a + s.rating, 0) / r.scorecard.length).toFixed(1);
       return `<a class="card" style="display:block;text-decoration:none" href="#/sites/${r.id}">
@@ -210,7 +212,8 @@ VIEWS.sales = { title: "02 Sales", render(el, id) {
       `</table>${sections(r)}${citeList(r)}</div>`; return; }
   el.innerHTML = `<div class="card"><h2>Hyperscaler / Neocloud Sales Intelligence</h2>
     <p class="dim">Target in → capacity posture, dated expansion signals, pitch angles.
-    Same engine, customer lens.</p></div><div class="grid">` +
+    Same engine, customer lens.</p>
+    <p class="dim small">All gates — connects customer-facing capacity claims to delivery reality.</p></div><div class="grid">` +
     byType("customer_brief").map(r => `<a class="card" style="display:block;text-decoration:none"
       href="#/sales/${r.id}"><h2>${esc(r.title)}</h2>${govBadge(r)}
       <p class="dim small">${(r.signals || []).length} dated signals ·
@@ -231,6 +234,7 @@ VIEWS.radar = { title: "03 Radar", render(el, id) {
     .sort((a, b) => b.date.localeCompare(a.date)).slice(0, 10);
   el.innerHTML = `<div class="card"><h2>Market & Competitor Radar</h2>
     <p class="dim">Cross-competitor timeline, newest first. Same engine, market lens.</p>
+    <p class="dim small">Gate 2 · Feasibility — is there a credible route to a viable powered campus?</p>
     <table><tr><th>when</th><th>who</th><th>move</th></tr>` +
     all.map(m => `<tr><td style="font-family:var(--mono)">${esc(m.date)}</td>
       <td><a href="#/radar/${m.id}">${esc(m.who)}</a></td><td>${esc(m.headline)}</td></tr>`).join("") +
@@ -244,6 +248,7 @@ VIEWS.collapse = { title: "04 Collapse", render(el) {
     ${govBadge(wf)}<p class="dim">Before: PMO analyst manually merges ${window.MOCK_STATUS.length}
     weekly project reports over days. After: the workflow layer does it below -
     <strong>watch the clock</strong>. New workflows plug into the same pattern.</p>
+    <p class="dim small">Gates 3-6 · Design, Procure, Build, Commission — timeline visibility across the delivery chain.</p>
     <p class="small dim">Inputs are representative mock projects (no client data).</p>
     <div id="collapse-run"><p style="margin-top:12px"><button class="run" id="go">Run consolidation
     (${window.MOCK_STATUS.length} reports)</button></p><div id="out"></div>
@@ -289,6 +294,7 @@ VIEWS.hub = { title: "05 Hub", render(el, id) {
     <p class="dim">One governed, searchable knowledge base: PMBOK practice summaries,
     delivery process, and every intelligence brief in the system. Search everything -
     access tiers and audit apply automatically.</p>
+    <p class="dim small">Gate 7 · Operate — can operations assume responsibility without inheriting uncontrolled risk?</p>
     <div id="hub-search"><input type="search" id="q" placeholder="try: stakeholder · stage gate · power · risk"
       autocomplete="off"><div id="res" style="margin-top:14px"></div></div>`;
   const rank = q => window.STORE.records.map(r => {
@@ -316,6 +322,7 @@ VIEWS.live = { title: "06 Live", render(el) {
   el.innerHTML = `<div class="card"><h2>Live Query</h2>
     <p class="dim">Type a query - Wikipedia research runs directly in your browser.
     No backend needed. Works on raylim.me.</p>
+    <p class="dim small">On-demand intelligence — feeds any gate with real-time cited research.</p>
     <div style="display:flex;gap:8px;margin:10px 0">
       <input type="search" id="live-q" placeholder="e.g. Hyderabad India · AWS Sydney · Equinix"
         style="flex:2" autocomplete="off">
@@ -384,6 +391,7 @@ VIEWS.governance = { title: "Governance", render(el) {
   el.innerHTML = `<div class="card"><h2>Governance register</h2>
     <p class="dim small">Every record is owned, versioned, access-tiered and cited -
     enforced by the build (it refuses uncited data). This is the layer IT signs off on.</p>
+    <p class="dim small">All gates — cross-cutting governance, audit trail, and evidence standards.</p>
     <div id="gov-table"><table><tr><th>id</th><th>type</th><th>owner</th><th>ver</th><th>access</th>
     <th>sources</th><th>updated</th></tr>${rows}</table></div>
     <div class="card"><h2>Session audit trail</h2>
