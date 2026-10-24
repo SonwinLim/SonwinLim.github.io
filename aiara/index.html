@@ -95,6 +95,11 @@ h1 { margin: 0; font: 800 clamp(3.6rem, 12vw, 8rem)/.88 var(--display); letter-s
 /* shallows */
 .what { --bg: var(--shallows); --fg: var(--ink); padding-top: 8rem; }
 .lede { max-width: 38rem; font-size: 1.3rem; line-height: 1.55; margin: 0; }
+.what-grid { display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: center; }
+.steve { width: 13rem; padding: 0; border: 0; background: none; color: var(--ink); cursor: pointer; font: 500 .95rem/1.3 var(--display); }
+.steve img { display: block; width: 100%; height: auto; animation: bob 3.2s ease-in-out infinite alternate; transition: transform .35s cubic-bezier(.3,1.6,.5,1); }
+.steve[aria-pressed="true"] img { transform: scale(1.35); }
+@keyframes bob { from { translate: 0 -6px; } to { translate: 0 6px; } }
 
 /* mid water: survey tape */
 .work { --bg: var(--mid); --fg: var(--foam); }
@@ -155,12 +160,15 @@ footer { margin-top: 3.5rem; font: 500 .9rem/1.4 var(--display); color: var(--sh
   .tape li { grid-template-columns: 3.4rem 18px 1fr; column-gap: 1rem; }
   .tape .yr { font-size: 1rem; }
   .critter { width: calc(var(--w) * .6); }
+  .what-grid { grid-template-columns: 1fr; }
+  .steve { justify-self: center; width: 11rem; }
   .facts { gap: .5rem; font-size: .9rem; }
   .facts .pill { padding: .45rem .8rem; }
   .facts b { font-size: 1.1rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  section::before, .caustics, .bubble, .critter, .flap, .porthole { animation: none; }
+  section::before, .caustics, .bubble, .critter, .flap, .porthole, .steve img { animation: none; }
+  .steve img { transition: none; }
   .bubble { display: none; }
   html { scroll-behavior: auto; }
 }
@@ -210,9 +218,15 @@ footer { margin-top: 3.5rem; font: 500 .9rem/1.4 var(--display); color: var(--sh
         <path d="M100 26 V94 M70 40 Q100 60 70 80 M130 40 Q100 60 130 80"/>
       </g>
     </svg>
-    <div class="wrap">
-      <h2>What I do</h2>
-      <p class="lede">I run field research on tropical reefs where tourism and ecosystems overlap. I build ways for divers, students and local people to contribute data, and I partner with universities and NGOs so the science reaches the people who live beside the reef.</p>
+    <div class="wrap what-grid">
+      <div>
+        <h2>What I do</h2>
+        <p class="lede">I run field research on tropical reefs where tourism and ecosystems overlap. I build ways for divers, students and local people to contribute data, and I partner with universities and NGOs so the science reaches the people who live beside the reef.</p>
+      </div>
+      <button class="steve" id="steve" type="button" aria-pressed="false" aria-label="Steve the porcupinefish. Press to puff him up">
+        <img src="steve.png" width="400" height="303" alt="">
+        <span>Steve the porcupinefish. Tap him.</span>
+      </button>
     </div>
   </section>
 
@@ -431,6 +445,14 @@ footer { margin-top: 3.5rem; font: 500 .9rem/1.4 var(--display); color: var(--sh
   }, { passive: true });
   addEventListener("resize", update);
   update();
+
+  // porcupinefish puff up when startled, then deflate
+  var steve = document.getElementById("steve"), deflate;
+  steve.addEventListener("click", function () {
+    steve.setAttribute("aria-pressed", "true");
+    clearTimeout(deflate);
+    deflate = setTimeout(function () { steve.setAttribute("aria-pressed", "false"); }, 1800);
+  });
 })();
 </script>
 </body>
