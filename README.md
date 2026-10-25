@@ -1,9 +1,13 @@
 # Ray Lim — Personal Profile Site
 
 A single self-contained `index.html` (no build step, no dependencies). Aesthetic: an
-aerospace-cockpit dossier — near-black ink, warm paper, signal-amber accent. Fonts: Fraunces
-(display), Newsreader (body), JetBrains Mono (labels). All content is sourced from the approved
-ResumeForge files and respects the Career Transition Narrative disclosure boundaries.
+aerospace cockpit at night — blue-grey panel, warm paper, avionics-amber accent, and the track
+record set as buff ATC flight-progress strips. Fonts: Newsreader (the commercial voice: headings
+and body) and B612 / B612 Mono (the builder voice: labels, figures, dates — Airbus's cockpit
+display face). `projects/index.html` shares the same tokens. Positioning: "Commercial operator
+who builds" — settled, not job hunting; the current employer is never named. All content is
+sourced from the approved ResumeForge files and respects the Career Transition Narrative
+disclosure boundaries.
 
 ```
 resume-site/
@@ -56,17 +60,19 @@ SSL/TLS encryption mode: **Full** (under SSL/TLS tab, not Records).
 
 Everything lives in `index.html`. Sections, in order:
 
-| # | Section | Anchor |
-|---|---------|--------|
-| 01 | The hybrid profile + headline metrics | `#profile` |
-| 02 | Signature results | `#results` |
-| 03 | AI-enabled execution | `#ai` |
-| 04 | Track record (timeline) | `#experience` |
-| 05 | Capabilities (Commercial / Technical) | `#capabilities` |
-| 06 | Foundations & honours | `#education` |
-| 07 | Contact | `#contact` |
+| Section | Anchor |
+|---------|--------|
+| Hero: identity + portrait | `#top` |
+| Two fluencies + readouts | `#profile` |
+| Results ledger | `#results` |
+| How I build: rules, systems map, pipeline, personal builds | `#build` |
+| Track record (flight strips; `.strip.now` marks the current entry) | `#record` |
+| What I work with (Commercial / Technical) | `#capabilities` |
+| Education and honours | `#education` |
+| Writing (newsletters) | `#writing` |
+| Contact | `#contact` |
 
 - **Colors / fonts:** the `:root` block at the top of the `<style>`.
-- **Animated numbers:** any `<span data-count="N" data-suffix="…">`.
+- **Motion:** one hero load sequence (`.rise`); off under `prefers-reduced-motion`.
 - **Content guardrails:** keep wording inside the "safe to say" set from
   `ResumeForge Career Transition Narrative.md`. Do not introduce anything from its "do not say" list.
