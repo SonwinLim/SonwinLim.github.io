@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex,nofollow">
+<title>Mena in Singapore</title>
+<style>
+:root{
+  --paper:#EEF2F1;
+  --card:#FFFFFF;
+  --ink:#0E2A30;
+  --muted:#46606A;
+  --teal:#1D6A73;
+  --rule:#C9D6D5;
+  --hivis:#FFD400;
+  --night:#14213D;
+  --night-ink:#E9EEFA;
+  --night-muted:#B3BFDA;
+  --focus:#0B57D0;
+  --display:'Bahnschrift','Avenir Next Condensed','Roboto Condensed','Arial Narrow','Helvetica Neue',sans-serif;
+  --text:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --paper:#0B171A;
+    --card:#112328;
+    --ink:#E6EFEE;
+    --muted:#9DB4B8;
+    --teal:#6CC3CC;
+    --rule:#274147;
+    --night:#1B2A52;
+    --focus:#8AB4F8;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:1.0625rem/1.55 var(--text)}
+a{color:var(--teal);text-underline-offset:.2em}
+a:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:3px}
+.wrap{max-width:46rem;margin:0 auto;padding:0 1rem}
+
+/* hero */
+.hero{padding:2.25rem 0 1.5rem}
+.hero-where{margin:0 0 .25rem;color:var(--muted)}
+.hero h1{font:700 clamp(2.4rem,9vw,4rem)/1 var(--display);letter-spacing:-.01em;margin:0 0 1.5rem}
+.bib{position:relative;background:var(--hivis);color:#1A1A00;padding:1.4rem 1.5rem 1.3rem;border-radius:.4rem;transform:rotate(-1deg);box-shadow:0 1px 0 rgba(0,0,0,.25)}
+.bib::before,.bib::after{content:"";position:absolute;top:.55rem;width:.6rem;height:.6rem;border-radius:50%;background:var(--paper);box-shadow:inset 0 0 0 1px rgba(0,0,0,.25)}
+.bib::before{left:.6rem}.bib::after{right:.6rem}
+.bib-dist{font:700 1rem/1 var(--display);margin:0 0 .35rem;letter-spacing:.02em}
+.countdown{font:700 clamp(2.6rem,12vw,4.6rem)/.95 var(--display);font-variant-numeric:tabular-nums;margin:0}
+.countdown small{font-size:.42em;font-weight:600;margin-right:.55em}
+.bib-note{margin:.6rem 0 0;font-size:.98rem}
+
+/* day nav */
+.nav{position:sticky;top:0;z-index:5;background:var(--paper);border-bottom:1px solid var(--rule)}
+.nav ul{display:flex;gap:.4rem;overflow-x:auto;list-style:none;margin:0;padding:.6rem 1rem;scrollbar-width:none}
+.nav a{display:block;white-space:nowrap;padding:.4rem .8rem;border:1px solid var(--rule);border-radius:2rem;color:var(--ink);text-decoration:none;font-weight:600;font-size:.95rem}
+.nav a:hover{border-color:var(--teal)}
+
+/* glance table */
+.glance{margin:2rem 0 .5rem}
+.glance h2,.block h2{font:700 1.7rem/1.1 var(--display);margin:0 0 .75rem}
+table{width:100%;border-collapse:collapse;background:var(--card);border-radius:.4rem;overflow:hidden}
+th,td{padding:.65rem .8rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+th{font-weight:700;white-space:nowrap}
+tr:last-child th,tr:last-child td{border-bottom:0}
+td.ray{color:var(--muted);width:32%}
+
+/* days */
+.day{margin:3rem 0;scroll-margin-top:4rem}
+.day-head{display:flex;gap:1rem;align-items:baseline;margin-bottom:1rem}
+.day-date{font:700 3.6rem/.9 var(--display);min-width:2.6ch;font-variant-numeric:tabular-nums}
+.day-title{font:700 1.55rem/1.1 var(--display);margin:0}
+.day-sub{margin:.2rem 0 0;color:var(--muted);font-size:.98rem}
+.today-tag{display:inline-block;margin-left:.5rem;padding:.05rem .5rem;border-radius:1rem;background:var(--hivis);color:#1A1A00;font:700 .85rem/1.5 var(--text)}
+.steps{list-style:none;margin:0;padding:0}
+.steps li{display:grid;grid-template-columns:4.6rem 1fr;gap:.5rem 1rem;padding:.2rem 0 1.2rem}
+.steps time{font:700 1.2rem/1.3 var(--display);font-variant-numeric:tabular-nums;text-align:right;padding-top:.05rem}
+.steps .body{border-left:2px solid var(--rule);padding-left:1rem;position:relative}
+.steps .body::before{content:"";position:absolute;left:-.4rem;top:.45rem;width:.7rem;height:.7rem;border-radius:50%;background:var(--paper);border:2px solid var(--teal)}
+.steps h3{margin:0 0 .15rem;font-size:1.08rem}
+.steps p{margin:.15rem 0}
+.steps .tip{color:var(--muted);font-size:.97rem}
+.steps li.ray .body{background:var(--night);color:var(--night-ink);border-left-color:var(--night);padding:.8rem 1rem;border-radius:.4rem;margin-left:.3rem}
+.steps li.ray .body::before{display:none}
+.steps li.ray .tip{color:var(--night-muted)}
+.steps li.ray a{color:#9CC4FF}
+.steps li.race .body{background:var(--hivis);color:#1A1A00;border-left-color:var(--hivis);padding:.8rem 1rem;border-radius:.4rem;margin-left:.3rem}
+.steps li.race .body::before{display:none}
+.steps li.race .tip{color:#3A3A10}
+.steps li.race a{color:#1A1A00}
+.maplink{font-size:.95rem;font-weight:600}
+
+/* info blocks */
+.block{margin:3rem 0}
+.block p,.block ul{margin:.5rem 0}
+.block ul{padding-left:1.2rem}
+.block li{margin:.35rem 0}
+.check{list-style:none;padding:0!important}
+.check li{display:flex;gap:.7rem;align-items:flex-start;margin:.55rem 0}
+.check input{width:1.3rem;height:1.3rem;margin-top:.2rem;accent-color:var(--teal);flex:none}
+.confirm{background:var(--card);border:1px solid var(--rule);border-radius:.4rem;padding:1rem 1.2rem}
+.contacts dt{font-weight:700;margin-top:.8rem}
+.contacts dd{margin:0}
+footer{padding:2rem 0 3rem;color:var(--muted);font-size:.95rem}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{.nav{display:none}.bib{transform:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+  <p class="hero-where">Singapore, Friday 4 to Wednesday 9 December 2026</p>
+  <h1>Mena's week in Singapore</h1>
+  <div class="bib">
+    <p class="bib-dist">Full marathon, 42.195 km</p>
+    <p class="countdown" id="countdown" aria-label="Time until the start of the marathon">Sunday 6 December, 04:30</p>
+    <p class="bib-note" id="countdown-note">Flag-off at the F1 Pit Building. Singapore time.</p>
+  </div>
+</header>
+</div>
+
+<nav class="nav" aria-label="Days">
+  <ul>
+    <li><a href="#fri">Fri 4</a></li>
+    <li><a href="#sat">Sat 5</a></li>
+    <li><a href="#sun">Sun 6</a></li>
+    <li><a href="#mon">Mon 7</a></li>
+    <li><a href="#tue">Tue 8</a></li>
+    <li><a href="#wed">Wed 9</a></li>
+    <li><a href="#info">Good to know</a></li>
+  </ul>
+</nav>
+
+<main class="wrap">
+
+<section class="glance" aria-labelledby="glance-h">
+  <h2 id="glance-h">The week</h2>
+  <table>
+    <tbody>
+      <tr><th scope="row">Fri 4</th><td>Land, check in, collect your race pack, Little India dinner, Mustafa Centre</td><td class="ray">I join at 19:00</td></tr>
+      <tr><th scope="row">Sat 5</th><td>Rest. I run the half marathon in the morning. Early carb dinner.</td><td class="ray">I join at 17:30</td></tr>
+      <tr><th scope="row">Sun 6</th><td>Marathon. Then rest and an easy dinner.</td><td class="ray">Finish and dinner</td></tr>
+      <tr><th scope="row">Mon 7</th><td>Merlion, Gardens by the Bay, then dinner at CÉ LA VI and the light show</td><td class="ray">I join at 19:00</td></tr>
+      <tr><th scope="row">Tue 8</th><td>Sentosa and Universal Studios</td><td class="ray">I have the day off and join all day</td></tr>
+      <tr><th scope="row">Wed 9</th><td>Fly out in the morning</td><td class="ray">Not this morning</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="day" id="fri" data-date="2026-12-04">
+  <div class="day-head">
+    <div class="day-date" aria-hidden="true">04</div>
+    <div>
+      <h2 class="day-title">Friday: land and get ready</h2>
+      <p class="day-sub">Friday 4 December. You are on your own until dinner.</p>
+    </div>
+  </div>
+  <ol class="steps">
+    <li><time>Midday</time><div class="body"><h3>Land at Changi</h3><p>Take the MRT towards the city and change at Tanah Merah, or take a taxi or Grab. Get off at Bugis, which is the station for your hotel.</p></div></li>
+    <li><time>13:30</time><div class="body"><h3>Check in at the hotel</h3><p>Check-in starts at 14:00. If you arrive early, ask them to keep your bag. Bring your passport. They take a SGD 100 deposit at check-in, and a card is easiest. I will send you the hotel name and address separately.</p></div></li>
+    <li><time>Afternoon</time><div class="body"><h3>Collect your race pack</h3><p>Collection is open until 22:00 on Friday. The venue was not published yet when I wrote this, so check the race website and I will send it when I have it. Take the QR code from your race receipt.</p></div></li>
+    <li class="ray"><time>19:00</time><div class="body"><h3>Dinner at Tekka Centre</h3><p>I will meet you here. It has several vegetarian Indian stalls in Little India. <a class="maplink" href="https://www.google.com/maps/search/?api=1&query=Tekka+Centre+Singapore">Open on the map</a></p></div></li>
+    <li class="ray"><time>20:15</time><div class="body"><h3>Mustafa Centre</h3><p>A huge shop with spices, sweets, gifts and electronics at low prices. It is a few minutes' walk from Farrer Park MRT and is reported to open late or all night. Keep it to about 90 minutes, because your race is in two days. <a class="maplink" href="https://www.google.com/maps/search/?api=1&query=Mustafa+Centre+145+Syed+Alwi+Road+Singapore">Open on the map</a></p><p class="tip">Tourist GST refund: ask at the till whether they give refund tickets, and keep your receipts. See Wednesday.</p></div></li>
+    <li><time>21:45</time><div class="body"><h3>Back at the hotel</h3><p>Early night.</p></div></li>
+  </ol>
+</section>
+
+<section class="day" id="sat" data-date="2026-12-05">
+  <div class="day-head">
+    <div class="day-date" aria-hidden="true">05</div>
+    <div>
+      <h2 class="day-title">Saturday: rest</h2>
+      <p class="day-sub">Saturday 5 December. I run the half marathon this morning, so you have the day to yourself.</p>
+    </div>
+  </div>
+  <ol class="steps">
+    <li><time>Morning</time><div class="body"><h3>Sleep in and eat breakfast slowly</h3><p>Nothing hard today.</p></div></li>
+    <li><time>11:00</time><div class="body"><h3>A short walk through Kampong Glam</h3><p>Sultan Mosque, Haji Lane and Arab Street are a short walk from the hotel. Keep it easy. <a class="maplink" href="https://www.google.com/maps/search/?api=1&query=Sultan+Mosque+Singapore">Open on the map</a></p></div></li>
+    <li><time>Afternoon</time><div class="body"><h3>Lay out your kit</h3><p>Pack your race kit and gear bag. Check the deadline for the gear bag drop on the race website.</p></div></li>
+    <li class="ray"><time>17:30</time><div class="body"><h3>Carb dinner at Komala Vilas</h3><p>South Indian vegetarian food in Little India. I will meet you there. <a class="maplink" href="https://www.google.com/maps/search/?api=1&query=Komala+Vilas+Little+India+Singapore">Open on the map</a></p></div></li>
+    <li><time>20:00</time><div class="body"><h3>In bed</h3><p>Set the alarm for 02:00.</p></div></li>
+  </ol>
+</section>
+
+<section class="day" id="sun" data-date="2026-12-06">
+  <div class="day-head">
+    <div class="day-date" aria-hidden="true">06</div>
+    <div>
+      <h2 class="day-title">Sunday: race day</h2>
+      <p class="day-sub">Sunday 6 December. The marathon starts at 04:30.</p>
+    </div>
+  </div>
+  <ol class="steps">
+    <li><time>02:00</time><div class="body"><h3>Wake up</h3><p>Eat, dress, check your bib and chip.</p></div></li>
+    <li><time>02:45</time><div class="body"><h3>Leave the hotel</h3><p>The MRT is free on selected lines from 02:30, but I still need to check that Bugis is on the open list. A backup is to walk from the hotel, roughly 2 km or 25 minutes. Please check the route on your phone beforehand. Taxis may be stuck behind road closures.</p></div></li>
+    <li class="race"><time>03:30</time><div class="body"><h3>Be at the F1 Pit Building</h3><p>The organiser asks runners to arrive at least an hour before the start. <a class="maplink" href="https://www.google.com/maps/search/?api=1&query=F1+Pit+Building+Singapore">Open on the map</a></p></div></li>
+    <li class="race"><time>04:30</time><div class="body"><h3>Flag-off</h3><p>The cut-off is 7 hours. The official page lists the finish at the National Stadium. Other guides disagree, so I will confirm with the organiser. <a class="maplink" href="https://www.google.com/maps/search/?api=1&query=National+Stadium+Singapore">Open the stadium on the map</a></p></div></li>
+    <li><time>After</time><div class="body"><h3>Collect your medal, eat, rest</h3><p>I will try to be at the finish. Go back to the hotel and sleep.</p></div></li>
+    <li class="ray"><time>Evening</time><div class="body"><h3>Easy dinner near the hotel</h3><p>Something light and nothing late. You have earned a quiet evening.</p></div></li>
+  </ol>
+</section>
+
+<section class="day" id="mon" data-date="2026-12-07">
+  <div class="day-head">
+    <div class="day-date" aria-hidden="true">07</div>
+    <div>
+      <h2 class="day-title">Monday: Merlion and Marina Bay</h2>
+      <p class="day-sub">Monday 7 December. You are on your own until 19:00. Your legs will be stiff, so this day has plenty of sitting.</p>
+    </div>
+  </div>
+  <ol class="steps">
+    <li><time>09:30</time><div class="body"><h3>The Merlion</h3><p>Merlion Park is free and open at all hours. The nearest MRT station is Raffles Place, about a 10-minute walk. Take your medal for the photo. Have lunch nearby. <a class="maplink" href="https://www.google.com/maps/search/?api=1&query=Merlion+Park+Singapore">Open on the map</a></p></div></li>
+    <li><time>13:00</time><div class="body"><h3>Rest at the hotel and change</h3><p>Please do not skip this. Tonight's restaurant has a dress code, and you will want a shower and dry clothes.</p></div></li>
+    <li><time>16:00</time><div class="body"><h3>Gardens by the Bay</h3><p>Take the Downtown Line from Bugis to Bayfront. It is a direct ride. The Cloud Forest and Flower Dome conservatories are next door, with seats and shelter if it rains. Check the opening hours on the day. <a class="maplink" href="https://www.google.com/maps/search/?api=1&query=Gardens+by+the+Bay+Singapore">Open on the map</a></p></div></li>
+    <li><time>18:45</time><div class="body"><h3>Walk to Marina Bay Sands</h3><p>It is connected to the Bayfront station area. <a class="maplink" href="https://www.google.com/maps/search/?api=1&query=Marina+Bay+Sands+Singapore">Open on the map</a></p></div></li>
+    <li class="ray"><time>19:00</time><div class="body"><h3>Dinner at CÉ LA VI</h3><p>I will meet you at Marina Bay Sands. It is the rooftop restaurant and bar. Dress smart casual. One listing says no singlets, swimwear, sleeveless tops or flip-flops after 17:30. <a class="maplink" href="https://www.google.com/maps/search/?api=1&query=CE+LA+VI+Singapore+Marina+Bay+Sands">Open on the map</a></p><p class="tip">I will book the table. Tell me about any foods you avoid, for example fish sauce or stock, so I can ask them about vegetarian dishes.</p></div></li>
+    <li class="ray"><time>21:00</time><div class="body"><h3>The light and water show</h3><p>Spectra is free and is reported to run at 20:00 and 21:00, from the Event Plaza in front of the shops. Arrive early for a good spot. The times still need checking.</p></div></li>
+    <li><time>22:30</time><div class="body"><h3>Back at the hotel</h3><p>We will buy the Universal Studios ticket tonight, once you know how your legs feel.</p></div></li>
+  </ol>
+</section>
+
+<section class="day" id="tue" data-date="2026-12-08">
+  <div class="day-head">
+    <div class="day-date" aria-hidden="true">08</div>
+    <div>
+      <h2 class="day-title">Tuesday: Sentosa and the rides</h2>
+      <p class="day-sub">Tuesday 8 December. I have the day off, so we go together.</p>
+    </div>
+  </div>
+  <ol class="steps">
+    <li class="ray"><time>09:00</time><div class="body"><h3>Meet at the hotel and travel to Sentosa</h3><p>I will meet you at the hotel. From Bugis take the East-West Line to Outram Park, then the North-East Line to HarbourFront. Then ride the Sentosa Express monorail from VivoCity to Resorts World. Allow 30 to 45 minutes.</p></div></li>
+    <li class="ray"><time>10:00</time><div class="body"><h3>Universal Studios Singapore</h3><p>The park is usually open 10:00 to 20:00, but December hours need checking. Wear comfortable shoes and take a poncho. An Express Pass shortens the time you stand in queues, and that matters with sore legs. <a class="maplink" href="https://www.google.com/maps/search/?api=1&query=Universal+Studios+Singapore">Open on the map</a></p><p class="tip">If it storms or your legs say no, switch to the S.E.A. Aquarium or the Singapore Oceanarium. They are indoors and you can sit.</p></div></li>
+    <li class="ray"><time>18:00</time><div class="body"><h3>Head back</h3><p>Leave the park around 18:00 so you are in Bugis by about 19:30.</p></div></li>
+    <li class="ray"><time>19:30</time><div class="body"><h3>Early dinner in Bugis</h3><p>Fortune Centre and Fu Lu Shou Complex are both reported to have vegetarian restaurants. Pack afterwards and sleep. <a class="maplink" href="https://www.google.com/maps/search/?api=1&query=Fortune+Centre+Singapore">Open Fortune Centre on the map</a></p></div></li>
+  </ol>
+</section>
+
+<section class="day" id="wed" data-date="2026-12-09">
+  <div class="day-head">
+    <div class="day-date" aria-hidden="true">09</div>
+    <div>
+      <h2 class="day-title">Wednesday: fly out</h2>
+      <p class="day-sub">Wednesday 9 December. Check-out is at 12:00, but you leave early.</p>
+    </div>
+  </div>
+  <ol class="steps">
+    <li><time>06:15</time><div class="body"><h3>Leave the hotel</h3><p>Take a taxi or Grab. By MRT leave about 06:00 and change at Tanah Merah. Check the first train times the evening before.</p></div></li>
+    <li><time>07:00</time><div class="body"><h3>Changi Terminal 1</h3><p>Check-in counters reportedly close about 60 minutes before departure, and online check-in is reportedly open from 48 hours before. Check your airline's own times. This is an international flight, so leave time for immigration. <a class="maplink" href="https://www.google.com/maps/search/?api=1&query=Changi+Airport+Terminal+1">Open on the map</a></p><p class="tip">If you are claiming a GST refund, use the refund kiosk in the check-in hall before immigration. Bring your passport, receipts and the goods, because they can be inspected. Keep purchases in your hand luggage until then. Allow another 20 minutes.</p></div></li>
+    <li><time>Morning</time><div class="body"><h3>Your flight</h3><p>Thailand asks visitors to complete a digital arrival card before arriving. Check whether you need a new one for this entry.</p></div></li>
+  </ol>
+</section>
+
+<section class="block" id="info">
+  <h2>Good to know</h2>
+
+  <h3>Getting around</h3>
+  <ul>
+    <li>The MRT is the easiest way across the city. Bugis is on the East-West and Downtown lines.</li>
+    <li>A contactless bank card is reported to work at the MRT gates. Check that yours does, and keep some Singapore dollars for hawker stalls.</li>
+    <li>Grab is the local taxi app. Set it up before you leave home.</li>
+  </ul>
+
+  <h3>Eating vegetarian</h3>
+  <ul>
+    <li>Little India has the most Indian vegetarian food: Komala Vilas and Tekka Centre.</li>
+    <li>Fortune Centre and Fu Lu Shou Complex, near the hotel, have vegetarian restaurants.</li>
+    <li>Ask about shrimp paste, fish sauce and lard. They can hide in dishes that look vegetarian.</li>
+  </ul>
+
+  <h3>Weather</h3>
+  <p>December is usually the wettest month, and it stays warm and humid. Carry a compact umbrella or poncho. Check haze.gov.sg and the race organiser's channels in race week, because the organiser has said it has plans for haze.</p>
+
+  <h3>Before you fly</h3>
+  <ul class="check" id="checklist">
+    <li><label><input type="checkbox" data-k="arrival"> Submit the SG Arrival Card within 3 days before landing (free, at ica.gov.sg)</label></li>
+    <li><label><input type="checkbox" data-k="tdac"> Thailand digital arrival card for 9 December, if you need a new one</label></li>
+    <li><label><input type="checkbox" data-k="esim"> Mobile data for Singapore, such as an eSIM</label></li>
+    <li><label><input type="checkbox" data-k="grab"> Grab app installed</label></li>
+    <li><label><input type="checkbox" data-k="card"> Contactless card, and some Singapore dollars in cash</label></li>
+    <li><label><input type="checkbox" data-k="addr"> Hotel name and address saved offline</label></li>
+    <li><label><input type="checkbox" data-k="form"> Send Ray your race confirmation and a signed authorisation form, as a backup for your race pack</label></li>
+    <li><label><input type="checkbox" data-k="diet"> Tell Ray about any foods you avoid</label></li>
+    <li><label><input type="checkbox" data-k="kit"> Race kit, poncho or umbrella, and smart casual clothes for Monday</label></li>
+  </ul>
+
+  <h3>Still to confirm</h3>
+  <div class="confirm">
+    <ul>
+      <li>Race pack venue and times for your entry. Mine shows Thursday and Friday, 11:00 to 22:00.</li>
+      <li>Where the marathon finishes.</li>
+      <li>Whether Bugis is on the free MRT section on race morning.</li>
+      <li>Opening hours for Mustafa Centre and Universal Studios in December, and the Spectra show times.</li>
+      <li>Whether the race changes if there is haze or lightning.</li>
+    </ul>
+  </div>
+
+  <h3>Contacts</h3>
+  <dl class="contacts">
+    
+    <dt>Race organiser</dt><dd>info@singaporeinternationalmarathon.com</dd>
+    <dt>Emergencies in Singapore</dt><dd>995 for ambulance and fire. 999 for police.</dd>
+  </dl>
+</section>
+
+</main>
+
+<footer class="wrap">Plan last updated 9 November 2026. Times marked as reported or still to confirm may change.</footer>
+
+<script>
+(function(){
+  // Countdown to the marathon flag-off, 04:30 on 6 Dec 2026, Singapore time (UTC+8, no daylight saving).
+  var start = new Date('2026-12-06T04:30:00+08:00').getTime();
+  var el = document.getElementById('countdown');
+  var note = document.getElementById('countdown-note');
+  function tick(){
+    var ms = start - Date.now();
+    if (ms <= 0){
+      el.textContent = 'Race day';
+      note.textContent = 'The marathon has started. Singapore time.';
+      return false;
+    }
+    var mins = Math.floor(ms / 60000);
+    var d = Math.floor(mins / 1440);
+    var h = Math.floor((mins % 1440) / 60);
+    var m = mins % 60;
+    el.innerHTML = '<span>' + d + '<small>days</small></span><span>' + h + '<small>hours</small></span><span>' + m + '<small>min</small></span>';
+    note.textContent = 'until the flag-off at 04:30 on Sunday 6 December, at the F1 Pit Building. Singapore time.';
+    return true;
+  }
+  if (tick()) setInterval(tick, 30000);
+
+  // Mark today's day if the page is opened during the trip.
+  try {
+    var parts = new Intl.DateTimeFormat('en-CA', {timeZone:'Asia/Singapore', year:'numeric', month:'2-digit', day:'2-digit'}).format(new Date());
+    var day = document.querySelector('.day[data-date="' + parts + '"]');
+    if (day){
+      var t = document.createElement('span');
+      t.className = 'today-tag';
+      t.textContent = 'Today';
+      day.querySelector('.day-title').appendChild(t);
+    }
+  } catch (e) {}
+
+  // Remember ticked checklist items on this device.
+  var boxes = document.querySelectorAll('#checklist input');
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem('mena-sg-checklist') || '{}'); } catch (e) {}
+  boxes.forEach(function(b){
+    b.checked = !!saved[b.dataset.k];
+    b.addEventListener('change', function(){
+      saved[b.dataset.k] = b.checked;
+      try { localStorage.setItem('mena-sg-checklist', JSON.stringify(saved)); } catch (e) {}
+    });
+  });
+})();
+</script>
+</body>
+</html>
