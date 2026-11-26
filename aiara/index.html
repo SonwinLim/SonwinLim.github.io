@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-US">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Aiara Cardoso, Marine Scientist</title>
-<meta name="description" content="Marine scientist working on reef ecology, coral restoration and citizen science. MSc Zoology, 3,500+ dives, published in reef fish and coral research.">
+<meta name="description" content="Marine scientist working on reef ecology, coral restoration, conservation education and program leadership. MSc Zoology, diving since 2014, published in reef fish and coral research.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
@@ -75,7 +75,7 @@ h2 { margin: 0 0 1.5rem; font: 800 clamp(1.9rem, 4.2vw, 2.7rem)/1.05 var(--displ
 @keyframes rise { from { transform: translateY(0); opacity: 0; } 10% { opacity: 1; } to { transform: translateY(-34rem); opacity: 0; } }
 .top { display: grid; grid-template-columns: 1.25fr 1fr; gap: 2rem; align-items: center; }
 h1 { margin: 0; font: 800 clamp(3.6rem, 12vw, 8rem)/.88 var(--display); letter-spacing: -.035em; }
-.role { margin: 1.1rem 0 0; font: 500 clamp(1.15rem, 2.6vw, 1.6rem)/1.3 var(--display); max-width: 24rem; }
+.role { margin: 1.1rem 0 0; font: 500 clamp(1.15rem, 2.6vw, 1.6rem)/1.3 var(--display); max-width: 30rem; }
 .porthole {
   justify-self: center; width: min(100%, 22rem); aspect-ratio: 1; border-radius: 50%;
   border: 16px solid var(--tape);
@@ -91,6 +91,9 @@ h1 { margin: 0; font: 800 clamp(3.6rem, 12vw, 8rem)/.88 var(--display); letter-s
 .facts a.pill:hover { background: var(--coral); color: var(--ink); }
 #education, #research { scroll-margin-top: 1.5rem; }
 .facts b { font-weight: 800; font-size: 1.35rem; margin-right: .3rem; }
+.facts b.after { margin: 0 0 0 .3rem; }
+.cv-cta { margin: 1.5rem 0 0; }
+.cv-cta .btn { box-shadow: 0 6px 16px rgba(6,43,58,.2); }
 
 /* shallows */
 .what { --bg: var(--shallows); --fg: var(--ink); padding-top: 8rem; }
@@ -125,6 +128,12 @@ h1 { margin: 0; font: 800 clamp(3.6rem, 12vw, 8rem)/.88 var(--display); letter-s
 .tape li li { display: list-item; padding: 0 0 .35rem; }
 .tape li li::marker { color: var(--coral); }
 .also { max-width: 44rem; }
+.tape .where small { font-style: italic; }
+.wins { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1rem; }
+.wins li { padding: 1.1rem 1.2rem; border-radius: 14px; background: rgba(6,26,51,.28); border-top: 4px solid var(--tape); }
+.wins h4 { margin: 0 0 .4rem; font: 800 1.1rem/1.3 var(--display); }
+.wins p { margin: 0; font-size: 1rem; line-height: 1.55; }
+.pubs .doi { font: 500 .9rem/1.4 var(--display); color: var(--shallows); word-break: break-all; }
 
 /* deep water: publications */
 .research { --bg: var(--deep); --fg: var(--foam); }
@@ -194,7 +203,7 @@ footer { margin-top: 3.5rem; font: 500 .9rem/1.4 var(--display); color: var(--sh
       <div class="top">
         <div>
           <h1>Aiara<br>Cardoso</h1>
-          <p class="role">Marine scientist. Reef ecology, restoration and citizen science.</p>
+          <p class="role">Marine scientist <span aria-hidden="true">|</span> Reef ecology, restoration, conservation education &amp; program leadership</p>
         </div>
         <div class="porthole">
           <img src="aiara.jpg" width="640" height="640" alt="Aiara Cardoso smiling as she speaks into a microphone at a talk">
@@ -202,10 +211,11 @@ footer { margin-top: 3.5rem; font: 500 .9rem/1.4 var(--display); color: var(--sh
       </div>
       <ul class="facts">
         <li><span class="pill"><b>3,500+</b>dives</span></li>
-        <li><span class="pill"><b>10+</b>years in the water</span></li>
+        <li><span class="pill">Diving since<b class="after">2014</b></span></li>
         <li><a class="pill" href="#education"><b>MSc</b>Zoology, UFPB Brazil</a></li>
         <li><a class="pill" href="#research"><b>5</b>selected publications</a></li>
       </ul>
+      <p class="cv-cta"><a class="btn" href="Aiara-Cardoso-CV.pdf" download>Download CV (PDF)</a></p>
     </div>
   </header>
 
@@ -227,7 +237,7 @@ footer { margin-top: 3.5rem; font: 500 .9rem/1.4 var(--display); color: var(--sh
     <div class="wrap what-grid">
       <div>
         <h2>What I do</h2>
-        <p class="lede">I run field research on tropical reefs where tourism and ecosystems overlap. I build ways for divers, students and local people to contribute data, and I partner with universities and NGOs so the science reaches the people who live beside the reef.</p>
+        <p class="lede">I develop marine research and conservation programs that bring people into the science. My work combines tropical reef ecology, restoration, scientific diving, and education. I design field projects, train participants, and build partnerships with universities and conservation organizations, creating opportunities for people to learn, contribute, and help protect the ocean.</p>
       </div>
       <button class="steve" id="steve" type="button" aria-pressed="false" aria-label="Steve the porcupinefish. Press to puff him up">
         <img src="steve.png" width="400" height="303" alt="">
@@ -238,10 +248,10 @@ footer { margin-top: 3.5rem; font: 500 .9rem/1.4 var(--display); color: var(--sh
       <ul class="strip">
         <li><figure><img src="field-01.jpg" width="800" height="533" loading="lazy" alt="Aiara pointing at a Conservation Diver course slide on a screen"><figcaption>Teaching a Conservation Diver course</figcaption></figure></li>
         <li><figure><img src="field-11.jpg" width="800" height="1200" loading="lazy" alt="Aiara underwater holding a sea slug identification sheet"><figcaption>Sea slug survey, Koh Tao</figcaption></figure></li>
-        <li><figure><img src="field-02.jpg" width="800" height="600" loading="lazy" alt="Aiara speaking into a microphone to a seated group, with marine debris posters behind her"><figcaption>A session on mooring lines and marine debris</figcaption></figure></li>
-        <li><figure><img src="field-17.jpg" width="800" height="600" loading="lazy" alt="Aiara underwater laying a survey tape along the reef"><figcaption>Laying a survey tape on the reef</figcaption></figure></li>
-        <li><figure><img src="field-10.jpg" width="800" height="1067" loading="lazy" alt="Aiara kneeling beside a coral restoration structure while a group watches"><figcaption>Showing a group a coral restoration structure</figcaption></figure></li>
-        <li><figure><img src="field-15.jpg" width="800" height="600" loading="lazy" alt="Aiara briefing a dive team around a table on a boat"><figcaption>Briefing the team on the boat</figcaption></figure></li>
+        <li><figure><img src="field-02.jpg" width="800" height="600" loading="lazy" alt="Aiara speaking into a microphone to a seated group at an outdoor event, with conservation posters behind her"><figcaption>Presenting coral monitoring and citizen science initiatives, including CoralWatch, at the annual Koh Tao Spotlight event.</figcaption></figure></li>
+        <li><figure><img src="field-17.jpg" width="800" height="600" loading="lazy" alt="Aiara underwater reeling out a transect line along the reef"><figcaption>Laying a transect line for an ecological monitoring survey.</figcaption></figure></li>
+        <li><figure><img src="field-10.jpg" width="800" height="1067" loading="lazy" alt="Aiara placing a model coral on a cement restoration structure while workshop participants watch"><figcaption>Leading a hands-on coral restoration workshop during PADI AWARE Week, using model corals to teach attachment techniques and placement on cement and metal structures.</figcaption></figure></li>
+        <li><figure><img src="field-15.jpg" width="800" height="600" loading="lazy" alt="Aiara giving a pre-dive briefing to a team around a table on a boat"><figcaption>Leading the pre-dive briefing before relocating artificial structures at our coral restoration site.</figcaption></figure></li>
       </ul>
     </div>
   </section>
@@ -273,8 +283,9 @@ footer { margin-top: 3.5rem; font: 500 .9rem/1.4 var(--display); color: var(--sh
             <p class="where">Black Turtle Dive, Koh Tao, Thailand</p>
             <ul>
               <li>Set up a collaboration with the University of Plymouth: proposed seven MSc projects and prepared three student placements before handing over.</li>
-              <li>Ran a five-day research visit in January 2026 with 20+ participants, arranging field teams, boats and specimen processing so the planned fieldwork was completed.</li>
+              <li>Coordinated a five-day visit by Dr. Le Qin Choo (Hong Kong) in January 2026 for <i>Drupella</i> snail and <i>Diadema</i> urchin research, involving 20+ participants in talks, fieldwork, and specimen processing.</li>
               <li>Mentored conservation staff into teaching and research roles, handing over course delivery as my scientific oversight and student supervision grew.</li>
+              <li>Co-wrote the scientific content of annual DMCR coral restoration proposals and presented monitoring findings to government representatives.</li>
             </ul>
           </div>
         </li>
@@ -285,9 +296,9 @@ footer { margin-top: 3.5rem; font: 500 .9rem/1.4 var(--display); color: var(--sh
             <p class="where">Black Turtle Dive, Koh Tao, Thailand</p>
             <ul>
               <li>Designed a 400-fragment coral restoration experiment testing four attachment methods across five coral genera, with tagged fragments and monthly photo monitoring.</li>
-              <li>Assessed 13 inherited datasets with a UFPB researcher, setting priorities for sampling, metadata and record keeping.</li>
+              <li>Assessed 13 inherited datasets with Dr. Bráulio Santos of UFPB, identifying priorities for sampling design, metadata, and data management.</li>
               <li>Relocated 10 artificial reef tunnels in two days in February 2025, coordinating about 15 divers to prepare the site for restoration research.</li>
-              <li>Co-designed four two-week conservation programmes with the programme manager, adding supervised independent projects linked to active research.</li>
+              <li>Co-designed seven conservation programs with the program manager, creating a progression from introductory citizen science to scientific diving and research assistance, with practical training, participation in ongoing research, and supervised independent projects.</li>
             </ul>
           </div>
         </li>
@@ -309,7 +320,7 @@ footer { margin-top: 3.5rem; font: 500 .9rem/1.4 var(--display); color: var(--sh
             <h3>Expedition Manager and SCUBA Instructor</h3>
             <p class="where">Reef Conservation International, Placencia, Belize</p>
             <ul>
-              <li>Ran a conservation programme on invasive lionfish control and marine biodiversity.</li>
+              <li>Ran a conservation program on invasive lionfish control and marine biodiversity.</li>
               <li>Led species-identification dives for international volunteers and coordinated island operations.</li>
             </ul>
           </div>
@@ -330,13 +341,14 @@ footer { margin-top: 3.5rem; font: 500 .9rem/1.4 var(--display); color: var(--sh
           <div class="yr">2019<small>to now</small></div><span></span>
           <div>
             <h3>Research Collaborator</h3>
-            <p class="where">Laboratory of Applied Ecology and Conservation (LEAC), João Pessoa, Brazil</p>
+            <p class="where">Laboratory of Applied Ecology and Conservation (LEAC), Federal University of Paraíba, João Pessoa, Brazil<br><small lang="pt">Laboratório de Ecologia Aplicada e Conservação</small></p>
             <ul>
+              <li>Ongoing academic collaboration involving field research, scientific publications, and student capacity building.</li>
               <li>From my MSc (2017–2019): first-author study of four shipwrecks, recording 5,005 fish of 76 species. I led the surveys, species identification and writing.</li>
               <li>Surveyed coral bleaching and disease on three Paraíba reefs in 2024: nine transects over about 360 m², for a peer-reviewed study.</li>
               <li>Contributed literature reviews and manuscript sections to the 2021 artificial-reef and 2022 coral-disease papers.</li>
               <li>My MSc data was part of the evidence, alongside colleagues' research, for protecting the Naufrágio Queimado area.</li>
-              <li>Gave free dive training and certification to two LEAC students who could not otherwise afford fieldwork.</li>
+              <li>Provided free dive training and certification to two female LEAC students facing financial barriers to pursuing marine science careers.</li>
             </ul>
           </div>
         </li>
@@ -355,6 +367,15 @@ footer { margin-top: 3.5rem; font: 500 .9rem/1.4 var(--display); color: var(--sh
         </li>
       </ol>
       <p class="also">I have also worked as a freelance SCUBA instructor and dive guide in Brazil (Papuan Dive and Tourism, seasonal in 2019 and 2024) and on Andaman Sea liveaboards out of Khao Lak, Thailand (2022).</p>
+
+      <h3 class="sub" id="achievements">Selected research and education achievements</h3>
+      <ul class="wins">
+        <li><h4>Sea slug research and citizen science</h4><p>Designed a sea slug monitoring project that reached approximately 29 dive sites and involved 50+ participants, including dive customers, staff, and conservation students. Developed the sampling protocol, managed the database, and introduced a progression pathway through which at least three participants became survey leaders.</p></li>
+        <li><h4>Conservation in professional dive training</h4><p>Refined and delivered the REACT divemaster conservation workshop, integrating scientific surveys and restoration monitoring into professional dive training.</p></li>
+        <li><h4>Conservation program delivery</h4><p>Co-developed conservation programs delivered by a team that certified approximately 111 students during my tenure in 2024–2026.</p></li>
+        <li><h4>Public science engagement</h4><p>Created Ocean Insights, a public outreach series connecting marine science with dive-center visitors and the wider community. Approximately five events took place before my departure, featuring student projects and guest researchers.</p></li>
+        <li><h4>Local capacity building</h4><p>Trained Thai colleague Woranitta “Bua” in monthly coral monitoring and prepared Thai-language materials to support her participation.</p></li>
+      </ul>
     </div>
   </section>
 
@@ -372,11 +393,11 @@ footer { margin-top: 3.5rem; font: 500 .9rem/1.4 var(--display); color: var(--sh
     <div class="wrap">
       <h2>Published research</h2>
       <ol class="pubs" reversed>
-        <li>Morais, J., Almeida, P. M., Avelino, C. D., Souza, M. C. A., <strong>Cardoso, A. P. L. R.</strong>, et al. (2026). Risk or relief? The influence of river plumes on coral bleaching and disease in marginal and extreme reefs. <span class="j">Marine Pollution Bulletin</span>, 222, 118741.</li>
-        <li>Morais, J., Siqueira, A. C., Rocha, L. A., Medeiros, A. P. M., <strong>Cardoso, A. P. L. R.</strong>, &amp; Santos, B. A. (2026). Diversity and vulnerability of reef fishes in marginal and extreme habitats. In M. O. Soares et al. (Eds.), <span class="j">Extreme and Marginal Coral Reefs and Communities</span> (pp. 33–54). Springer.</li>
-        <li>Morais, J., <strong>Cardoso, A. P. L. R.</strong>, &amp; Santos, B. A. (2022). A global synthesis of the current knowledge on the taxonomic and geographic distribution of major coral diseases. <span class="j">Environmental Advances</span>, 8, 100231.</li>
-        <li>Medeiros, A. P. M., Ferreira, B. P., Betancur-R, R., <strong>Cardoso, A. P. L. R.</strong>, et al. (2021). Centenary shipwrecks reveal the limits of artificial habitats in protecting regional reef fish diversity. <span class="j">Journal of Applied Ecology</span>.</li>
-        <li><strong>Cardoso, A. P. L. R.</strong>, et al. (2020). Increased fish diversity over day and night in structurally complex habitats of artificial reefs. <span class="j">Journal of Experimental Marine Biology and Ecology</span>, 522, 151244.</li>
+        <li>Morais, J., Almeida, P. M., Avelino, C. D., Souza, M. C. A., <strong>Cardoso, A. P. L. R.</strong>, et al. (2026). Risk or relief? The influence of river plumes on coral bleaching and disease in marginal and extreme reefs. <span class="j">Marine Pollution Bulletin</span>, 222, 118741. <a class="doi" href="https://doi.org/10.1016/j.marpolbul.2025.118741" rel="noopener">doi:10.1016/j.marpolbul.2025.118741</a></li>
+        <li>Morais, J., Siqueira, A. C., Rocha, L. A., Medeiros, A. P. M., <strong>Cardoso, A. P. L. R.</strong>, &amp; Santos, B. A. (2026). Diversity and vulnerability of reef fishes in marginal and extreme habitats. In M. O. Soares et al. (Eds.), <span class="j">Extreme and Marginal Coral Reefs and Communities</span> (pp. 33–54). Springer. <a class="doi" href="https://doi.org/10.1007/978-3-032-28035-0_3" rel="noopener">doi:10.1007/978-3-032-28035-0_3</a></li>
+        <li>Morais, J., <strong>Cardoso, A. P. L. R.</strong>, &amp; Santos, B. A. (2022). A global synthesis of the current knowledge on the taxonomic and geographic distribution of major coral diseases. <span class="j">Environmental Advances</span>, 8, 100231. <a class="doi" href="https://doi.org/10.1016/j.envadv.2022.100231" rel="noopener">doi:10.1016/j.envadv.2022.100231</a></li>
+        <li>Medeiros, A. P. M., Ferreira, B. P., Betancur-R, R., <strong>Cardoso, A. P. L. R.</strong>, Matos, M. R. S. B. C., &amp; Santos, B. A. (2021). Centenary shipwrecks reveal the limits of artificial habitats in protecting regional reef fish diversity. <span class="j">Journal of Applied Ecology</span>, 59(1), 286–299. <a class="doi" href="https://doi.org/10.1111/1365-2664.14053" rel="noopener">doi:10.1111/1365-2664.14053</a></li>
+        <li><strong>Cardoso, A. P. L. R.</strong>, et al. (2020). Increased fish diversity over day and night in structurally complex habitats of artificial reefs. <span class="j">Journal of Experimental Marine Biology and Ecology</span>, 522, 151244. <a class="doi" href="https://doi.org/10.1016/j.jembe.2019.151244" rel="noopener">doi:10.1016/j.jembe.2019.151244</a></li>
       </ol>
       <h3 class="sub">Talks and films</h3>
       <ul class="pubs">
@@ -401,7 +422,7 @@ footer { margin-top: 3.5rem; font: 500 .9rem/1.4 var(--display); color: var(--sh
         <div>
           <h3 id="education">Education</h3>
           <ul>
-            <li>M.Sc. Biological Sciences/Zoology, Federal University of Paraíba, 2017–2019. Thesis: effects of shipwreck structural complexity on fish diversity.</li>
+            <li>M.Sc. in Zoology, Federal University of Paraíba, 2017–2019. Research focus: marine ecology. Thesis: effects of shipwreck structural complexity on reef fish diversity.</li>
             <li>B.Sc. Biological Sciences, Federal University of Paraíba, 2009–2015.</li>
           </ul>
         </div>
@@ -415,7 +436,16 @@ footer { margin-top: 3.5rem; font: 500 .9rem/1.4 var(--display); color: var(--sh
             <li>Dive Against Debris Instructor</li>
             <li>Fish Identification Instructor</li>
             <li>Peak Performance Buoyancy Instructor</li>
+            <li>Conservation Diver Instructor &amp; Instructor Trainer: qualified to teach student-level courses in ecological monitoring, coral taxonomy and identification, coral disease monitoring, coral predator monitoring and management, sea slug ecology, seahorses, sea turtles, sharks, artificial reefs, and coral nursery and restoration</li>
             <li>OWSI, EFR and Emergency Oxygen Provider current through December 2026</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Additional field &amp; maritime credentials</h3>
+          <ul>
+            <li>STCW training, completed 2022</li>
+            <li>Brazilian Merchant Marine qualifications, both completed 2024: <span lang="pt">Marinheiro Auxiliar de Convés</span> (MAC; auxiliary deckhand qualification) and <span lang="pt">Curso Especial de Segurança de Embarcações de Passageiros</span> (ESEP; passenger vessel safety course)</li>
+            <li>Valid driver’s license and International Driving Permit for cars</li>
           </ul>
         </div>
         <div>
@@ -424,7 +454,6 @@ footer { margin-top: 3.5rem; font: 500 .9rem/1.4 var(--display); color: var(--sh
             <li>Eco-Shoreline Designs for Sustainability, Hong Kong Institution of Engineers, 2025</li>
             <li>Stranded Marine Endangered Species Rescue, DMCR Thailand, 2024</li>
             <li>Reef Rehabilitation, DMCR Thailand, 2021</li>
-            <li>Community Ecology Data Analysis and Geoprocessing with QGIS, UFPB, 2018</li>
           </ul>
         </div>
         <div>
@@ -462,6 +491,7 @@ footer { margin-top: 3.5rem; font: 500 .9rem/1.4 var(--display); color: var(--sh
       <p class="lede">I'm open to new roles in marine research, conservation, restoration and education. Thailand and Southeast Asia come first, and I welcome worldwide and remote roles. I'm also glad to talk about collaborations and speaking.</p>
       <div class="btns">
         <a class="btn" href="mailto:aiaraponce@gmail.com">Email Aiara</a>
+        <a class="btn" href="Aiara-Cardoso-CV.pdf" download>Download CV (PDF)</a>
         <a class="btn alt" href="tel:+66838986255">Call +66 83 898 6255</a>
         <a class="btn alt" href="https://www.linkedin.com/in/aiara" rel="noopener">LinkedIn</a>
       </div>
